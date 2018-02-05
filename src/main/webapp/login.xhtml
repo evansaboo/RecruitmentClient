@@ -19,6 +19,7 @@
         <ui:include src="header.xhtml"/>
         <h:form>
             <div class="container">
+                <div class="login">
                 <div class="row">
                     <div class="col-sm-12">Welcome to the login and registration page</div>
                 </div>
@@ -32,10 +33,41 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-6"><h:commandButton action="#{login.toServ}" value="Login"/></div>
-                    <div class="col-sm-6"><h:commandLink onclick="register();">Register?</h:commandLink></div>
+                    <div class="col-sm-6"><h:commandLink onclick="showRegForm();">Register?</h:commandLink></div>
                 </div>
+                </div>
+                <br></br>
+                <div class="reg" type="hidden">
                 
-                <!--<h:commandButton onclick="register();" value="Login"/> -->
+                <div class="row">
+                    <div class="col-sm-2">Username</div>
+                    <div class="col-sm-6"><h:inputText value="#{login.regUser}"/></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">Password</div>
+                    <div class="col-sm-6"><h:inputText value="#{login.regPassword}"/></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">First name</div>
+                    <div class="col-sm-6"><h:inputText value="#{login.name}"/></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">Surname</div>
+                    <div class="col-sm-6"><h:inputText value="#{login.surname}"/></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">Social security number</div>
+                    <div class="col-sm-6"><h:inputText value="#{login.ssn}"/></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">Email-address</div>
+                    <div class="col-sm-6"><h:inputText value="#{login.email}"/></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6"><h:commandButton action="#{login.register}" value="Register"/></div>
+                </div>
+                    
+                </div>
                 
             </div>
 

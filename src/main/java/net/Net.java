@@ -25,6 +25,8 @@ public class Net implements Serializable {
 
     private String user;
     private String password;
+    private String reguser;
+    private String regpassword;
     private String ssn;
     private String name;
     private String surname;
@@ -37,6 +39,41 @@ public class Net implements Serializable {
     public void setUser(String user) {
         this.user = user;
     }
+    public String getRegUser() {
+        return reguser;
+    }
+
+    public void setRegUser(String reguser) {
+        this.reguser = reguser;
+    }
+    public String getSsn() {
+        return ssn;
+    }
+
+    public void setSsn(String ssn) {
+        this.ssn = ssn;
+    }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public String getPassword() {
         return password;
@@ -44,6 +81,13 @@ public class Net implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+    public String getRegPassword() {
+        return regpassword;
+    }
+
+    public void setRegPassword(String regpassword) {
+        this.regpassword = regpassword;
     }
 
     public void test() {
@@ -82,8 +126,8 @@ public class Net implements Serializable {
                     .add("surname", surname)
                     .add("ssn", ssn)
                     .add("email", email)
-                    .add("password", password)
-                    .add("username", user).build();
+                    .add("password", regpassword)
+                    .add("username", reguser).build();
             Client client = ClientBuilder.newClient();
             String s = client.target("http://localhost:8080/RecruitmentServ/webresources/kth.iv1201.recruitmentserv.person")
                     .request()
