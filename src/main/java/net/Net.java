@@ -15,10 +15,6 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 
-/**
- *
- * @author Evan
- */
 @Named("searchApplications")
 @SessionScoped
 public class Net implements Serializable {
@@ -32,6 +28,9 @@ public class Net implements Serializable {
     private String surname;
     private String email;
 
+    
+    
+    
     public String getUser() {
         return user;
     }
@@ -89,15 +88,7 @@ public class Net implements Serializable {
     public void setRegPassword(String regpassword) {
         this.regpassword = regpassword;
     }
-
-    public void test() {
-        System.out.println("client test");
-        Client client = ClientBuilder.newClient();
-        client.target("http://localhost:8080/RecruitmentServ/webresources/kth.iv1201.recruitmentserv.availability")
-                .request()
-                .get(String.class);
-    }
-
+    
     public void toServ() {
         try {
             JsonProvider provider = JsonProvider.provider();
