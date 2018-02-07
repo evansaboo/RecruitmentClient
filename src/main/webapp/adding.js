@@ -1,8 +1,19 @@
-
-
-function hideRegForm() {
-    $(".reg").hide();
-}
+/*
 function showRegForm() {
-    $(".reg").show();
-}
+    document.getElementById("regger").style.display = '';
+} */
+
+/*
+
+$('#showRegForm').click(function (e) {
+    e.preventDefault();
+    $('#reg').show();
+    $(this).hide();
+});
+
+$(document).ready(function() {
+  $('.reg').hide();
+});
+
+
+*/

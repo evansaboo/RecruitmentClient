@@ -102,15 +102,17 @@ public class Net implements Serializable {
         try {
             JsonProvider provider = JsonProvider.provider();
             JsonObject job;
+            
             job = provider.createObjectBuilder()
                     .add("type", "login")
                     .add("username", user)
                     .add("password", password).build();
+            
             Client client = ClientBuilder.newClient();
             String s = client.target("http://localhost:8080/RecruitmentServ/webresources/kth.iv1201.recruitmentserv.person")
                     .request()
                     .post(Entity.entity(job, MediaType.APPLICATION_JSON), String.class);
-            System.out.println("From serv" + s);
+            System.out.println("From serv " + s);
 
         } catch (Exception e) {
             e.printStackTrace();
