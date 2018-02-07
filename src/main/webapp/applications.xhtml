@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui:composition template="masterTemplate.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
@@ -13,19 +14,19 @@
             <h:form class="form col-xs-12 col-md-6 col-md-offset-3" id="searchForm">
                 <div class="form-group" >
                     <label for="date">Application Submission Date</label>
-                    <h:inputText class="form-control" id="date"/>
+                    <h:inputText value="#{applicationListing.date}" class="form-control" id="date"/>
                 </div>
                 <div class="form-group col-xs-6" style="padding-left: 0">
                     <label for="dateFrom">Time From</label>
-                    <h:inputText class="form-control" id="dateFrom"/>
+                    <h:inputText value="#{applicationListing.timeFrom}" class="form-control" id="dateFrom"/>
                 </div>
                 <div class="form-group col-xs-6" style="padding-right: 0">
                     <label for="dateTo">Time To</label>
-                    <h:inputText class="form-control" id="dateTo"/>
+                    <h:inputText value="#{applicationListing.timeTo}" class="form-control" id="dateTo"/>
                 </div>
                 <div class="form-group">
                     <label>Competence</label>
-                    <h:selectOneMenu class="form-control" id="sel1" >
+                    <h:selectOneMenu  value="#{applicationListing.competence}" class="form-control" id="sel1" >
                         <f:selectItem itemValue="all" itemLabel="All"/>
                     </h:selectOneMenu>
                 </div>
