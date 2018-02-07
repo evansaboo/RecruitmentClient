@@ -1,19 +1,15 @@
-/*
+
 function showRegForm() {
     document.getElementById("regger").style.display = '';
-} */
+}
 
-/*
 
-$('#showRegForm').click(function (e) {
-    e.preventDefault();
-    $('#reg').show();
-    $(this).hide();
+
+$(document).ready(function () {
+    $('#registerForm').hide();
+
+    $('#dropdownMenuButton').click(function (e) {
+        $('#registerForm').show();
+        $(this).hide();
+    });
 });
-
-$(document).ready(function() {
-  $('.reg').hide();
-});
-
-
-*/

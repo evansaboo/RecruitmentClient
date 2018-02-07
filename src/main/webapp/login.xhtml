@@ -37,7 +37,7 @@
                             <div class="form-group login-group-checkbox">
                                 <!-- <h:commandLink onclick="showRegForm();">Register?</h:commandLink> -->
                                 <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button class="btn btn-secondary" type="button" id="dropdownMenuButton">
                                         Register?
                                     </button>
                                     <!--
@@ -72,7 +72,7 @@
                     <!-- </div>container -->
 
                 </h:form>
-                <h:form>
+                <h:form id="registerForm">
 
                     <br></br>
                     <div class="reg">
@@ -101,7 +101,7 @@
                             <div class="col-sm-6"><h:inputText value="#{login.email}"/></div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-6"><h:commandButton action="#{login.register}" value="Register"/></div>
+                            <div class="col-sm-6"><h:commandButton  action="#{login.register}" value="Register"/></div>
                         </div>
 
                     </div>
