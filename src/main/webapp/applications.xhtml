@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-    <h:head>
-        <title>Applications</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-        <!-- Latest compiled and minified JavaScript -->
+<ui:composition template="masterTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <ui:define name="head">
         <link rel="stylesheet" href="css/footer.css"/>
         <link rel="stylesheet" href="css/applications.css"/>
-    </h:head>
-    <h:body>         
-        <ui:include src="header.xhtml"/>
+    </ui:define>
+    <ui:define name="body">
         <div class="container">
             <h:form class="form col-xs-12 col-md-6 col-md-offset-3" id="searchForm">
                 <div class="form-group" >
@@ -89,7 +83,5 @@
 
             </div>
         </div>
-
-        <ui:include src="footer.xhtml"/>
-    </h:body>
-</html>
+    </ui:define>
+</ui:composition>
