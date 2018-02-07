@@ -55,3 +55,7 @@ used to vertically center elements, may need modification if you're not using de
     padding-right: 15px;
     font-weight: bold;
 }
+#searchForm{
+    margin-left: auto;
+    margin-right: auto;
+}

@@ -19,7 +19,7 @@ import javax.ws.rs.core.MediaType;
  *
  * @author Evan
  */
-@Named("login")
+@Named("searchApplications")
 @SessionScoped
 public class Net implements Serializable {
 
