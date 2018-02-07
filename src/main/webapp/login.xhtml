@@ -35,30 +35,10 @@
                                 <h:inputSecret value="#{login.password}" class="form-control" id="lg_password" a:placeholder="password"/>
                             </div>
                             <div class="form-group login-group-checkbox">
-                                <!-- <h:commandLink onclick="showRegForm();">Register?</h:commandLink> -->
                                 <div class="dropdown">
                                     <button class="btn btn-secondary" type="button" id="dropdownMenuButton">
                                         Register?
                                     </button>
-                                    <!--
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <form>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Email address</label>
-                                                <h:inputText value="#{login.user}" class="form-control" a:placeholder="username"/>
-                                                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputPassword1">Password</label>
-                                                <h:inputText value="#{login.user}" class="form-control" a:placeholder="username"/>
-                                            </div>
-                                            <div class="form-check">
-                                                <h:inputText value="#{login.user}" class="form-control" a:placeholder="username"/>
-                                                    <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                                            </div>
-                                            <button type="submit" class="btn btn-primary">Submit</button> 
-                                        </form>
-                                    </div> -->
                                 </div>
                             </div>
 
@@ -66,49 +46,81 @@
 
                         </div>
                         <h:commandButton action="#{login.toServ}" value="Login" class="login-button"/>
-                        <!--<button type="submit" class="login-button"><i class="fa fa-chevron-right"></i></button>-->
                     </div>
 
-                    <!-- </div>container -->
-
                 </h:form>
-                <h:form id="registerForm">
+                
+                
+                <div class="row main" id="registerForm">
+				<div class="main-login main-center">
+				
+					<h:form>
+						<h5>Register to use ReCute</h5>
+						<div class="form-group">
+                                                    <h:outputLabel for="name" class="cols-sm-2 control-label">Your first name</h:outputLabel>
+							<div class="cols-sm-10">
+								<div class="input-group">
+                                                                     <h:inputText value="#{login.name}" class="form-control" id="name" a:placeholder="Enter first name"/>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+                                                    <h:outputLabel for="surname" class="cols-sm-2 control-label">Your surname</h:outputLabel>
+							<div class="cols-sm-10">
+								<div class="input-group">
+                                                                    <h:inputText value="#{login.surname}" class="form-control" id="surname" a:placeholder="Enter last name"/>
+								</div>
+							</div>
+						</div>
 
-                    <br></br>
-                    <div class="reg">
-                        <div class="row">
-                            <div class="col-sm-2">Username</div>
-                            <div class="col-sm-6"><h:inputText value="#{login.regUser}"/></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-2">Password</div>
-                            <div class="col-sm-6"><h:inputText value="#{login.regPassword}"/></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-2">First name</div>
-                            <div class="col-sm-6"><h:inputText value="#{login.name}"/></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-2">Surname</div>
-                            <div class="col-sm-6"><h:inputText value="#{login.surname}"/></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-2">Social security number</div>
-                            <div class="col-sm-6"><h:inputText value="#{login.ssn}"/></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-2">Email-address</div>
-                            <div class="col-sm-6"><h:inputText value="#{login.email}"/></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6"><h:commandButton  action="#{login.register}" value="Register"/></div>
-                        </div>
+						<div class="form-group">
+                                                    <h:outputLabel for="email" class="cols-sm-2 control-label">Your Email</h:outputLabel>
+							<div class="cols-sm-10">
+								<div class="input-group">
+                                                                      <h:inputText value="#{login.email}" class="form-control" id="email" a:placeholder="Enter your Email"/>
+								</div>
+							</div>
+						</div>
 
-                    </div>
+						<div class="form-group">
+                                                    <h:outputLabel for="username" class="cols-sm-2 control-label">Username</h:outputLabel>
+							<div class="cols-sm-10">
+								<div class="input-group">
+                                                                    <h:inputText value="#{login.regUser}" class="form-control" id="username" a:placeholder="Enter your Username"/>
+								</div>
+							</div>
+						</div>
 
+						<div class="form-group">
+                                                    <h:outputLabel for="password" class="cols-sm-2 control-label">Password</h:outputLabel>
+							<div class="cols-sm-10">
+								<div class="input-group">
+                                                                    <h:inputSecret value="#{login.regPassword}" class="form-control" id="password" a:placeholder="Enter your Password"/>
+								</div>
+							</div>
+						</div>
+                                            
+                                            <div class="form-group">
+                                                    <h:outputLabel for="ssn" class="cols-sm-2 control-label">Your Social security number</h:outputLabel>
+							<div class="cols-sm-10">
+								<div class="input-group">
+                                                                     <h:inputText value="#{login.ssn}" class="form-control" id="ssn" a:placeholder="Enter your Social Security Number"/>
+								</div>
+							</div>
+						</div>
+                                            
 
-
-                </h:form>
+						<div class="form-group ">
+                                                    <h:commandButton  action="#{login.register}" class="btn btn-primary btn-lg btn-block" value="Register"/>
+						</div>
+                                                <button type="button" id="dropBack" class="btn btn-default">Cancel</button>
+						
+					</h:form>
+				</div>
+			</div>
+                
+                
+                
 
             </div>
 
