@@ -8,6 +8,9 @@ $(document).ready(function () {
     $('#dropBack').click(function (e) {
         $('#registerForm').hide();
     });
+    var errorMsg = $('span[id*="errorMsg"]').text();
+    if(!(errorMsg === ""))
+        notify(errorMsg, "warning");
 });
 
 function notify(msg, alertType) {
@@ -37,3 +40,4 @@ function notify(msg, alertType) {
     });
 
 }
+

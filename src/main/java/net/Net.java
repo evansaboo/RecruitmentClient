@@ -28,7 +28,7 @@ public class Net implements Serializable {
     private String surname;
     private String email;
     private String script;
-
+    private String authenticated;
     public String getUser() {
         return user;
     }
@@ -92,11 +92,19 @@ public class Net implements Serializable {
     public void setRegPassword(String regpassword) {
         this.regpassword = regpassword;
     }
+    
 
     public String getScript() {
         return script;
     }
+    
+    public String getAuthenticated(){
+        String s = authenticated;
+        authenticated = "";
+        return s;
+    }
 
+    
     public String toServ() {
         try {
             JsonProvider provider = JsonProvider.provider();
@@ -112,12 +120,10 @@ public class Net implements Serializable {
                     .request()
                     .post(Entity.entity(job, MediaType.APPLICATION_JSON), String.class);
             if (!s.equals("invalid")) {
+                
                 return "index?faces-redirect=true";
             } else {
-                script = "$.getScript('adding.js', function()\n"
-                        + "{\n"
-                        + "notify('Invalid credentials', 'warning');"
-                        + "});";
+                authenticated = "Authentication failed";
                 return "login?faces-redirect=true";
             }
 
