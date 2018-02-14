@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition template="masterTemplate.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <ui:define name="head">
+        <link rel="stylesheet" href="css/footer.css"/>
+        <link rel="stylesheet" href="css/applications.css"/>
+    </ui:define>
+    <ui:define name="body">
+        <div class="container">
+            <h:form>
+                <h:selectOneMenu id="t1" value="#{applyManager.profile.name}">
+                    <f:selectItem itemLabel="Choose competence..." itemValue="#{null}" />
+                    <f:selectItems value="#{applyManager.competences}" var="comp" itemLabel="#{comp.name}" itemValue="#{comp.name}" />
+                </h:selectOneMenu>
+                <h:selectOneMenu id="t2" value="#{applyManager.profile.yearsOfExperience}">
+                    <f:selectItem itemLabel="Years of experience" itemValue="#{null}" />
+                    <f:selectItems value="#{applyManager.years}" />
+                </h:selectOneMenu>
+                <h:inputText id="t3" value="#{applyManager.profile.availableFrom}">
+                    <f:convertDateTime type="date" pattern="dd-MM-yyyy" />
+                </h:inputText>
+                <h:inputText id="t4" value="#{applyManager.profile.availableTo}">
+                    <f:convertDateTime type="date" pattern="dd-MM-yyyy" />
+                </h:inputText>
+
+                <h:commandButton value="Add profile">
+                    <f:ajax execute="t1 t2 t3 t4" listener="#{applyManager.addProfile}" render="@form"/>
+                </h:commandButton>
+
+                <h:dataTable value="#{applyManager.profiles}" var="p" rendered="#{!empty applyManager.profiles}">
+                    <h:column>
+                        <f:facet name="header">Competence</f:facet>
+                        #{p.name}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Competence ID</f:facet>
+                        #{p.competenceId}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Years of experience</f:facet>
+                        #{p.yearsOfExperience}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Available from</f:facet>
+                        #{p.availableFrom}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Available to</f:facet>
+                        #{p.availableTo}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Remove</f:facet>
+                        <h:commandButton value="Delete">
+                            <f:ajax listener="#{applyManager.deleteProfile(p)}" render="@form" />
+                        </h:commandButton>
+                    </h:column>
+                </h:dataTable>
+                
+                <h:commandButton value="Submit Application" action="#{applyManager.submitApplication}" rendered="#{!empty applyManager.profiles}"/>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>
