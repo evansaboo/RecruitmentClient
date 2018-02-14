@@ -10,6 +10,7 @@ and open the template in the editor.
           xmlns:f="http://java.sun.com/jsf/core"
           xmlns:h="http://java.sun.com/jsf/html"
           xmlns:ui="http://java.sun.com/jsf/facelets" >
+    <f:view locale="#{language.locale}">
     <h:head>
         <title>
             ReCute
@@ -24,4 +25,5 @@ and open the template in the editor.
         <ui:insert name="body"/>
         <ui:include src="footer.xhtml"/>
     </h:body>
+    </f:view>
 </html>

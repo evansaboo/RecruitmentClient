@@ -38,7 +38,6 @@
 .login-form-1 .form-group {
     margin-bottom: 0;
     border-bottom: 2px solid gainsboro;
-    padding-right: 20px;
     position: relative;
     
 }
@@ -154,6 +153,7 @@ body, html{
 
 .main{
     margin:50px 15px;
+    padding-bottom: 5em;
 }
 
 h1.title { 
@@ -172,7 +172,7 @@ hr{
 }
 
 label{
-    margin-bottom: 15px;
+    margin-top: 15px;
 }
 
 input,
