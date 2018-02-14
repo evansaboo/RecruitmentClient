@@ -29,6 +29,11 @@ public class Net implements Serializable {
     private String email;
     private String script;
     private String authenticated;
+    private String loggedon;
+    
+    public String getLoggedon() {
+        return loggedon;
+    }
     public String getUser() {
         return user;
     }
@@ -120,7 +125,7 @@ public class Net implements Serializable {
                     .request()
                     .post(Entity.entity(job, MediaType.APPLICATION_JSON), String.class);
             if (!s.equals("invalid")) {
-                
+                loggedon=s;
                 return "index?faces-redirect=true";
             } else {
                 authenticated = "Authentication failed";
@@ -133,7 +138,7 @@ public class Net implements Serializable {
         return "";
     }
 
-    public void register() {
+    public String register() {
         try {
             JsonProvider provider = JsonProvider.provider();
             JsonObject job;
@@ -149,11 +154,19 @@ public class Net implements Serializable {
             String s = client.target("http://localhost:8080/RecruitmentServ/webresources/kth.iv1201.recruitmentserv.person")
                     .request()
                     .post(Entity.entity(job, MediaType.APPLICATION_JSON), String.class);
-            System.out.println("From serv" + s);
+            
+            if (!s.equals("invalid")) {
+                loggedon=s;
+                return "index?faces-redirect=true";
+            } else {
+                authenticated = "Username taken";
+                return "login?faces-redirect=true";
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return "";
     }
 
 }
