@@ -28,6 +28,7 @@
                     <label>Competence</label>
                     <h:selectOneMenu  value="#{applicationListing.competence}" class="form-control" id="sel1" >
                         <f:selectItem itemValue="all" itemLabel="All"/>
+                        <f:selectItems value="#{applicationListing.competenceList}"/>
                     </h:selectOneMenu>
                 </div>
                 <div class="form-group">
@@ -43,22 +44,17 @@
                 <div class="panel panel-default panel-table">
 
                     <div class="panel-body">
-                        <table class="table table-striped table-bordered table-list">
-                            <thead>
-                                <tr>
-                                    <th class="hidden-xs">ID</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                </tr> 
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="hidden-xs">1</td>
-                                    <td>John Doe</td>
-                                    <td>johndoe@example.com</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <h:dataTable class="table table-striped table-bordered table-list">
+                            <h:column>
+                                <f:facet name="header" class="hidden-xs" >ID</f:facet>
+                            </h:column>                            
+                            <h:column>
+                                <f:facet name="header">Name</f:facet>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Email</f:facet>
+                            </h:column>
+                        </h:dataTable>
 
                     </div>
                     <div class="panel-footer">
