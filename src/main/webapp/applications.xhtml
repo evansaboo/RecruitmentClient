@@ -4,17 +4,23 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-
     <ui:define name="head">
         <link rel="stylesheet" href="css/footer.css"/>
         <link rel="stylesheet" href="css/applications.css"/>
+        <link  rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css"/>
+        <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"/>
+        <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"/>
+
+
     </ui:define>
     <ui:define name="body">
         <div class="container">
             <h:form class="form col-xs-12 col-md-6 col-md-offset-3" id="searchForm">
                 <div class="form-group" >
                     <label for="date">Application Submission Date</label>
-                    <h:inputText value="#{applicationListing.date}" class="form-control" id="date"/>
+                    <h:inputText value="#{applicationListing.date}" class="form-control" id="date">
+                        <f:convertDateTime pattern="d-M-yyyy"/>
+                    </h:inputText>
                 </div>
                 <div class="form-group col-xs-6" style="padding-left: 0">
                     <label for="dateFrom">Time From</label>
@@ -27,58 +33,45 @@
                 <div class="form-group">
                     <label>Competence</label>
                     <h:selectOneMenu  value="#{applicationListing.competence}" class="form-control" id="sel1" >
-                        <f:selectItem itemValue="all" itemLabel="All"/>
-                        <f:selectItems value="#{applicationListing.competenceList}"/>
+                        <f:selectItem itemValue="0" itemLabel="All"/>
+                        <f:selectItems value="#{applicationListing.cmptList}"/>
                     </h:selectOneMenu>
                 </div>
                 <div class="form-group">
                     <label for="name">Applicant Name</label>
                     <h:inputText value="#{applicationListing.firstname}" class="form-control" id="name"/>
                 </div>
-                <h:commandButton action="applications" class="btn btn-default" value="search"/>
+                <h:commandButton class="btn btn-default" value="search" action="#{applicationListing.searchApplications}"/>
             </h:form>
         </div>
         <div class="container">
             <h1 class="title">Applications</h1>
             <div class="col-md-12">
-                <div class="panel panel-default panel-table">
 
-                    <div class="panel-body">
-                        <h:dataTable class="table table-striped table-bordered table-list">
-                            <h:column>
-                                <f:facet name="header" class="hidden-xs" >ID</f:facet>
-                            </h:column>                            
-                            <h:column>
-                                <f:facet name="header">Name</f:facet>
-                            </h:column>
-                            <h:column>
-                                <f:facet name="header">Email</f:facet>
-                            </h:column>
-                        </h:dataTable>
+                <h:dataTable id="appListingTable" value="#{applicationListing.applications}" var="app" 
+                             class="table table-striped table-bordered nowrap"
+                             >
+                    <h:column>
+                        <f:facet name="header" class="hidden-xs" >First Name</f:facet>
+                            #{app.firstname}
+                    </h:column>                            
+                    <h:column>
+                        <f:facet name="header">Surname</f:facet>
+                            #{app.surname}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Email</f:facet>
+                            #{app.email}
+                    </h:column>
+                </h:dataTable>
 
-                    </div>
-                    <div class="panel-footer">
-                        <div class="row">
-                            <div class="col col-xs-4">Page 1 of 5
-                            </div>
-                            <div class="col col-xs-8">
-                                <ul class="pagination hidden-xs pull-right">
-                                    <li><a href="#">1</a></li>
-                                    <li><a href="#">2</a></li>
-                                    <li><a href="#">3</a></li>
-                                    <li><a href="#">4</a></li>
-                                    <li><a href="#">5</a></li>
-                                </ul>
-                                <ul class="pagination visible-xs pull-right">
-                                    <li><a href="#">«</a></li>
-                                    <li><a href="#">»</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
             </div>
         </div>
+        <script>
+            $(document).ready(function () {
+                $('#appListingTable').DataTable();
+            });
+        </script>
     </ui:define>
 </ui:composition>
