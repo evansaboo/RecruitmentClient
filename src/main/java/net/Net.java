@@ -22,7 +22,6 @@ public class Net implements Serializable {
     private String name;
     private String surname;
     private String email;
-    private String script;
     private String authenticated;
     private String loggedon;
     private JsonProvider provider = JsonProvider.provider();
@@ -95,16 +94,16 @@ public class Net implements Serializable {
         this.regpassword = regpassword;
     }
 
-    public String getScript() {
-        return script;
-    }
-
     public String getAuthenticated() {
         String s = authenticated;
         authenticated = "";
         return s;
     }
-
+    /**
+     * Sends user credentials to the toServ method and check from recieved result if sucessfull login
+     * sets error message on fail 
+     * @return redirect to start page on sucess
+     */
     public String login() {
         JsonObject job;
         job = provider.createObjectBuilder()
@@ -121,7 +120,11 @@ public class Net implements Serializable {
             return "login?faces-redirect=true";
         }
     }
-
+    /**
+     * Sends user credentials to the toServ method and check from recieved result if sucessfull registration
+     * sets error message on fail 
+     * @return redirect to start page on sucess
+     */
     public String register() {
         try {
             JsonObject job;
@@ -148,7 +151,11 @@ public class Net implements Serializable {
         }
         return "";
     }
-
+    /**
+     * Sends a request to the server to log out the user and then removes users id.
+     * Also sends a message to the user confirming logout
+     * @return returns a redirect message
+     */
     public String logout() {
         JsonObject job;
         job = provider.createObjectBuilder()
@@ -159,7 +166,11 @@ public class Net implements Serializable {
         authenticated="Logged out, goodbye!";
         return "login?faces-redirect=true";
     }
-
+    /**
+     * Sends a JsonObject using REST to the server which will handle it.
+     * @param job   a JsonObject that contains either a login/register/logout request and user credentials
+     * @return  returns a string confirming or denying that the action was sucessful
+     */
     public String toServ(JsonObject job) {
         try {
             Client client = ClientBuilder.newClient();
@@ -170,7 +181,7 @@ public class Net implements Serializable {
 
         } catch (Exception e) {
             e.printStackTrace();
-            return "";
+            return "invalid";
         }
     }
 
