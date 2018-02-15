@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package net;
 
 import java.io.Serializable;
@@ -27,13 +22,14 @@ public class Net implements Serializable {
     private String name;
     private String surname;
     private String email;
-    private String script;
     private String authenticated;
     private String loggedon;
-    
+    private JsonProvider provider = JsonProvider.provider();
+
     public String getLoggedon() {
         return loggedon;
     }
+
     public String getUser() {
         return user;
     }
@@ -97,50 +93,40 @@ public class Net implements Serializable {
     public void setRegPassword(String regpassword) {
         this.regpassword = regpassword;
     }
-    
 
-    public String getScript() {
-        return script;
-    }
-    
-    public String getAuthenticated(){
+    public String getAuthenticated() {
         String s = authenticated;
         authenticated = "";
         return s;
     }
+    /**
+     * Sends user credentials to the toServ method and check from recieved result if sucessfull login
+     * sets error message on fail 
+     * @return redirect to start page on sucess
+     */
+    public String login() {
+        JsonObject job;
+        job = provider.createObjectBuilder()
+                .add("type", "login")
+                .add("username", user)
+                .add("password", password).build();
 
-    
-    public String toServ() {
-        try {
-            JsonProvider provider = JsonProvider.provider();
-            JsonObject job;
-
-            job = provider.createObjectBuilder()
-                    .add("type", "login")
-                    .add("username", user)
-                    .add("password", password).build();
-
-            Client client = ClientBuilder.newClient();
-            String s = client.target("http://localhost:8080/RecruitmentServ/webresources/kth.iv1201.recruitmentserv.person")
-                    .request()
-                    .post(Entity.entity(job, MediaType.APPLICATION_JSON), String.class);
-            if (!s.equals("invalid")) {
-                loggedon=s;
-                return "index?faces-redirect=true";
-            } else {
-                authenticated = "Authentication failed";
-                return "login?faces-redirect=true";
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        String s = toServ(job);
+        if (!s.equals("invalid")) {
+            loggedon = s;
+            return "index?faces-redirect=true";
+        } else {
+            authenticated = "Authentication failed";
+            return "login?faces-redirect=true";
         }
-        return "";
     }
-
+    /**
+     * Sends user credentials to the toServ method and check from recieved result if sucessfull registration
+     * sets error message on fail 
+     * @return redirect to start page on sucess
+     */
     public String register() {
         try {
-            JsonProvider provider = JsonProvider.provider();
             JsonObject job;
             job = provider.createObjectBuilder()
                     .add("type", "register")
@@ -150,13 +136,10 @@ public class Net implements Serializable {
                     .add("email", email)
                     .add("password", regpassword)
                     .add("username", reguser).build();
-            Client client = ClientBuilder.newClient();
-            String s = client.target("http://localhost:8080/RecruitmentServ/webresources/kth.iv1201.recruitmentserv.person")
-                    .request()
-                    .post(Entity.entity(job, MediaType.APPLICATION_JSON), String.class);
-            
+            String s = toServ(job);
+
             if (!s.equals("invalid")) {
-                loggedon=s;
+                loggedon = s;
                 return "index?faces-redirect=true";
             } else {
                 authenticated = "Username taken";
@@ -167,6 +150,39 @@ public class Net implements Serializable {
             e.printStackTrace();
         }
         return "";
+    }
+    /**
+     * Sends a request to the server to log out the user and then removes users id.
+     * Also sends a message to the user confirming logout
+     * @return returns a redirect message
+     */
+    public String logout() {
+        JsonObject job;
+        job = provider.createObjectBuilder()
+                .add("type", "logout")
+                .add("uid", loggedon).build();
+        toServ(job);
+        loggedon="";
+        authenticated="Logged out, goodbye!";
+        return "login?faces-redirect=true";
+    }
+    /**
+     * Sends a JsonObject using REST to the server which will handle it.
+     * @param job   a JsonObject that contains either a login/register/logout request and user credentials
+     * @return  returns a string confirming or denying that the action was sucessful
+     */
+    public String toServ(JsonObject job) {
+        try {
+            Client client = ClientBuilder.newClient();
+            String s = client.target("http://localhost:8080/RecruitmentServ/webresources/kth.iv1201.recruitmentserv.person")
+                    .request()
+                    .post(Entity.entity(job, MediaType.APPLICATION_JSON), String.class);
+            return s;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "invalid";
+        }
     }
 
 }

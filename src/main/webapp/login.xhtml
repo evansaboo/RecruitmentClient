@@ -16,7 +16,9 @@
     <ui:define name="body">
 
         <div class="container">
-
+            <h:form>
+            <h:commandButton action="#{login.logout}" value="log off" rendered="#{not empty login.loggedon}"/>
+            </h:form>
             <div class="login-form-1">
                 <h:form id="login-form" class="text-left center">
                     <div class="login-form-main-message"></div>
@@ -48,10 +50,10 @@
                             </div>
 
                         </div>
-                        <h:commandButton action="#{login.toServ}" value="#{msg['login']}" class="login-button"/>
-                        <h:outputScript rendered="#{not empty login.script}">#{login.script}</h:outputScript>
+                        <h:commandButton action="#{login.login}" value="#{msg['login']}" class="login-button"/>
                     </div>
                     <h:outputText id="errorMsg" value="#{login.authenticated}" style="display: none;"/>
+                    <h:outputText id="logoutb" value="#{login.loggedon}" style="display: none;"/>
                 </h:form>
 
 

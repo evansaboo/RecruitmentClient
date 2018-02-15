@@ -1,6 +1,5 @@
 $(document).ready(function () {
     $('#registerForm').hide();
-
     $('#dropdownMenuButton').click(function (e) {
         $('#registerForm').show();
     });
@@ -11,6 +10,8 @@ $(document).ready(function () {
     var errorMsg = $('span[id*="errorMsg"]').text();
     if(!(errorMsg === ""))
         notify(errorMsg, "warning");
+    
+   
 });
 
 function notify(msg, alertType) {
