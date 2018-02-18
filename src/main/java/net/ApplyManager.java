@@ -5,14 +5,13 @@
  */
 package net;
 
+import datarepresentation.Availability;
+import datarepresentation.Competence;
 import datarepresentation.CompetenceDTO;
-import datarepresentation.CompetenceProfileDTO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -33,12 +32,19 @@ import javax.ws.rs.core.Response;
 @ViewScoped
 public class ApplyManager implements Serializable {
     private final String BASE_URL = "http://localhost:8080/RecruitmentServ/webresources/apply";
+    private final String COMPETENCE_PATH = "competence";
+    private final String AVAILABILITY_PATH = "availability";
+    
     private List<CompetenceDTO> competences;
-    private List<CompetenceProfileDTO> profiles = new ArrayList<>();
-    private CompetenceProfileDTO profile = new CompetenceProfileDTO();
     private HashMap<String, Long> competenceMapper = new HashMap<>();
+    
+    private List<Competence> comps = new ArrayList<>();
+    private Competence comp = new Competence();
+    private List<Availability> availabilities = new ArrayList<>();
+    private Availability availability = new Availability();
+    
     private final Client client = ClientBuilder.newClient();
-    private final List<Integer> years = IntStream.range(0, 125).boxed().collect(Collectors.toList());
+    private final List<Double> yearsOfExp = new ArrayList<>();
     
     @PostConstruct
     private void populateCompetences() {
@@ -48,28 +54,104 @@ public class ApplyManager implements Serializable {
         competences.forEach((CompetenceDTO comp) -> {
             competenceMapper.put(comp.getName(), comp.getCompetenceId());
         });
+        
+        for(double i = 0; i < 75; i += 0.25) {
+            yearsOfExp.add(i);
+        }
     }
 
     public void submitApplication() {
-        if(profiles.isEmpty()) { return; }
+        if(comps.isEmpty() && availabilities.isEmpty()) { return; }
         
-        GenericEntity<List<CompetenceProfileDTO>> entity = new GenericEntity<List<CompetenceProfileDTO>>(profiles) {};
-        Response response = client.target(BASE_URL).request().post(Entity.json(entity));
-        profiles = new ArrayList<>();
+        Response compResponse = null;
+        if(!comps.isEmpty()) {
+            GenericEntity<List<Competence>> entity = new GenericEntity<List<Competence>>(comps) {};
+            compResponse = client.target(BASE_URL).path(COMPETENCE_PATH)
+                    .request().post(Entity.json(entity));
+        }
+        
+        Response availResponse = null;
+        if(!availabilities.isEmpty()) {
+            GenericEntity<List<Availability>> entity = new GenericEntity<List<Availability>>(availabilities) {};
+            availResponse = client.target(BASE_URL).path(AVAILABILITY_PATH)
+                    .request().post(Entity.json(entity));
+        }
+        
+        // check responses
+        if(compResponse == null || !compResponse.getStatusInfo().equals(Response.Status.OK)) {
+            System.out.println("COMPETENCE ERROR HANDLING");
+        }
+        
+        if(availResponse == null || !availResponse.getStatusInfo().equals(Response.Status.OK)) {
+            System.out.println("AVAILABILITY ERROR HANDLING");
+        }
+
+        comps = new ArrayList<>();
+        availabilities = new ArrayList<>();
     }
     
-    public void addProfile() {
-        if(profile.getName() == null) { return; }
-        Long compId = competenceMapper.get(profile.getName());
-        profile.setCompetenceId(compId);
-        profiles.add(profile);
-        profile = new CompetenceProfileDTO();
+    public void addCompetence() {
+        if(comp.getName() == null) { return; }
+        
+        Long compId = competenceMapper.get(comp.getName());
+        comp.setCompetenceId(compId);
+        comps.add(comp);
+        comp = new Competence();
     }
     
-    public void deleteProfile(CompetenceProfileDTO prof) {
-        profiles.remove(prof);
+    public void addAvailability() {
+        if(availability.getToDate() == null || availability.getFromDate() == null) { return; }
+        availabilities.add(availability);
+        availability = new Availability();
+    }
+    
+    public void deleteEntry(Object entry) {
+        if(entry instanceof Availability) {
+            availabilities.remove(Availability.class.cast(entry));
+        } else if(entry instanceof Competence) {
+            comps.remove(Competence.class.cast(entry));
+        } else {
+            // log
+        }
     }
 
+    public List<Competence> getComps() {
+        return comps;
+    }
+
+    public void setComps(List<Competence> comps) {
+        this.comps = comps;
+    }
+
+    public Competence getComp() {
+        return comp;
+    }
+
+    public void setComp(Competence comp) {
+        this.comp = comp;
+    }
+
+    public List<Availability> getAvailabilities() {
+        return availabilities;
+    }
+
+    public void setAvailabilities(List<Availability> availabilities) {
+        this.availabilities = availabilities;
+    }
+
+    public Availability getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(Availability availability) {
+        this.availability = availability;
+    }
+
+    public List<Double> getYearsOfExp() {
+        return yearsOfExp;
+    }
+
+    
     public List<CompetenceDTO> getCompetences() {
         return competences;
     }
@@ -78,32 +160,4 @@ public class ApplyManager implements Serializable {
         this.competences = competences;
     }
 
-    public List<CompetenceProfileDTO> getProfiles() {
-        return profiles;
-    }
-
-    public void setProfiles(List<CompetenceProfileDTO> profiles) {
-        this.profiles = profiles;
-    }
-
-    public CompetenceProfileDTO getProfile() {
-        return profile;
-    }
-
-    public void setProfile(CompetenceProfileDTO profile) {
-        this.profile = profile;
-    }
-
-    public HashMap<String, Long> getCompetenceMapper() {
-        return competenceMapper;
-    }
-
-    public void setCompetenceMapper(HashMap<String, Long> competenceMapper) {
-        this.competenceMapper = competenceMapper;
-    }
-
-    public List<Integer> getYears() {
-        return years;
-    }
-    
 }
