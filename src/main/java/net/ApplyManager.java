@@ -5,6 +5,7 @@
  */
 package net;
 
+import controller.Controller;
 import datarepresentation.Availability;
 import datarepresentation.Competence;
 import datarepresentation.CompetenceDTO;
@@ -13,13 +14,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.ejb.EJB;
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
@@ -28,12 +25,9 @@ import javax.ws.rs.core.Response;
  * @author Oscar
  */
 @Named("applyManager")
-@ManagedBean
-@ViewScoped
+@SessionScoped
 public class ApplyManager implements Serializable {
-    private final String BASE_URL = "http://localhost:8080/RecruitmentServ/webresources/apply";
-    private final String COMPETENCE_PATH = "competence";
-    private final String AVAILABILITY_PATH = "availability";
+    @EJB Controller controller;
     
     private List<CompetenceDTO> competences;
     private HashMap<String, Long> competenceMapper = new HashMap<>();
@@ -42,48 +36,50 @@ public class ApplyManager implements Serializable {
     private Competence comp = new Competence();
     private List<Availability> availabilities = new ArrayList<>();
     private Availability availability = new Availability();
-    
-    private final Client client = ClientBuilder.newClient();
     private final List<Double> yearsOfExp = new ArrayList<>();
     
     @PostConstruct
-    private void populateCompetences() {
-        competences = client.target(BASE_URL)
-                .request().get(new GenericType<List<CompetenceDTO>> () {});
-        
-        competences.forEach((CompetenceDTO comp) -> {
-            competenceMapper.put(comp.getName(), comp.getCompetenceId());
-        });
-        
-        for(double i = 0; i < 75; i += 0.25) {
-            yearsOfExp.add(i);
-        }
+    private void populateCompetences()  {        
+        try {
+            Response competencesResponse = controller.getCompetences();
+            competences = competencesResponse.readEntity(new GenericType<List<CompetenceDTO>>() {});
+            
+            competences.forEach((CompetenceDTO comp) -> {
+                competenceMapper.put(comp.getName(), comp.getCompetenceId());
+            });
+            
+            double interval = 0.25;
+            for (double i = interval; i <= 75; i += interval) {
+                yearsOfExp.add(i);
+            }
+        } catch(Exception ex) {}
     }
 
-    public void submitApplication() {
+    public void login() {
+        Response response = controller.login();
+    }
+    
+    public void submitApplication() throws Exception {
         if(comps.isEmpty() && availabilities.isEmpty()) { return; }
         
-        Response compResponse = null;
+        controller.testToken();
+        
         if(!comps.isEmpty()) {
-            GenericEntity<List<Competence>> entity = new GenericEntity<List<Competence>>(comps) {};
-            compResponse = client.target(BASE_URL).path(COMPETENCE_PATH)
-                    .request().post(Entity.json(entity));
+            Response compResponse = controller.sendCompetences(comps);
+
+            if(compResponse == null || !compResponse.getStatusInfo().equals(Response.Status.OK)) {
+                System.out.println("COMPETENCE ERROR HANDLING");
+                System.out.println("ERROR CODE = " + compResponse.getStatus() + ", REASON = " + compResponse.getStatusInfo().getReasonPhrase());
+            }
         }
         
-        Response availResponse = null;
         if(!availabilities.isEmpty()) {
-            GenericEntity<List<Availability>> entity = new GenericEntity<List<Availability>>(availabilities) {};
-            availResponse = client.target(BASE_URL).path(AVAILABILITY_PATH)
-                    .request().post(Entity.json(entity));
-        }
-        
-        // check responses
-        if(compResponse == null || !compResponse.getStatusInfo().equals(Response.Status.OK)) {
-            System.out.println("COMPETENCE ERROR HANDLING");
-        }
-        
-        if(availResponse == null || !availResponse.getStatusInfo().equals(Response.Status.OK)) {
-            System.out.println("AVAILABILITY ERROR HANDLING");
+            Response availResponse = controller.sendAvailabilities(availabilities);
+
+            if(availResponse == null || !availResponse.getStatusInfo().equals(Response.Status.OK)) {
+                System.out.println("AVAILABILITY ERROR HANDLING");
+                System.out.println("ERROR CODE = " + availResponse.getStatus() + ", REASON = " + availResponse.getStatusInfo().getReasonPhrase());
+            }
         }
 
         comps = new ArrayList<>();
@@ -150,7 +146,6 @@ public class ApplyManager implements Serializable {
     public List<Double> getYearsOfExp() {
         return yearsOfExp;
     }
-
     
     public List<CompetenceDTO> getCompetences() {
         return competences;

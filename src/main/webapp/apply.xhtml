@@ -37,6 +37,7 @@
                 <h:commandButton value="add availability">
                     <f:ajax execute="t3 t4" listener="#{applyManager.addAvailability}" render="@form" />
                 </h:commandButton>
+                <h:commandButton value="LOGIN" action="#{applyManager.login}" />
 
                 <h:dataTable value="#{applyManager.comps}" var="p" rendered="#{!empty applyManager.comps}">
                     <h:column>
