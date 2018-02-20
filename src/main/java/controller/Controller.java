@@ -7,24 +7,20 @@ package controller;
 
 import datarepresentation.Availability;
 import datarepresentation.Competence;
-import datarepresentation.CompetenceDTO;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.faces.context.FacesContext;
-import javax.ws.rs.NotAuthorizedException;
+import javax.json.JsonObject;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 
@@ -44,11 +40,13 @@ public class Controller {
     private final Client client = ClientBuilder.newClient();
     private final String AUTHORIZATION_SCHEMA = "Bearer ";
     private String token = "";
+    private String role = "";
     
     public Response login() {
         Response loginResponse = client.target(BASE_URL).path(APPLY_PATH).path(LOGIN_PATH).request().get();
-        extractTokenFromLoginResponse(loginResponse);
-        return Response.ok().build();
+        //extractTokenFromLoginResponse(loginResponse);
+        exctractTokenAndRoleFromResponse(loginResponse);
+        return loginResponse;
     }
     
     public Response getCompetences() {
@@ -93,6 +91,13 @@ public class Controller {
         System.out.println("CLIENT SERVER TOKEN = " + token);
     }
     
+    private void exctractTokenAndRoleFromResponse(Response response) {
+        JsonObject json = response.readEntity(JsonObject.class);
+        token = json.getString("token", "");
+        role = json.getString("role", "");
+        System.out.println("CLINET RECEIVED TOKEN: " + token + ", ROLE: " + role);
+    }
+    
     private Invocation.Builder addAuthorizationHeader(Invocation.Builder target) {
         return target.header(HttpHeaders.AUTHORIZATION, AUTHORIZATION_SCHEMA + token);
     }
@@ -113,6 +118,9 @@ public class Controller {
                 System.out.println("401 bsnitch");
                 triggerError(401, "BLOCKING YOU BeaCH");
                 break;
+            case 403:
+                System.out.println("403 forbidden");
+                triggerError(403, "I FORBID YOU!");
             default:
                 System.out.println("defaulting: " + response.getStatus() + ", status: " + response.getStatusInfo());
                 break;
