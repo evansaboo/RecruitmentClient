@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package net;
 
 import controller.Controller;
@@ -28,7 +23,6 @@ public class Net implements Serializable {
     private String name;
     private String surname;
     private String email;
-    private String script;
     private String authenticated;
     private String loggedon;
     public static String token;
@@ -37,6 +31,7 @@ public class Net implements Serializable {
     public String getLoggedon() {
         return loggedon;
     }
+
     public String getUser() {
         return user;
     }
@@ -100,19 +95,13 @@ public class Net implements Serializable {
     public void setRegPassword(String regpassword) {
         this.regpassword = regpassword;
     }
-    
 
-    public String getScript() {
-        return script;
-    }
-    
-    public String getAuthenticated(){
+    public String getAuthenticated() {
         String s = authenticated;
         authenticated = "";
         return s;
     }
 
-    
     public String toServ() {
         try {
             JsonProvider provider = JsonProvider.provider();
@@ -127,13 +116,16 @@ public class Net implements Serializable {
 
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        return "";
-    }
 
+        }
+    }
+    /**
+     * Sends user credentials to the toServ method and check from recieved result if sucessfull registration
+     * sets error message on fail 
+     * @return redirect to start page on sucess
+     */
     public String register() {
         try {
-            JsonProvider provider = JsonProvider.provider();
             JsonObject job;
             job = provider.createObjectBuilder()
                     .add("type", "register")
@@ -142,14 +134,46 @@ public class Net implements Serializable {
                     .add("ssn", ssn)
                     .add("email", email)
                     .add("password", regpassword)
-                    .add("username", reguser).build();
-            
+                    .add("username", reguser).build();            
             return login(job, "Username taken");
             
         } catch (Exception e) {
             e.printStackTrace();
         }
         return "";
+    }
+    /**
+     * Sends a request to the server to log out the user and then removes users id.
+     * Also sends a message to the user confirming logout
+     * @return returns a redirect message
+     */
+    public String logout() {
+        JsonObject job;
+        job = provider.createObjectBuilder()
+                .add("type", "logout")
+                .add("uid", loggedon).build();
+        toServ(job);
+        loggedon="";
+        authenticated="Logged out, goodbye!";
+        return "login?faces-redirect=true";
+    }
+    /**
+     * Sends a JsonObject using REST to the server which will handle it.
+     * @param job   a JsonObject that contains either a login/register/logout request and user credentials
+     * @return  returns a string confirming or denying that the action was sucessful
+     */
+    public String toServ(JsonObject job) {
+        try {
+            Client client = ClientBuilder.newClient();
+            String s = client.target("http://localhost:8080/RecruitmentServ/webresources/kth.iv1201.recruitmentserv.person")
+                    .request()
+                    .post(Entity.entity(job, MediaType.APPLICATION_JSON), String.class);
+            return s;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "invalid";
+        }
     }
 
     private String login(JsonObject job, String authMsg) {

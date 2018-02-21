@@ -6,11 +6,18 @@
 package net;
 
 import java.io.Serializable;
-import java.util.HashMap;
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -19,37 +26,42 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
+import model.Application;
+import model.LanguageChange;
+
 
 @Named("applicationListing")
 @SessionScoped
 public class ApplicationListing implements Serializable {
 
-    private String date;
+    private Date date;
     private String timeFrom;
     private String timeTo;
     private String competence;
     private String firstname;
+    private String locale = FacesContext.getCurrentInstance().getViewRoot().getLocale().toString();
     private final Map<String, Integer> cmptList = new LinkedHashMap<>();
-
+    private final ArrayList<Application> applications = new ArrayList<>();
+    
+    
     @PostConstruct
     public void init() {
-        JsonObject jbuilder = Json.createObjectBuilder().add("type", "getCompetence").build();
-        Client client = ClientBuilder.newClient();
-        JsonArray s = client.target("http://localhost:8080/RecruitmentServ/webresources/applications")
-                .request()
-                .post(Entity.entity(jbuilder, MediaType.APPLICATION_JSON), JsonArray.class);
-        
-        for(int i = 0; i < s.size(); i++){
+        JsonObject jbuilder = Json.createObjectBuilder().add("type", "getAllCompetences")
+                .add("locale", locale).build();
+        JsonArray s = getArrayFromServer(jbuilder, "/initAppListing");
+        for (int i = 0; i < s.size(); i++) {
             JsonObject obj = s.getJsonObject(i);
-            cmptList.put(obj.getString("competenceName"),obj.getInt("competenceId"));
+            cmptList.put(obj.getString("name"), obj.getInt("id"));
         }
+        
+        initList();
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
@@ -68,6 +80,9 @@ public class ApplicationListing implements Serializable {
     public void setTimeTo(String timeTo) {
         this.timeTo = timeTo;
     }
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
 
     public String getCompetence() {
         return competence;
@@ -84,7 +99,61 @@ public class ApplicationListing implements Serializable {
     public void setFirstname(String name) {
         this.firstname = name;
     }
-    public Map getCompetenceList() {
+
+    public Map<String, Integer> getCmptList() {
         return cmptList;
     }
+
+    public ArrayList<Application> getApplications() {
+        return applications;
+    }
+
+    private void initList() {
+        JsonObject jbuilder = Json.createObjectBuilder().add("type", "getAllJobApplications").build();
+        JsonArray s = getArrayFromServer(jbuilder, "/initAppListing"); 
+            for (int i = 0; i < s.size(); i++) {
+            JsonObject obj = s.getJsonObject(i);
+            applications.add(new Application(obj.getString("name"), obj.getString("surname"), obj.getString("email")));
+        }
+    }
+    
+    
+    public JsonArray getArrayFromServer(JsonObject obj, String path) {
+        Client client = ClientBuilder.newClient();
+        JsonArray s = client.target("http://localhost:8080/RecruitmentServ/webresources/applications"+path)
+                .request()
+                .post(Entity.entity(obj, MediaType.APPLICATION_JSON), JsonArray.class);
+        return s;
+    }
+    
+    public void searchApplications(){
+        DateFormat dFormat = new SimpleDateFormat("d-MM-yyyy");
+        String sDate = (date != null) ? dFormat.format(date): "";
+        JsonObject jbuilder = Json.createObjectBuilder()
+                .add("type", "searchApplications")
+                .add("subDate", sDate)
+                .add("periodFrom", timeFrom)
+                .add("periodTo", timeTo)
+                .add("competence", competence)
+                .add("name", firstname)
+                .build();
+        JsonArray s = getArrayFromServer(jbuilder, "/searchApplications"); 
+            applications.clear();
+            for (int i = 0; i < s.size(); i++) {
+            JsonObject obj = s.getJsonObject(i);
+            
+            applications.add(new Application(obj.getString("firstname"), obj.getString("surname"), obj.getString("email")));
+        } 
+    }
+    public void updateCompetences(String language){
+        cmptList.clear();
+        JsonObject jbuilder = Json.createObjectBuilder().add("type", "getAllCompetences")
+                .add("locale", language).build();
+        JsonArray s = getArrayFromServer(jbuilder, "/initAppListing");
+        for (int i = 0; i < s.size(); i++) {
+            JsonObject obj = s.getJsonObject(i);
+            cmptList.put(obj.getString("name"), obj.getInt("id"));
+        }
+    }
+
 }
