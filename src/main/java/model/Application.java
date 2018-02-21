@@ -10,15 +10,27 @@ package model;
  * @author Evan
  */
 public class Application {
+    private long applicationId;
     private String firstname;
     private String surname;
     private String email;
+
     
-    public Application(String firstname, String surname, String email){
+    public Application(long applicationId, String firstname, String surname, String email){
+        this.applicationId = applicationId;
         this.firstname = firstname;
         this.surname = surname;
         this.email = email;
     }
+
+    public long getApplicationId() {
+        return applicationId;
+    }
+
+    public void setApplicationId(long applicationId) {
+        this.applicationId = applicationId;
+    }
+    
     public String getFirstname() {
         return firstname;
     }
