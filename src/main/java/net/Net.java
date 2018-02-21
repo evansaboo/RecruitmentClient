@@ -5,20 +5,21 @@
  */
 package net;
 
+import controller.Controller;
 import java.io.Serializable;
 import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.JsonObject;
 import javax.json.spi.JsonProvider;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Named("login")
 @SessionScoped
 public class Net implements Serializable {
 
+    @Inject Controller controller;
+    
     private String user;
     private String password;
     private String reguser;
@@ -30,6 +31,8 @@ public class Net implements Serializable {
     private String script;
     private String authenticated;
     private String loggedon;
+    public static String token;
+    public static String role;
     
     public String getLoggedon() {
         return loggedon;
@@ -119,18 +122,8 @@ public class Net implements Serializable {
                     .add("type", "login")
                     .add("username", user)
                     .add("password", password).build();
-
-            Client client = ClientBuilder.newClient();
-            String s = client.target("http://localhost:8080/RecruitmentServ/webresources/kth.iv1201.recruitmentserv.person")
-                    .request()
-                    .post(Entity.entity(job, MediaType.APPLICATION_JSON), String.class);
-            if (!s.equals("invalid")) {
-                loggedon=s;
-                return "index?faces-redirect=true";
-            } else {
-                authenticated = "Authentication failed";
-                return "login?faces-redirect=true";
-            }
+            
+            return login(job, "Authentication failed");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -150,23 +143,31 @@ public class Net implements Serializable {
                     .add("email", email)
                     .add("password", regpassword)
                     .add("username", reguser).build();
-            Client client = ClientBuilder.newClient();
-            String s = client.target("http://localhost:8080/RecruitmentServ/webresources/kth.iv1201.recruitmentserv.person")
-                    .request()
-                    .post(Entity.entity(job, MediaType.APPLICATION_JSON), String.class);
             
-            if (!s.equals("invalid")) {
-                loggedon=s;
-                return "index?faces-redirect=true";
-            } else {
-                authenticated = "Username taken";
-                return "login?faces-redirect=true";
-            }
-
+            return login(job, "Username taken");
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
         return "";
     }
 
+    private String login(JsonObject job, String authMsg) {
+        System.out.println("BEROFRE CONTROLLER");
+        Response response = controller.login(job);
+        System.out.println("AFTER CONTROLLER");
+        JsonObject json = response.readEntity(JsonObject.class);
+        String error = json.getString("error", "");
+
+        if (error.isEmpty()) {
+            loggedon = json.getString("token", "");
+            token = loggedon;
+            role = json.getString("role", "");
+            return "index?faces-redirect=true";
+        } else {
+            authenticated = authMsg;
+            return "login?faces-redirect=true";
+        }
+    }
+    
 }

@@ -10,7 +10,7 @@ import datarepresentation.Competence;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.faces.context.FacesContext;
@@ -23,29 +23,33 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
+import net.Net;
 
 /**
  *
  * @author Oscar
  */
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-@Stateful
+@Stateless
 public class Controller {
     private final String BASE_URL = "http://localhost:8080/RecruitmentServ/webresources";
+    private final String LOGIN_REGISTER_PATH = "kth.iv1201.recruitmentserv.person";
     private final String APPLY_PATH = "apply";
     private final String COMPETENCE_PATH = "competence";
     private final String AVAILABILITY_PATH = "availability";
-    private final String LOGIN_PATH = "login";
     private final String TEST_TOKEN_PATH = "testtoken";
     private final Client client = ClientBuilder.newClient();
     private final String AUTHORIZATION_SCHEMA = "Bearer ";
     private String token = "";
     private String role = "";
     
-    public Response login() {
-        Response loginResponse = client.target(BASE_URL).path(APPLY_PATH).path(LOGIN_PATH).request().get();
-        //extractTokenFromLoginResponse(loginResponse);
+    public Response login(JsonObject json) {
+        Invocation.Builder request = getRequestToPath(Arrays.asList(LOGIN_REGISTER_PATH));
+        
+        Response loginResponse = request.post(Entity.json(json));
+        loginResponse.bufferEntity();
         exctractTokenAndRoleFromResponse(loginResponse);
+        
         return loginResponse;
     }
     
@@ -86,11 +90,6 @@ public class Controller {
                 .request().header(HttpHeaders.AUTHORIZATION, AUTHORIZATION_SCHEMA + token).get();
     }
     
-    private void extractTokenFromLoginResponse(Response resp) {
-        token = resp.readEntity(String.class);
-        System.out.println("CLIENT SERVER TOKEN = " + token);
-    }
-    
     private void exctractTokenAndRoleFromResponse(Response response) {
         JsonObject json = response.readEntity(JsonObject.class);
         token = json.getString("token", "");
@@ -99,7 +98,14 @@ public class Controller {
     }
     
     private Invocation.Builder addAuthorizationHeader(Invocation.Builder target) {
-        return target.header(HttpHeaders.AUTHORIZATION, AUTHORIZATION_SCHEMA + token);
+        String tok;
+        try {
+            tok = Net.token;
+        } catch(Exception ex) {
+            tok = "";
+        }
+        
+        return target.header(HttpHeaders.AUTHORIZATION, AUTHORIZATION_SCHEMA + tok);
     }
     
     private Invocation.Builder getRequestToPath(List<String> paths) {

@@ -14,9 +14,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
@@ -27,10 +29,10 @@ import javax.ws.rs.core.Response;
 @Named("applyManager")
 @SessionScoped
 public class ApplyManager implements Serializable {
-    @EJB Controller controller;
+    @Inject Controller controller;
     
     private List<CompetenceDTO> competences;
-    private HashMap<String, Long> competenceMapper = new HashMap<>();
+    private final HashMap<String, Long> competenceMapper = new HashMap<>();
     
     private List<Competence> comps = new ArrayList<>();
     private Competence comp = new Competence();
@@ -38,8 +40,7 @@ public class ApplyManager implements Serializable {
     private Availability availability = new Availability();
     private final List<Double> yearsOfExp = new ArrayList<>();
     
-    @PostConstruct
-    private void populateCompetences()  {        
+    public void onPageLoad() {
         try {
             Response competencesResponse = controller.getCompetences();
             competences = competencesResponse.readEntity(new GenericType<List<CompetenceDTO>>() {});
@@ -52,11 +53,7 @@ public class ApplyManager implements Serializable {
             for (double i = interval; i <= 75; i += interval) {
                 yearsOfExp.add(i);
             }
-        } catch(Exception ex) {}
-    }
-
-    public void login() {
-        Response response = controller.login();
+        } catch(Exception ex) {/* exception with reading objects*/}
     }
     
     public void submitApplication() throws Exception {
@@ -68,6 +65,7 @@ public class ApplyManager implements Serializable {
             Response compResponse = controller.sendCompetences(comps);
 
             if(compResponse == null || !compResponse.getStatusInfo().equals(Response.Status.OK)) {
+                /* TODO */
                 System.out.println("COMPETENCE ERROR HANDLING");
                 System.out.println("ERROR CODE = " + compResponse.getStatus() + ", REASON = " + compResponse.getStatusInfo().getReasonPhrase());
             }
@@ -77,6 +75,7 @@ public class ApplyManager implements Serializable {
             Response availResponse = controller.sendAvailabilities(availabilities);
 
             if(availResponse == null || !availResponse.getStatusInfo().equals(Response.Status.OK)) {
+                /* TODO */
                 System.out.println("AVAILABILITY ERROR HANDLING");
                 System.out.println("ERROR CODE = " + availResponse.getStatus() + ", REASON = " + availResponse.getStatusInfo().getReasonPhrase());
             }
