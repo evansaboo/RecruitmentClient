@@ -2,6 +2,7 @@ package net;
 
 import java.io.Serializable;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.json.JsonObject;
 import javax.json.spi.JsonProvider;
