@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition template="masterTemplate.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <f:metadata>
+        <f:viewAction action="#{applyManager.onPageLoad}" />
+    </f:metadata>
+    
+    <ui:define name="head">
+        <link rel="stylesheet" href="css/footer.css"/>
+        <link rel="stylesheet" href="css/applications.css"/>
+    </ui:define>
+    <ui:define name="body">
+        <div class="container">
+            <p>
+                Enter your competences and years of experience
+            </p>
+            <h:form>
+                <h:selectOneMenu id="t1" value="#{applyManager.comp.name}">
+                    <f:selectItem itemLabel="Choose competence..." itemValue="#{null}" />
+                    <f:selectItems value="#{applyManager.competences}" var="comp" itemLabel="#{comp.name}" itemValue="#{comp.name}" />
+                </h:selectOneMenu>
+                <h:selectOneMenu id="t2" value="#{applyManager.comp.yearsOfExperience}">
+                    <f:selectItem itemLabel="Years of experience" itemValue="#{null}" />
+                    <f:selectItems value="#{applyManager.yearsOfExp}" />
+                </h:selectOneMenu>
+                
+                <h:commandButton value="Add competence">
+                    <f:ajax execute="t1 t2" listener="#{applyManager.addCompetence}" render="@form" />
+                </h:commandButton>
+                
+                <h:inputText id="t3" value="#{applyManager.availability.fromDate}">
+                    <f:convertDateTime type="date" pattern="dd-MM-yyyy" />
+                </h:inputText>
+                <h:inputText id="t4" value="#{applyManager.availability.toDate}">
+                    <f:convertDateTime type="date" pattern="dd-MM-yyyy" />
+                </h:inputText>
+                <h:commandButton value="add availability">
+                    <f:ajax execute="t3 t4" listener="#{applyManager.addAvailability}" render="@form" />
+                </h:commandButton>
+
+                <h:dataTable value="#{applyManager.comps}" var="p" rendered="#{!empty applyManager.comps}">
+                    <h:column>
+                        <f:facet name="header">Competence</f:facet>
+                        #{p.name}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Competence ID</f:facet>
+                        #{p.competenceId}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Years of experience</f:facet>
+                        #{p.yearsOfExperience}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Remove</f:facet>
+                        <h:commandButton value="Delete">
+                            <f:ajax listener="#{applyManager.deleteEntry(p)}" render="@form" />
+                        </h:commandButton>
+                    </h:column>
+                </h:dataTable>
+                
+                <h:dataTable value="#{applyManager.availabilities}" var="a" rendered="#{!empty applyManager.availabilities}">
+                    <h:column>
+                        <f:facet name="header">Available from</f:facet>
+                        #{a.fromDate}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Available to</f:facet>
+                        #{a.toDate}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Remove</f:facet>
+                        <h:commandButton value="Delete">
+                            <f:ajax listener="#{applyManager.deleteEntry(a)}" render="@form" />
+                        </h:commandButton>
+                    </h:column>
+                </h:dataTable>
+                <h:commandButton value="Submit Application" action="#{applyManager.submitApplication}" 
+                                 rendered="#{!empty applyManager.comps || !empty applyManager.availabilities}"/>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>
