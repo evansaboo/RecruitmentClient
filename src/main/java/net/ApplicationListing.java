@@ -5,12 +5,15 @@
  */
 package net;
 
+import controller.Controller;
+import datarepresentation.CompetenceDTO;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -19,6 +22,7 @@ import javax.inject.Named;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
+import javax.ws.rs.core.GenericType;
 import model.Application;
 
 @Named("applicationListing")
@@ -32,21 +36,16 @@ public class ApplicationListing implements Serializable {
     private String firstname;
     String PATH = "applications";
 
-    private final Map<String, Integer> cmptList = new LinkedHashMap<>();
+    private List<CompetenceDTO> cmptList;
     private final ArrayList<Application> applications = new ArrayList<>();
-
+    
     @Inject
-    private ServerCommunication sc;
+    private Controller contr;
 
-    @PostConstruct
-    public void init() {
-        JsonObject jbuilder = Json.createObjectBuilder().add("type", "getAllCompetences").build();
-        JsonArray s = sc.postJson(PATH + "/initAppListing", jbuilder, JsonArray.class);
-        for (int i = 0; i < s.size(); i++) {
-            JsonObject obj = s.getJsonObject(i);
-            cmptList.put(obj.getString("competenceName"), obj.getInt("competenceId"));
-        }
-
+    public void initPage() {
+        cmptList = contr.getCompetences().readEntity(new GenericType<List<CompetenceDTO>>(){});
+        
+        
         initList();
     }
 
@@ -90,9 +89,15 @@ public class ApplicationListing implements Serializable {
         this.firstname = name;
     }
 
-    public Map<String, Integer> getCmptList() {
+    public List<CompetenceDTO> getCmptList() {
         return cmptList;
     }
+
+    public void setCmptList(List<CompetenceDTO> cmptList) {
+        this.cmptList = cmptList;
+    }
+    
+    
 
     public ArrayList<Application> getApplications() {
         return applications;
@@ -100,14 +105,14 @@ public class ApplicationListing implements Serializable {
 
     private void initList() {
         JsonObject jbuilder = Json.createObjectBuilder().add("type", "getAllJobApplications").build();
-        JsonArray s = sc.postJson(PATH + "/initAppListing", jbuilder, JsonArray.class);
+        /*JsonArray s = sc.postJson(PATH + "/initAppListing", jbuilder, JsonArray.class);
         for (int i = 0; i < s.size(); i++) {
             JsonObject obj = s.getJsonObject(i);
             applications.add(new Application(Long.parseLong(obj.getString("applicationId")),
                     obj.getString("firstname"),
                     obj.getString("surname"),
                     obj.getString("email")));
-        }
+        }*/
     }
 
     public void searchApplications() {
@@ -122,7 +127,7 @@ public class ApplicationListing implements Serializable {
                 .add("competence", competence)
                 .add("name", firstname)
                 .build();
-        JsonArray s = sc.postJson(PATH + "/searchApplications", jbuilder, JsonArray.class);
+        /*JsonArray s = sc.postJson(PATH + "/searchApplications", jbuilder, JsonArray.class);
         applications.clear();
         for (int i = 0; i < s.size(); i++) {
             JsonObject obj = s.getJsonObject(i);
@@ -131,7 +136,16 @@ public class ApplicationListing implements Serializable {
                     obj.getString("firstname"),
                     obj.getString("surname"),
                     obj.getString("email")));
-        }
+        }*/
     }
-
+    public void updateCompetences(String language){
+      /*  cmptList.clear();
+        JsonObject jbuilder = Json.createObjectBuilder().add("type", "getAllCompetences")
+                .add("locale", language).build();
+        JsonArray s = getArrayFromServer(jbuilder, "/initAppListing");
+        for (int i = 0; i < s.size(); i++) {
+            JsonObject obj = s.getJsonObject(i);
+            cmptList.put(obj.getString("name"), obj.getInt("id"));
+        }*/
+    }
 }

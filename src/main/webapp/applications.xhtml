@@ -7,8 +7,7 @@
 
     <ui:define name="preRender">
         <f:metadata>
-            <f:viewAction action="#{validator.validate()}"/>
-            <f:viewParam name="appId" value="#{validate.redirectParam}" />
+            <f:viewAction action="#{applicationListing.initPage()}"/>
         </f:metadata>
     </ui:define>
     <ui:define name="head">
@@ -42,9 +41,9 @@
                 </div>
                 <div class="form-group">
                     <label>Competence</label>
-                    <h:selectOneMenu  value="#{applicationListing.competence}" class="form-control" id="sel1" >
+                    <h:selectOneMenu  value="#{comp.competenceId}" class="form-control" id="sel1" >
                         <f:selectItem itemValue="0" itemLabel="All"/>
-                        <f:selectItems value="#{applicationListing.cmptList}"/>
+                        <f:selectItems value="#{applicationListing.cmptList}" var="comp" itemLabel="#{comp.name}" itemValue="#{comp.competenceId}"/>
                     </h:selectOneMenu>
                 </div>
                 <div class="form-group">

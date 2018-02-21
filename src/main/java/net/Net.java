@@ -7,6 +7,11 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.JsonObject;
 import javax.json.spi.JsonProvider;
+import static javax.json.spi.JsonProvider.provider;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Named("login")
@@ -28,6 +33,7 @@ public class Net implements Serializable {
     public static String token;
     public static String role;
     
+    JsonProvider provider = JsonProvider.provider();
     public String getLoggedon() {
         return loggedon;
     }
@@ -118,6 +124,7 @@ public class Net implements Serializable {
             e.printStackTrace();
 
         }
+        return "";
     }
     /**
      * Sends user credentials to the toServ method and check from recieved result if sucessfull registration
