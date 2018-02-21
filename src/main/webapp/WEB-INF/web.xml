@@ -13,6 +13,34 @@
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+
+    <!--<security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Viewpoint Secure URLs</web-resource-name>
+            <description/>
+            <url-pattern>/*</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+        </web-resource-collection>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>-->
+    <!--
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>secured index</web-resource-name>
+            <url-pattern>/applications.xhtml</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>recruiter</role-name>
+        </auth-constraint>
+    </security-constraint>-->
+  
+    <security-role>
+        <role-name>recruiter</role-name>
+    </security-role>
+
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>*.xhtml</url-pattern>
@@ -21,6 +49,7 @@
         <session-timeout>
             30
         </session-timeout>
+            <tracking-mode>COOKIE</tracking-mode>
     </session-config>
     <welcome-file-list>
         <welcome-file>index.xhtml</welcome-file>
