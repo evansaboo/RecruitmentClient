@@ -16,6 +16,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -25,6 +27,8 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import model.Application;
+import model.LanguageChange;
+
 
 @Named("applicationListing")
 @SessionScoped
@@ -35,17 +39,19 @@ public class ApplicationListing implements Serializable {
     private String timeTo;
     private String competence;
     private String firstname;
-
+    private String locale = FacesContext.getCurrentInstance().getViewRoot().getLocale().toString();
     private final Map<String, Integer> cmptList = new LinkedHashMap<>();
     private final ArrayList<Application> applications = new ArrayList<>();
-
+    
+    
     @PostConstruct
     public void init() {
-        JsonObject jbuilder = Json.createObjectBuilder().add("type", "getAllCompetences").build();
+        JsonObject jbuilder = Json.createObjectBuilder().add("type", "getAllCompetences")
+                .add("locale", locale).build();
         JsonArray s = getArrayFromServer(jbuilder, "/initAppListing");
         for (int i = 0; i < s.size(); i++) {
             JsonObject obj = s.getJsonObject(i);
-            cmptList.put(obj.getString("competenceName"), obj.getInt("competenceId"));
+            cmptList.put(obj.getString("name"), obj.getInt("id"));
         }
         
         initList();
@@ -73,6 +79,9 @@ public class ApplicationListing implements Serializable {
 
     public void setTimeTo(String timeTo) {
         this.timeTo = timeTo;
+    }
+    public void setLocale(String locale) {
+        this.locale = locale;
     }
 
     public String getCompetence() {
@@ -104,7 +113,7 @@ public class ApplicationListing implements Serializable {
         JsonArray s = getArrayFromServer(jbuilder, "/initAppListing"); 
             for (int i = 0; i < s.size(); i++) {
             JsonObject obj = s.getJsonObject(i);
-            applications.add(new Application(obj.getString("firstname"), obj.getString("surname"), obj.getString("email")));
+            applications.add(new Application(obj.getString("name"), obj.getString("surname"), obj.getString("email")));
         }
     }
     
@@ -135,6 +144,16 @@ public class ApplicationListing implements Serializable {
             
             applications.add(new Application(obj.getString("firstname"), obj.getString("surname"), obj.getString("email")));
         } 
+    }
+    public void updateCompetences(String language){
+        cmptList.clear();
+        JsonObject jbuilder = Json.createObjectBuilder().add("type", "getAllCompetences")
+                .add("locale", language).build();
+        JsonArray s = getArrayFromServer(jbuilder, "/initAppListing");
+        for (int i = 0; i < s.size(); i++) {
+            JsonObject obj = s.getJsonObject(i);
+            cmptList.put(obj.getString("name"), obj.getInt("id"));
+        }
     }
 
 }
