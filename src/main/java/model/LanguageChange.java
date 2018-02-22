@@ -11,7 +11,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import net.ApplicationListing;
+import view.ApplicationListing;
 
 @Named(value = "language")
 @SessionScoped

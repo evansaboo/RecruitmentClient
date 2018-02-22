@@ -1,4 +1,4 @@
-package net;
+package view;
 
 import rest.RestCommunication;
 import java.io.Serializable;
@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response;
 
 @Named("login")
 @SessionScoped
-public class Net implements Serializable {
+public class Authentication implements Serializable {
 
     @Inject RestCommunication controller;
     

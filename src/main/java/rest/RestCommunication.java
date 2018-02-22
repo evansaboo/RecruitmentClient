@@ -23,7 +23,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
-import net.Net;
+import view.Authentication;
 
 /**
  *
@@ -212,7 +212,7 @@ public class RestCommunication {
     private Invocation.Builder addAuthorizationHeader(Invocation.Builder target) {
         String token;
         try {
-            token = Net.token;
+            token = Authentication.token;
         } catch(Exception ex) {
             token = "";
         }
