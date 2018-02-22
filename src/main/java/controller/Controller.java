@@ -45,8 +45,8 @@ public class Controller {
     private final String AUTHORIZATION_SCHEMA = "Bearer ";
     private final String LIST_APPLICATIONS_PATH = "listApplications";
     private final String SEARCH_APPLICATION_PATH = "searchApplication";
-    private String token = "";
-    private String role = "";
+    //private String token = "";
+    //private String role = "";
     
     
     
@@ -93,8 +93,6 @@ public class Controller {
         Response response = request.get();
         return validateResponseStatus(response);
     }
-
-    
     
     public Response getCompetencesForRecruiter(String language) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, COMPETENCE_PATH));

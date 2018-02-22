@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author Oscar
  */
-public class CompetenceDTO{
+public class CompetenceDTO implements Serializable {
 
     private Long competenceNameId;
     private String name;
@@ -27,8 +27,6 @@ public class CompetenceDTO{
         this.competenceId = competenceId;
         this.language = language;
     }
-
-
 
     public Long getCompetenceNameId() {
         return competenceNameId;
