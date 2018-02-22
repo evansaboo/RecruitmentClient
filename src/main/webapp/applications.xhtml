@@ -20,61 +20,62 @@
     <ui:define name="body">
 
         <div class="container">
+            <h1 class="title">#{msg['search_title']}</h1>
             <h:form class="form col-xs-12 col-md-6 col-md-offset-3" id="searchForm">
                 <div class="form-group" >
-                    <label for="date">Application Submission Date</label>
+                    <label for="date">#{msg['app_submission_date']}</label>
                     <h:inputText value="#{applicationListing.regDate}" class="form-control" id="date">
                         <f:convertDateTime pattern="d-M-yyyy"/>
                     </h:inputText>
                 </div>
                 <div class="form-group col-xs-6" style="padding-left: 0">
-                    <label for="dateFrom">Time From</label>
+                    <label for="dateFrom">#{msg['availability_form']}</label>
                     <h:inputText value="#{applicationListing.periodFrom}" class="form-control" id="dateFrom">
                         <f:convertDateTime pattern="d-M-yyyy"/>
                     </h:inputText>
                 </div>
                 <div class="form-group col-xs-6" style="padding-right: 0">
-                    <label for="dateTo">Time To</label>
+                    <label for="dateTo">#{msg['availability_to']}</label>
                     <h:inputText value="#{applicationListing.periodTo}" class="form-control" id="dateTo">
                         <f:convertDateTime pattern="d-M-yyyy"/>
                     </h:inputText>
                 </div>
                 <div class="form-group">
-                    <label>Competence</label>
-                    <h:selectOneMenu  value="#{comp.competenceId}" class="form-control" id="sel1" >
-                        <f:selectItem itemValue="0" itemLabel="All"/>
+                    <label for="sell">#{msg['competence']}</label>
+                    <h:selectOneMenu  value="#{applicationListing.competence}" class="form-control" id="sel1" >
+                        <f:selectItem itemValue="0" itemLabel="#{msg['competence_any']}"/>
                         <f:selectItems value="#{applicationListing.cmptList}" var="comp" itemLabel="#{comp.name}" itemValue="#{comp.competenceId}"/>
                     </h:selectOneMenu>
                 </div>
                 <div class="form-group">
-                    <label for="name">Applicant Name</label>
+                    <label for="name">#{msg['applicant_name']}</label>
                     <h:inputText value="#{applicationListing.firstname}" class="form-control" id="name"/>
                 </div>
-                <h:commandButton class="btn btn-default" value="search" action="#{applicationListing.searchApplications}"/>
+                <h:commandButton class="btn btn-default" value="#{msg['search_button']}" action="#{applicationListing.searchApplications}"/>
             </h:form>
         </div>
         <div class="container">
-            <h1 class="title">Applications</h1>
+            <h1 class="title">#{msg['Applications_title']}</h1>
             <div class="col-md-12">
 
                 <h:dataTable id="appListingTable" value="#{applicationListing.applications}" var="app" 
                              class="table table-striped table-bordered nowrap"
                              >
                     <h:column>
-                        <f:facet name="header" class="hidden-xs" >First Name</f:facet>
+                        <f:facet name="header" class="hidden-xs" >#{msg['column_first_name']}</f:facet>
                             #{app.firstname}
                     </h:column>                            
                     <h:column>
-                        <f:facet name="header">Surname</f:facet>
+                        <f:facet name="header">#{msg['column_surname']}</f:facet>
                             #{app.surname}
                     </h:column>
                     <h:column>
-                        <f:facet name="header">Email</f:facet>
+                        <f:facet name="header">#{msg['column_email']}</f:facet>
                             #{app.email}
                     </h:column>
                     <h:column>
-                        <f:facet name="header">Full Application Detail</f:facet>
-                        <h:link outcome="view_application" value="View Application">
+                        <f:facet name="header">#{msg['column_app_detail']}</f:facet>
+                        <h:link outcome="view_application" value="#{msg['column_value_app_detail']}">
                             <f:param name="appId" value="#{app.applicationId}" />
                         </h:link>
                     </h:column>

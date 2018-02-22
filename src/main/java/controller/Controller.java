@@ -35,13 +35,18 @@ public class Controller {
     private final String BASE_URL = "http://localhost:8080/RecruitmentServ/webresources";
     private final String LOGIN_REGISTER_PATH = "kth.iv1201.recruitmentserv.person";
     private final String APPLY_PATH = "apply";
+    private final String APPLICATIONS_PATH = "applications";
     private final String COMPETENCE_PATH = "competence";
     private final String AVAILABILITY_PATH = "availability";
     private final String TEST_TOKEN_PATH = "testtoken";
     private final Client client = ClientBuilder.newClient();
     private final String AUTHORIZATION_SCHEMA = "Bearer ";
+    private final String LIST_APPLICATIONS_PATH = "listApplications";
+    private final String SEARCH_APPLICATION_PATH = "searchApplication";
     private String token = "";
     private String role = "";
+    
+    
     
     public Response login(JsonObject json) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(LOGIN_REGISTER_PATH));
@@ -53,14 +58,30 @@ public class Controller {
         return loginResponse;
     }
     
-    public Response getCompetences() {
+    public Response getCompetences(String language) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLY_PATH));
         request = addAuthorizationHeader(request);
-        
+        request.header("language", language);
         Response response = request.get();
         return validateResponseStatus(response);
     }
     
+    public Response listApplications() {
+        Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, LIST_APPLICATIONS_PATH));
+        request = addAuthorizationHeader(request);
+        Response response = request.get();
+        return validateResponseStatus(response);
+    }
+
+    
+    
+    public Response getCompetencesForRecruiter(String language) {
+        Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, COMPETENCE_PATH));
+        request = addAuthorizationHeader(request);
+        request.header("language", language);
+        Response response = request.get();
+        return validateResponseStatus(response);
+    }    
     public Response sendCompetences(List<Competence> competenceProfiles) {
         GenericEntity<List<Competence>> entity = new GenericEntity<List<Competence>>(competenceProfiles) {};
         
@@ -84,7 +105,17 @@ public class Controller {
         
         return response;
     }
-
+    public Response searchApplication(JsonObject searchParams) {
+        GenericEntity<JsonObject> entity = new GenericEntity<JsonObject>(searchParams) {};
+        
+        Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, SEARCH_APPLICATION_PATH));
+        request = addAuthorizationHeader(request);
+        
+        Response response = request.post(Entity.json(entity));
+        validateResponseStatus(response);
+        
+        return response;
+    }
     public Response testToken() {
         return client.target(BASE_URL).path(APPLY_PATH).path(TEST_TOKEN_PATH)
                 .request().header(HttpHeaders.AUTHORIZATION, AUTHORIZATION_SCHEMA + token).get();

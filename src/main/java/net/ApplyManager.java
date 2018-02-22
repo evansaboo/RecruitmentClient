@@ -21,6 +21,7 @@ import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
+import model.LanguageChange;
 
 /**
  *
@@ -31,6 +32,7 @@ import javax.ws.rs.core.Response;
 public class ApplyManager implements Serializable {
     @Inject Controller controller;
     
+    @Inject private LanguageChange lc;    
     private List<CompetenceDTO> competences;
     private final HashMap<String, Long> competenceMapper = new HashMap<>();
     
@@ -40,9 +42,10 @@ public class ApplyManager implements Serializable {
     private Availability availability = new Availability();
     private final List<Double> yearsOfExp = new ArrayList<>();
     
+    
     public void onPageLoad() {
         try {
-            Response competencesResponse = controller.getCompetences();
+            Response competencesResponse = controller.getCompetences(lc.getLanguage());
             competences = competencesResponse.readEntity(new GenericType<List<CompetenceDTO>>() {});
             
             competences.forEach((CompetenceDTO comp) -> {
