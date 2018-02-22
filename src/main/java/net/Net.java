@@ -1,6 +1,6 @@
 package net;
 
-import controller.Controller;
+import rest.RestCommunication;
 import java.io.Serializable;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -13,7 +13,7 @@ import javax.ws.rs.core.Response;
 @SessionScoped
 public class Net implements Serializable {
 
-    @Inject Controller controller;
+    @Inject RestCommunication controller;
     
     private String user;
     private String password;
