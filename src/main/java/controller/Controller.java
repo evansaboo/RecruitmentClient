@@ -33,12 +33,14 @@ import net.Net;
 @Stateless
 public class Controller {
     private final String BASE_URL = "http://localhost:8080/RecruitmentServ/webresources";
-    private final String LOGIN_REGISTER_PATH = "kth.iv1201.recruitmentserv.person";
+    private final String AUTH_PATH = "auth";
+    private final String LOGIN_PATH = "login";
+    private final String REGISTER_PATH = "register";
+    private final String LOGOUT_PATH = "logout";
     private final String APPLY_PATH = "apply";
     private final String APPLICATIONS_PATH = "applications";
     private final String COMPETENCE_PATH = "competence";
     private final String AVAILABILITY_PATH = "availability";
-    private final String TEST_TOKEN_PATH = "testtoken";
     private final Client client = ClientBuilder.newClient();
     private final String AUTHORIZATION_SCHEMA = "Bearer ";
     private final String LIST_APPLICATIONS_PATH = "listApplications";
@@ -49,13 +51,32 @@ public class Controller {
     
     
     public Response login(JsonObject json) {
-        Invocation.Builder request = getRequestToPath(Arrays.asList(LOGIN_REGISTER_PATH));
+        Invocation.Builder request = getRequestToPath(Arrays.asList(AUTH_PATH, LOGIN_PATH));
         
         Response loginResponse = request.post(Entity.json(json));
         loginResponse.bufferEntity();
-        exctractTokenAndRoleFromResponse(loginResponse);
+        //exctractTokenAndRoleFromResponse(loginResponse);
         
         return loginResponse;
+    }
+    
+    public Response register(JsonObject json) {
+        Invocation.Builder request = getRequestToPath(Arrays.asList(AUTH_PATH, REGISTER_PATH));
+        
+        Response registerResponse = request.post(Entity.json(json));
+        registerResponse.bufferEntity();
+        //exctractTokenAndRoleFromResponse(registerResponse);
+        
+        return registerResponse;
+    }
+    
+    public Response logout() {
+        Invocation.Builder request = getRequestToPath(Arrays.asList(AUTH_PATH, LOGOUT_PATH));
+        request = addAuthorizationHeader(request);
+        
+        Response logoutResponse = request.get();
+        
+        return logoutResponse;
     }
     
     public Response getCompetences(String language) {
@@ -105,6 +126,7 @@ public class Controller {
         
         return response;
     }
+  
     public Response searchApplication(JsonObject searchParams) {
         GenericEntity<JsonObject> entity = new GenericEntity<JsonObject>(searchParams) {};
         
@@ -121,22 +143,22 @@ public class Controller {
                 .request().header(HttpHeaders.AUTHORIZATION, AUTHORIZATION_SCHEMA + token).get();
     }
     
-    private void exctractTokenAndRoleFromResponse(Response response) {
+    /*private void exctractTokenAndRoleFromResponse(Response response) {
         JsonObject json = response.readEntity(JsonObject.class);
         token = json.getString("token", "");
         role = json.getString("role", "");
         System.out.println("CLINET RECEIVED TOKEN: " + token + ", ROLE: " + role);
-    }
+    }*/
     
     private Invocation.Builder addAuthorizationHeader(Invocation.Builder target) {
-        String tok;
+        String token;
         try {
-            tok = Net.token;
+            token = Net.token;
         } catch(Exception ex) {
-            tok = "";
+            token = "";
         }
         
-        return target.header(HttpHeaders.AUTHORIZATION, AUTHORIZATION_SCHEMA + tok);
+        return target.header(HttpHeaders.AUTHORIZATION, AUTHORIZATION_SCHEMA + token);
     }
     
     private Invocation.Builder getRequestToPath(List<String> paths) {

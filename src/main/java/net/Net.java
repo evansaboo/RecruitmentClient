@@ -7,11 +7,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.JsonObject;
 import javax.json.spi.JsonProvider;
-import static javax.json.spi.JsonProvider.provider;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Named("login")
@@ -108,17 +103,16 @@ public class Net implements Serializable {
         return s;
     }
 
-    public String toServ() {
+    public String login() {
         try {
-            JsonProvider provider = JsonProvider.provider();
             JsonObject job;
 
             job = provider.createObjectBuilder()
-                    .add("type", "login")
                     .add("username", user)
                     .add("password", password).build();
             
-            return login(job, "Authentication failed");
+            Response authResponse = controller.login(job);
+            return validateAndExtractAuthResponse(authResponse, "Authentication failed");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -135,14 +129,15 @@ public class Net implements Serializable {
         try {
             JsonObject job;
             job = provider.createObjectBuilder()
-                    .add("type", "register")
                     .add("name", name)
                     .add("surname", surname)
                     .add("ssn", ssn)
                     .add("email", email)
                     .add("password", regpassword)
                     .add("username", reguser).build();            
-            return login(job, "Username taken");
+            
+            Response authResponse = controller.register(job);
+            return validateAndExtractAuthResponse(authResponse, "Username taken");
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -155,38 +150,18 @@ public class Net implements Serializable {
      * @return returns a redirect message
      */
     public String logout() {
-        JsonObject job;
+        /*JsonObject job;
         job = provider.createObjectBuilder()
                 .add("type", "logout")
                 .add("uid", loggedon).build();
-        toServ(job);
+        //toServ(job);*/
+        controller.logout();
         loggedon="";
         authenticated="Logged out, goodbye!";
         return "login?faces-redirect=true";
     }
-    /**
-     * Sends a JsonObject using REST to the server which will handle it.
-     * @param job   a JsonObject that contains either a login/register/logout request and user credentials
-     * @return  returns a string confirming or denying that the action was sucessful
-     */
-    public String toServ(JsonObject job) {
-        try {
-            Client client = ClientBuilder.newClient();
-            String s = client.target("http://localhost:8080/RecruitmentServ/webresources/kth.iv1201.recruitmentserv.person")
-                    .request()
-                    .post(Entity.entity(job, MediaType.APPLICATION_JSON), String.class);
-            return s;
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "invalid";
-        }
-    }
-
-    private String login(JsonObject job, String authMsg) {
-        System.out.println("BEROFRE CONTROLLER");
-        Response response = controller.login(job);
-        System.out.println("AFTER CONTROLLER");
+    private String validateAndExtractAuthResponse(Response response, String authMsg) {
         JsonObject json = response.readEntity(JsonObject.class);
         String error = json.getString("error", "");
 
