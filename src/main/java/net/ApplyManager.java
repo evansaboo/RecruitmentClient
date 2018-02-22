@@ -13,12 +13,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
@@ -58,8 +55,6 @@ public class ApplyManager implements Serializable {
     
     public void submitApplication() throws Exception {
         if(comps.isEmpty() && availabilities.isEmpty()) { return; }
-        
-        controller.testToken();
         
         if(!comps.isEmpty()) {
             Response compResponse = controller.sendCompetences(comps);
