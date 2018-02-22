@@ -138,10 +138,6 @@ public class Controller {
         
         return response;
     }
-    public Response testToken() {
-        return client.target(BASE_URL).path(APPLY_PATH).path(TEST_TOKEN_PATH)
-                .request().header(HttpHeaders.AUTHORIZATION, AUTHORIZATION_SCHEMA + token).get();
-    }
     
     /*private void exctractTokenAndRoleFromResponse(Response response) {
         JsonObject json = response.readEntity(JsonObject.class);
