@@ -21,14 +21,24 @@ public class LanguageChange implements Serializable {
     
     private Locale locale = FacesContext.getCurrentInstance().getApplication().getDefaultLocale();
     
+    /**
+     * Returns the current language of the application
+     * @return the current locale
+     */
     public Locale getLocale() {
         return locale;
     }
-
+    /**
+     * Returns the current locale as of the application as a string
+     * @return locale as a string
+     */
     public String getLanguage() {
         return locale.getLanguage();
     }
-
+    /**
+     * Sets the locale to whatever language was sent as parameter also calls for competences to update
+     * @param language  A language string sent from the web page
+     */
     public void changeLanguage(String language) {
         locale = new Locale(language);
         FacesContext.getCurrentInstance().getViewRoot().setLocale(new Locale(language));

@@ -43,65 +43,109 @@ public class ApplicationListing implements Serializable {
     @Inject
     private LanguageChange lc;
 
+    /**
+     * Fills the list of competences on initialize
+     */
     public void initPage() {
         cmptList = contr.getCompetencesForRecruiter(lc.getLanguage()).readEntity(new GenericType<List<CompetenceDTO>>() {
         });
 
         initList();
     }
-
+    /**
+     * Returns the submission date
+     * @return date of submission
+     */
     public Date getRegDate() {
         return regDate;
     }
-
+    /**
+     * Set the date of submission
+     * @param date  The date entered by the user for submission
+     */
     public void setRegDate(Date date) {
         this.regDate = date;
     }
-
+    /**
+     * Return the period from when the applicant is available
+     * @return the date from when the applicant is available
+     */
     public Date getPeriodFrom() {
         return periodFrom;
     }
-
+    /**
+     * Set the period from which the applicant is available
+     * @param periodFrom The date entered by the user
+     */
     public void setPeriodFrom(Date periodFrom) {
         this.periodFrom = periodFrom;
     }
-
+    /**
+     * Set the period to where the applicant is available
+     * @return  returns the period of 
+     */
     public Date getPeriodTo() {
         return periodTo;
     }
-
+    /**
+     * Set the period to which the applicant is available
+     * @param periodTo  The period as entered by the applicant
+     */
     public void setPeriodTo(Date periodTo) {
         this.periodTo = periodTo;
     }
-
+    /**
+     * Return a competence
+     * @return a competence
+     */
     public String getCompetence() {
         return competence;
     }
-
+    /**
+     * Set a competence 
+     * @param competence competence picked by the user
+     */
     public void setCompetence(String competence) {
         this.competence = competence;
     }
-
+    /**
+     * Returns the applicants first name
+     * @return first name entered
+     */
     public String getFirstname() {
         return firstname;
     }
-
+    /**
+     * Set the first name entered by the applicant
+     * @param name the first name from the applicant
+     */
     public void setFirstname(String name) {
         this.firstname = name;
     }
-
+    /**
+     * Returns a list of competences
+     * @return list of competences
+     */
     public List<CompetenceDTO> getCmptList() {
         return cmptList;
     }
-
+    /**
+     * Set list of competences
+     * @param cmptList a list of competences
+     */
     public void setCmptList(List<CompetenceDTO> cmptList) {
         this.cmptList = cmptList;
     }
-
+    /**
+     * Returns a list of applications
+     * @return list of applications
+     */
     public ArrayList<Application> getApplications() {
         return applications;
     }
-
+    /**
+     * Initializes the list of applications and fills it with all applications.
+     */
     private void initList() {
         applications.clear();
         JsonArray jarray = contr.listApplications().readEntity(new GenericType<JsonArray>() {});
@@ -113,7 +157,9 @@ public class ApplicationListing implements Serializable {
                     obj.getString("email")));
         }
     }
-
+    /**
+     * Search for specific applications and display them based on the results
+     */
     public void searchApplications() {
         DateFormat dFormat = new SimpleDateFormat("d-MM-yyyy");
         String sDate = (regDate != null) ? dFormat.format(regDate) : "";
@@ -137,7 +183,9 @@ public class ApplicationListing implements Serializable {
                     obj.getString("email")));
         }
     }
-
+    /**
+     * Updates the list of competences to the same ones in a different language when the language is changed.
+     */
     public void updateCompetences() {
         cmptList = contr.getCompetencesForRecruiter(lc.getLanguage()).readEntity(new GenericType<List<CompetenceDTO>>() {
         });

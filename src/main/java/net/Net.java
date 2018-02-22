@@ -27,8 +27,12 @@ public class Net implements Serializable {
     private String loggedon;
     public static String token;
     public static String role;
-    
     JsonProvider provider = JsonProvider.provider();
+    
+    /**
+     *  A randomly generated token for a logged on user.
+     * @return a string containing the randomly generated token
+     */
     public String getLoggedon() {
         return loggedon;
     }
@@ -102,7 +106,10 @@ public class Net implements Serializable {
         authenticated = "";
         return s;
     }
-
+    /**
+     * Creates a JsonObject of the user credentials and sends it to authenticate the user.
+     * @return  Returns the result of the authentication and an errormessage if it fails. 
+     */
     public String login() {
         try {
             JsonObject job;
@@ -150,17 +157,18 @@ public class Net implements Serializable {
      * @return returns a redirect message
      */
     public String logout() {
-        /*JsonObject job;
-        job = provider.createObjectBuilder()
-                .add("type", "logout")
-                .add("uid", loggedon).build();
-        //toServ(job);*/
         controller.logout();
         loggedon="";
         authenticated="Logged out, goodbye!";
         return "login?faces-redirect=true";
     }
-
+    /**
+     * Validates the authorization reponse and redirects the user on success and setting a token.
+     * Also redirects the user based on the result.
+     * @param response  The reseult of the authentication
+     * @param authMsg   An errormessage based on the type of request
+     * @return 
+     */
     private String validateAndExtractAuthResponse(Response response, String authMsg) {
         JsonObject json = response.readEntity(JsonObject.class);
         String error = json.getString("error", "");
