@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package rest;
 
 import datarepresentation.Availability;
 import datarepresentation.Competence;
@@ -31,7 +31,7 @@ import net.Net;
  */
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Stateless
-public class Controller {
+public class RestCommunication {
     private final String BASE_URL = "http://localhost:8080/RecruitmentServ/webresources";
     private final String AUTH_PATH = "auth";
     private final String LOGIN_PATH = "login";
@@ -112,8 +112,9 @@ public class Controller {
     }
     
     /**
-     *
-     * @return
+     *Requests all available job applications from the server 
+     * 
+     * @return Response contaning status and all applictions if successful
      */
     public Response listApplications() {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, LIST_APPLICATIONS_PATH));
@@ -123,9 +124,11 @@ public class Controller {
     }
     
     /**
+     * This method requests the competences for recruiter in a specific language from the 
+     * remote server.
      *
-     * @param language
-     * @return
+     * @param language specified by the user.
+     * @return Response with the content from the remote server.
      */
     public Response getCompetencesForRecruiter(String language) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, COMPETENCE_PATH));
@@ -176,9 +179,10 @@ public class Controller {
     }
   
     /**
-     *
-     * @param searchParams
-     * @return
+     *Sends a post request to remote server with user search parameter to get all application matching all search criterias.
+     * 
+     * @param searchParams JsonObject which contains all search parameters
+     * @return Response with applications which fulfills every search criteria. 
      */
     public Response searchApplication(JsonObject searchParams) {
         GenericEntity<JsonObject> entity = new GenericEntity<JsonObject>(searchParams) {};
@@ -199,6 +203,12 @@ public class Controller {
         System.out.println("CLINET RECEIVED TOKEN: " + token + ", ROLE: " + role);
     }*/
     
+    /**
+     * Adds token to target header for user validation in server side.
+     * 
+     * @param target Invocation target
+     * @return target with token
+     */
     private Invocation.Builder addAuthorizationHeader(Invocation.Builder target) {
         String token;
         try {
@@ -210,6 +220,12 @@ public class Controller {
         return target.header(HttpHeaders.AUTHORIZATION, AUTHORIZATION_SCHEMA + token);
     }
     
+    /**
+     * Build a new webtarget with provides base url and inner paths.
+     * 
+     * @param paths inner paths
+     * @return reequested webtarget
+     */
     private Invocation.Builder getRequestToPath(List<String> paths) {
         WebTarget target = client.target(BASE_URL);
         
@@ -220,6 +236,12 @@ public class Controller {
         return target.request();
     }
     
+    /**
+     * Validates if the response from server is acceptable. If not send user to error page with error msg.
+     * 
+     * @param response Response contaning response status
+     * @return Response object
+     */
     private Response validateResponseStatus(Response response) {
         switch(response.getStatus()) {
             case 401:
@@ -237,6 +259,12 @@ public class Controller {
         return response;
     }
     
+    /**
+     * Send user to error page with provided error message.
+     * 
+     * @param code error code
+     * @param msg error message
+     */
     private void triggerError(int code, String msg) {
         try {
             FacesContext.getCurrentInstance().getExternalContext().responseSendError(code, msg);

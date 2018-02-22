@@ -5,7 +5,7 @@
  */
 package net;
 
-import controller.Controller;
+import rest.RestCommunication;
 import datarepresentation.Availability;
 import datarepresentation.Competence;
 import datarepresentation.CompetenceDTO;
@@ -27,7 +27,7 @@ import model.LanguageChange;
 @Named("applyManager")
 @SessionScoped
 public class ApplyManager implements Serializable {
-    @Inject Controller controller;
+    @Inject RestCommunication controller;
     
     @Inject private LanguageChange lc;    
     private List<CompetenceDTO> competences;

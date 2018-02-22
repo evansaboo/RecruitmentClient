@@ -5,7 +5,7 @@
  */
 package net;
 
-import controller.Controller;
+import rest.RestCommunication;
 import datarepresentation.CompetenceDTO;
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -38,7 +38,7 @@ public class ApplicationListing implements Serializable {
     private final ArrayList<Application> applications = new ArrayList<>();
 
     @Inject
-    private Controller contr;
+    private RestCommunication contr;
 
     @Inject
     private LanguageChange lc;
