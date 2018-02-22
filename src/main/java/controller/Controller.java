@@ -48,8 +48,13 @@ public class Controller {
     //private String token = "";
     //private String role = "";
     
-    
-    
+    /**
+     * This method sends a login json object to the remote server to login the 
+     * user.
+     *
+     * @param json credentials to login with.
+     * @return Response the servers response to the login attempt.
+     */
     public Response login(JsonObject json) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(AUTH_PATH, LOGIN_PATH));
         
@@ -60,6 +65,13 @@ public class Controller {
         return loginResponse;
     }
     
+    /**
+     * This method sends a register json object to the remote server to try to
+     * register a new user.
+     *
+     * @param json registration credentials sent to the server.
+     * @return Response with the registration attempt.
+     */
     public Response register(JsonObject json) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(AUTH_PATH, REGISTER_PATH));
         
@@ -70,6 +82,11 @@ public class Controller {
         return registerResponse;
     }
     
+    /**
+     * This method sends a logout request to the remote server.
+     *
+     * @return Response with the remote server status report.
+     */
     public Response logout() {
         Invocation.Builder request = getRequestToPath(Arrays.asList(AUTH_PATH, LOGOUT_PATH));
         request = addAuthorizationHeader(request);
@@ -79,6 +96,13 @@ public class Controller {
         return logoutResponse;
     }
     
+    /**
+     * This method requests the competences in a specific language from the 
+     * remote server.
+     *
+     * @param language specified by the user.
+     * @return Response with the content from the remote server.
+     */
     public Response getCompetences(String language) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLY_PATH));
         request = addAuthorizationHeader(request);
@@ -87,6 +111,10 @@ public class Controller {
         return validateResponseStatus(response);
     }
     
+    /**
+     *
+     * @return
+     */
     public Response listApplications() {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, LIST_APPLICATIONS_PATH));
         request = addAuthorizationHeader(request);
@@ -94,6 +122,11 @@ public class Controller {
         return validateResponseStatus(response);
     }
     
+    /**
+     *
+     * @param language
+     * @return
+     */
     public Response getCompetencesForRecruiter(String language) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, COMPETENCE_PATH));
         request = addAuthorizationHeader(request);
@@ -101,6 +134,15 @@ public class Controller {
         Response response = request.get();
         return validateResponseStatus(response);
     }    
+
+    /**
+     * This method sends a list with the users competences to the remote server
+     * as json. 
+     *
+     * @param competenceProfiles the competneces this user has.
+     * @return Response from the remote server or an error page if the server 
+     * couldn't/wouldn't handle the request
+     */
     public Response sendCompetences(List<Competence> competenceProfiles) {
         GenericEntity<List<Competence>> entity = new GenericEntity<List<Competence>>(competenceProfiles) {};
         
@@ -113,6 +155,14 @@ public class Controller {
         return response;
     }
     
+    /**
+     * This method sends a list with the entered availability periods to the 
+     * remote server. 
+     *
+     * @param availabilities list with the available periods.
+     * @return Response from the remote server or an error page if the server 
+     * couldn't/wouldn't handle the request.
+     */
     public Response sendAvailabilities(List<Availability> availabilities) {
         GenericEntity<List<Availability>> entity = new GenericEntity<List<Availability>>(availabilities) {};
         
@@ -125,6 +175,11 @@ public class Controller {
         return response;
     }
   
+    /**
+     *
+     * @param searchParams
+     * @return
+     */
     public Response searchApplication(JsonObject searchParams) {
         GenericEntity<JsonObject> entity = new GenericEntity<JsonObject>(searchParams) {};
         
