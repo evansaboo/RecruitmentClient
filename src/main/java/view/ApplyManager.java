@@ -42,9 +42,8 @@ public class ApplyManager implements Serializable {
     
     public void onPageLoad() {
         try {
-            Response competencesResponse = controller.getCompetences(lc.getLanguage());
+            Response competencesResponse = controller.getCompetences();
             competences = competencesResponse.readEntity(new GenericType<List<CompetenceDTO>>() {});
-            
             competences.forEach((CompetenceDTO comp) -> {
                 competenceMapper.put(comp.getName(), comp.getCompetenceId());
             });
@@ -109,6 +108,7 @@ public class ApplyManager implements Serializable {
     }
 
     public List<Competence> getComps() {
+        
         return comps;
     }
 
@@ -145,7 +145,9 @@ public class ApplyManager implements Serializable {
     }
     
     public List<CompetenceDTO> getCompetences() {
-        return competences;
+        List<CompetenceDTO> tempList = new ArrayList<>(competences);
+        tempList.removeIf(c -> !c.getLanguage().equals(lc.getLanguage()));
+        return tempList;
     }
 
     public void setCompetences(List<CompetenceDTO> competences) {

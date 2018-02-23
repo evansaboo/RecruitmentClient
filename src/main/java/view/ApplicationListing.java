@@ -47,9 +47,8 @@ public class ApplicationListing implements Serializable {
      * Fills the list of competences on initialize
      */
     public void initPage() {
-        cmptList = contr.getCompetencesForRecruiter(lc.getLanguage()).readEntity(new GenericType<List<CompetenceDTO>>() {
+        cmptList = contr.getCompetencesForRecruiter().readEntity(new GenericType<List<CompetenceDTO>>() {
         });
-
         initList();
     }
     /**
@@ -127,7 +126,9 @@ public class ApplicationListing implements Serializable {
      * @return list of competences
      */
     public List<CompetenceDTO> getCmptList() {
-        return cmptList;
+        List<CompetenceDTO> tempList = new ArrayList<>(cmptList);
+        tempList.removeIf(c -> !c.getLanguage().equals(lc.getLanguage()));
+        return tempList;
     }
     /**
      * Set list of competences
@@ -182,12 +183,5 @@ public class ApplicationListing implements Serializable {
                     obj.getString("surname"),
                     obj.getString("email")));
         }
-    }
-    /**
-     * Updates the list of competences to the same ones in a different language when the language is changed.
-     */
-    public void updateCompetences() {
-        cmptList = contr.getCompetencesForRecruiter(lc.getLanguage()).readEntity(new GenericType<List<CompetenceDTO>>() {
-        });
     }
 }

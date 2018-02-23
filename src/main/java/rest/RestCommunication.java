@@ -100,13 +100,11 @@ public class RestCommunication {
      * This method requests the competences in a specific language from the 
      * remote server.
      *
-     * @param language specified by the user.
      * @return Response with the content from the remote server.
      */
-    public Response getCompetences(String language) {
+    public Response getCompetences() {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLY_PATH));
         request = addAuthorizationHeader(request);
-        request.header("language", language);
         Response response = request.get();
         return validateResponseStatus(response);
     }
@@ -127,13 +125,11 @@ public class RestCommunication {
      * This method requests the competences for recruiter in a specific language from the 
      * remote server.
      *
-     * @param language specified by the user.
      * @return Response with the content from the remote server.
      */
-    public Response getCompetencesForRecruiter(String language) {
+    public Response getCompetencesForRecruiter() {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, COMPETENCE_PATH));
         request = addAuthorizationHeader(request);
-        request.header("language", language);
         Response response = request.get();
         return validateResponseStatus(response);
     }    
