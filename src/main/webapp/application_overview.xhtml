@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition template="masterTemplate.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <ui:define name="preRender">
+        <f:metadata>
+            <f:viewParam name="appId" value="#{viewApplication.applicationId}"/>
+        </f:metadata>
+    </ui:define>
+    <ui:define name="head">
+        <link rel="stylesheet" href="css/footer.css"/>
+        <link rel="stylesheet" href="css/applications.css"/>
+        <link  rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css"/>
+        <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"/>
+        <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"/>
+    </ui:define>
+    <ui:define name="body">
+        <div class="container">
+
+            <h1>Job Application Overview</h1>
+            <hr/>
+            <h3>User Information</h3>
+            <table class="table table-striped table-hover table-bordered" style="  table-layout: fixed;">
+                <tbody>
+                    <tr>
+                        <th style="width:30%;">First Name</th>
+                        <td>
+                            #{viewApplication.firstname} 
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Surname</th>
+                        <td>
+                            #{viewApplication.surrname}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td>
+                            #{viewApplication.email}
+                        </td>
+                    </tr>  
+                    <tr>
+                        <th>Social Security Number</th>
+                        <td>
+                            #{viewApplication.ssn}
+                        </td>
+                    </tr>  
+                    <tr>
+                        <th>Surname</th>
+                        <td>
+                            #{viewApplication.surrname}
+                        </td>
+                    </tr>
+                </tbody>
+            </table> 
+            <h3>Application Information</h3>
+            <table class="table table-striped table-hover table-bordered" style="  table-layout: fixed;">
+                <tbody>
+                    <tr>
+                        <th style="width:30%;">Registration Date</th>
+                        <td>
+                            #{viewApplication.firstname} 
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Current Status</th>
+                        <td>
+                            #{viewApplication.firstname} 
+                        </td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" style="">
+                            <h4 style="text-align: center; font-weight: bold; padding-bottom: 10px;">Change Status</h4>
+
+                            <h:form>
+                                <div class="col-sm-6 col-xs-6">
+                                    <h:commandButton style="height:50px; width:100%" class="col-sm-12 btn btn-success" value="Accept"></h:commandButton>
+                                </div>
+                                <div class="col-sm-6 col-xs-6">
+                                    <h:commandButton style="height:50px; width:100%" class="col-sm-12 btn btn-danger" value="Reject"></h:commandButton>
+                                </div>
+                            </h:form>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th colspan="2"></th>
+                    </tr>
+                    <tr>
+                        <th colspan="2" style="text-align: center; font-size: 18px;">Change Status</th>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <h:form>
+                                <div class="col-sm-6 col-xs-6">
+                                    <h:commandButton style="height:50px; width:100%" class="col-sm-12 btn btn-success" value="Accept"></h:commandButton>
+                                </div>
+                                <div class="col-sm-6 col-xs-6">
+                                    <h:commandButton style="height:50px; width:100%" class="col-sm-12 btn btn-danger" value="Reject"></h:commandButton>
+                                </div>
+                            </h:form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table> 
+        </div>
+    </ui:define>
+</ui:composition>

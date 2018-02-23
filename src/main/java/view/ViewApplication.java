@@ -24,7 +24,7 @@ public class ViewApplication implements Serializable{
     private String ssn;
     
   
-    private long appicationId;
+    private long applicationId;
     private Date registrationDate;
     private final ArrayList<String> competenceProfiles = new ArrayList<>();
     
@@ -32,8 +32,12 @@ public class ViewApplication implements Serializable{
         
     }
     
-    public long getAppicationId() {
-        return appicationId;
+    public long getApplicationId() {
+        return applicationId;
+    }
+    
+    public void setApplicationId(long applicationId){
+        this.applicationId = applicationId;
     }
     
     public String getFirstname() {
@@ -66,10 +70,6 @@ public class ViewApplication implements Serializable{
 
     public void setSsn(String ssn) {
         this.ssn = ssn;
-    }
-
-    public void setAppicationId(long appicationId) {
-        this.appicationId = appicationId;
     }
 
     public Date getRegistrationDate() {
