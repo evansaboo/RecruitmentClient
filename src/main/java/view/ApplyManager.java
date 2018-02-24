@@ -6,7 +6,7 @@
 package view;
 
 import rest.RestCommunication;
-import datarepresentation.Availability;
+import datarepresentation.AvailabilityDTO;
 import datarepresentation.Competence;
 import datarepresentation.CompetenceDTO;
 import java.io.Serializable;
@@ -35,8 +35,8 @@ public class ApplyManager implements Serializable {
     
     private List<Competence> comps = new ArrayList<>();
     private Competence comp = new Competence();
-    private List<Availability> availabilities = new ArrayList<>();
-    private Availability availability = new Availability();
+    private List<AvailabilityDTO> availabilities = new ArrayList<>();
+    private AvailabilityDTO availability = new AvailabilityDTO();
     private final List<Double> yearsOfExp = new ArrayList<>();
     
     
@@ -94,12 +94,12 @@ public class ApplyManager implements Serializable {
     public void addAvailability() {
         if(availability.getToDate() == null || availability.getFromDate() == null) { return; }
         availabilities.add(availability);
-        availability = new Availability();
+        availability = new AvailabilityDTO();
     }
     
     public void deleteEntry(Object entry) {
-        if(entry instanceof Availability) {
-            availabilities.remove(Availability.class.cast(entry));
+        if(entry instanceof AvailabilityDTO) {
+            availabilities.remove(AvailabilityDTO.class.cast(entry));
         } else if(entry instanceof Competence) {
             comps.remove(Competence.class.cast(entry));
         } else {
@@ -124,19 +124,19 @@ public class ApplyManager implements Serializable {
         this.comp = comp;
     }
 
-    public List<Availability> getAvailabilities() {
+    public List<AvailabilityDTO> getAvailabilities() {
         return availabilities;
     }
 
-    public void setAvailabilities(List<Availability> availabilities) {
+    public void setAvailabilities(List<AvailabilityDTO> availabilities) {
         this.availabilities = availabilities;
     }
 
-    public Availability getAvailability() {
+    public AvailabilityDTO getAvailability() {
         return availability;
     }
 
-    public void setAvailability(Availability availability) {
+    public void setAvailability(AvailabilityDTO availability) {
         this.availability = availability;
     }
 

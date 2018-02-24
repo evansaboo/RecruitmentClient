@@ -5,17 +5,18 @@
  */
 package datarepresentation;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
  * @author Oscar
  */
-public class Availability {
+public class AvailabilityDTO implements Serializable{
     private Date fromDate;
     private Date toDate;
 
-    public Availability() {
+    public AvailabilityDTO() {
     }
 
    /**
@@ -24,7 +25,7 @@ public class Availability {
      * @param fromDate sets the fromDate property
      * @param toDate sets the toDAte property
      */
-    public Availability(Date fromDate, Date toDate) {
+    public AvailabilityDTO(Date fromDate, Date toDate) {
         this.fromDate = fromDate;
         this.toDate = toDate;
     }
@@ -63,6 +64,11 @@ public class Availability {
      */
     public void setToDate(Date toDate) {
         this.toDate = toDate;
+    }
+
+    @Override
+    public String toString() {
+        return "AvailabilityDTO{" + "fromDate=" + fromDate + ", toDate=" + toDate + '}';
     }
     
 }

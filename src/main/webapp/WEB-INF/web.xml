@@ -58,4 +58,8 @@
         <error-code>401</error-code>
         <location>/401.xhtml</location>
     </error-page>
+    <error-page>
+        <error-code>400</error-code>
+        <location>/400.xhtml</location>
+    </error-page>
 </web-app>

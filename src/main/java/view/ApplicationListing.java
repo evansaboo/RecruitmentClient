@@ -32,9 +32,8 @@ public class ApplicationListing implements Serializable {
     private Date periodTo;
     private String competence;
     private String firstname;
-    String PATH = "applications";
 
-    private List<CompetenceDTO> cmptList;
+    private List<CompetenceDTO> cmptList = new ArrayList<>();
     private final ArrayList<Application> applications = new ArrayList<>();
 
     @Inject

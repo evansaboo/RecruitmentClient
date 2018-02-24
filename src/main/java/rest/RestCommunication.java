@@ -5,8 +5,9 @@
  */
 package rest;
 
-import datarepresentation.Availability;
+import datarepresentation.AvailabilityDTO;
 import datarepresentation.Competence;
+import model.ApplicationDetailsDTO;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -45,6 +46,7 @@ public class RestCommunication {
     private final String AUTHORIZATION_SCHEMA = "Bearer ";
     private final String LIST_APPLICATIONS_PATH = "listApplications";
     private final String SEARCH_APPLICATION_PATH = "searchApplication";
+    private final String GET_APPLICATION_DETAILS_PATH = "getApplicationDetails";
     //private String token = "";
     //private String role = "";
     
@@ -162,8 +164,8 @@ public class RestCommunication {
      * @return Response from the remote server or an error page if the server 
      * couldn't/wouldn't handle the request.
      */
-    public Response sendAvailabilities(List<Availability> availabilities) {
-        GenericEntity<List<Availability>> entity = new GenericEntity<List<Availability>>(availabilities) {};
+    public Response sendAvailabilities(List<AvailabilityDTO> availabilities) {
+        GenericEntity<List<AvailabilityDTO>> entity = new GenericEntity<List<AvailabilityDTO>>(availabilities) {};
         
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLY_PATH, AVAILABILITY_PATH));
         request = addAuthorizationHeader(request);
@@ -190,6 +192,14 @@ public class RestCommunication {
         validateResponseStatus(response);
         
         return response;
+    }
+
+    public Response getApplicationDetails(long applicationId) {
+        Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, GET_APPLICATION_DETAILS_PATH));
+        request.header("applicationId", applicationId);
+        request = addAuthorizationHeader(request);
+        Response response = request.get();
+        return validateResponseStatus(response);
     }
     
     /*private void exctractTokenAndRoleFromResponse(Response response) {
@@ -247,6 +257,10 @@ public class RestCommunication {
             case 403:
                 System.out.println("403 forbidden");
                 triggerError(403, "I FORBID YOU!");
+                break;
+            case 400:
+                triggerError(400, "Bad Request");
+                break;
             default:
                 System.out.println("defaulting: " + response.getStatus() + ", status: " + response.getStatusInfo());
                 break;
@@ -265,6 +279,8 @@ public class RestCommunication {
         try {
             FacesContext.getCurrentInstance().getExternalContext().responseSendError(code, msg);
             FacesContext.getCurrentInstance().responseComplete();
+                            System.out.println("heres");
+
         } catch(IOException ex) {
             System.out.println("ERROR CAUGHT : " + ex.getMessage());
             ex.printStackTrace();
