@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<!DOCTYPE html>
+    <!--
+    To change this license header, choose License Headers in Project Properties.
+    To change this template file, choose Tools | Templates
+    and open the template in the editor.
+    -->
+    <!DOCTYPE html>
 
-<html     xmlns="http://www.w3.org/1999/xhtml"
-          xmlns:f="http://java.sun.com/jsf/core"
-          xmlns:h="http://java.sun.com/jsf/html"
-          xmlns:ui="http://java.sun.com/jsf/facelets" >
-    <f:view locale="#{language.locale}">
-        <ui:insert name="preRender"/>
-    <h:head>
-        <title>
-            ReCute
-        </title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <ui:insert name="head"/>
-    </h:head>
-    <h:body style="padding-bottom: 140px;">
-        <ui:include src="header.xhtml"/>
-        <ui:insert name="body"/>
-        <ui:include src="footer.xhtml"/>
-    </h:body>
-    </f:view>
-</html>
+    <html     xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:f="http://java.sun.com/jsf/core"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:ui="http://java.sun.com/jsf/facelets" >
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+            <f:view locale="#{language.locale}">
+                <ui:insert name="preRender"/>
+                <h:head>
+                    <title>
+                        ReCute
+                    </title>
+                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+                    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+                    <ui:insert name="head"/>
+                </h:head>
+                <h:body style="padding-bottom: 140px;">
+                    <ui:include src="header.xhtml"/>
+                    <ui:insert name="body"/>
+                    <ui:include src="footer.xhtml"/>
+                </h:body>
+            </f:view>
+    </html>
