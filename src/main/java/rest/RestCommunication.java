@@ -23,6 +23,7 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import view.Authentication;
 
@@ -33,6 +34,7 @@ import view.Authentication;
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Stateless
 public class RestCommunication {
+
     private final String BASE_URL = "http://localhost:8080/RecruitmentServ/webresources";
     private final String AUTH_PATH = "auth";
     private final String LOGIN_PATH = "login";
@@ -47,11 +49,12 @@ public class RestCommunication {
     private final String LIST_APPLICATIONS_PATH = "listApplications";
     private final String SEARCH_APPLICATION_PATH = "searchApplication";
     private final String GET_APPLICATION_DETAILS_PATH = "getApplicationDetails";
+    private final String STATUS_PATH = "changeStatus";
     //private String token = "";
     //private String role = "";
-    
+
     /**
-     * This method sends a login json object to the remote server to login the 
+     * This method sends a login json object to the remote server to login the
      * user.
      *
      * @param json credentials to login with.
@@ -59,14 +62,14 @@ public class RestCommunication {
      */
     public Response login(JsonObject json) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(AUTH_PATH, LOGIN_PATH));
-        
+
         Response loginResponse = request.post(Entity.json(json));
         loginResponse.bufferEntity();
         //exctractTokenAndRoleFromResponse(loginResponse);
-        
+
         return loginResponse;
     }
-    
+
     /**
      * This method sends a register json object to the remote server to try to
      * register a new user.
@@ -76,14 +79,14 @@ public class RestCommunication {
      */
     public Response register(JsonObject json) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(AUTH_PATH, REGISTER_PATH));
-        
+
         Response registerResponse = request.post(Entity.json(json));
         registerResponse.bufferEntity();
         //exctractTokenAndRoleFromResponse(registerResponse);
-        
+
         return registerResponse;
     }
-    
+
     /**
      * This method sends a logout request to the remote server.
      *
@@ -92,14 +95,14 @@ public class RestCommunication {
     public Response logout() {
         Invocation.Builder request = getRequestToPath(Arrays.asList(AUTH_PATH, LOGOUT_PATH));
         request = addAuthorizationHeader(request);
-        
+
         Response logoutResponse = request.get();
-        
+
         return logoutResponse;
     }
-    
+
     /**
-     * This method requests the competences in a specific language from the 
+     * This method requests the competences in a specific language from the
      * remote server.
      *
      * @return Response with the content from the remote server.
@@ -110,10 +113,10 @@ public class RestCommunication {
         Response response = request.get();
         return validateResponseStatus(response);
     }
-    
+
     /**
-     *Requests all available job applications from the server 
-     * 
+     * Requests all available job applications from the server
+     *
      * @return Response contaning status and all applictions if successful
      */
     public Response listApplications() {
@@ -122,10 +125,10 @@ public class RestCommunication {
         Response response = request.get();
         return validateResponseStatus(response);
     }
-    
+
     /**
-     * This method requests the competences for recruiter in a specific language from the 
-     * remote server.
+     * This method requests the competences for recruiter in a specific language
+     * from the remote server.
      *
      * @return Response with the content from the remote server.
      */
@@ -134,63 +137,67 @@ public class RestCommunication {
         request = addAuthorizationHeader(request);
         Response response = request.get();
         return validateResponseStatus(response);
-    }    
+    }
 
     /**
      * This method sends a list with the users competences to the remote server
-     * as json. 
+     * as json.
      *
      * @param competenceProfiles the competneces this user has.
-     * @return Response from the remote server or an error page if the server 
+     * @return Response from the remote server or an error page if the server
      * couldn't/wouldn't handle the request
      */
     public Response sendCompetences(List<Competence> competenceProfiles) {
-        GenericEntity<List<Competence>> entity = new GenericEntity<List<Competence>>(competenceProfiles) {};
-        
+        GenericEntity<List<Competence>> entity = new GenericEntity<List<Competence>>(competenceProfiles) {
+        };
+
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLY_PATH, COMPETENCE_PATH));
         request = addAuthorizationHeader(request);
-        
+
         Response response = request.post(Entity.json(entity));
         validateResponseStatus(response);
-        
+
         return response;
     }
-    
+
     /**
-     * This method sends a list with the entered availability periods to the 
-     * remote server. 
+     * This method sends a list with the entered availability periods to the
+     * remote server.
      *
      * @param availabilities list with the available periods.
-     * @return Response from the remote server or an error page if the server 
+     * @return Response from the remote server or an error page if the server
      * couldn't/wouldn't handle the request.
      */
     public Response sendAvailabilities(List<AvailabilityDTO> availabilities) {
-        GenericEntity<List<AvailabilityDTO>> entity = new GenericEntity<List<AvailabilityDTO>>(availabilities) {};
-        
+        GenericEntity<List<AvailabilityDTO>> entity = new GenericEntity<List<AvailabilityDTO>>(availabilities) {
+        };
+
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLY_PATH, AVAILABILITY_PATH));
         request = addAuthorizationHeader(request);
-        
+
         Response response = request.post(Entity.json(entity));
         validateResponseStatus(response);
-        
+
         return response;
     }
-  
+
     /**
-     *Sends a post request to remote server with user search parameter to get all application matching all search criterias.
-     * 
+     * Sends a post request to remote server with user search parameter to get
+     * all application matching all search criterias.
+     *
      * @param searchParams JsonObject which contains all search parameters
-     * @return Response with applications which fulfills every search criteria. 
+     * @return Response with applications which fulfills every search criteria.
      */
     public Response searchApplication(JsonObject searchParams) {
-        GenericEntity<JsonObject> entity = new GenericEntity<JsonObject>(searchParams) {};
-        
+        GenericEntity<JsonObject> entity = new GenericEntity<JsonObject>(searchParams) {
+        };
+
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, SEARCH_APPLICATION_PATH));
         request = addAuthorizationHeader(request);
-        
+
         Response response = request.post(Entity.json(entity));
         validateResponseStatus(response);
-        
+
         return response;
     }
 
@@ -201,17 +208,16 @@ public class RestCommunication {
         Response response = request.get();
         return validateResponseStatus(response);
     }
-    
+
     /*private void exctractTokenAndRoleFromResponse(Response response) {
         JsonObject json = response.readEntity(JsonObject.class);
         token = json.getString("token", "");
         role = json.getString("role", "");
         System.out.println("CLINET RECEIVED TOKEN: " + token + ", ROLE: " + role);
     }*/
-    
     /**
      * Adds token to target header for user validation in server side.
-     * 
+     *
      * @param target Invocation target
      * @return target with token
      */
@@ -219,37 +225,38 @@ public class RestCommunication {
         String token;
         try {
             token = Authentication.token;
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             token = "";
         }
-        
+
         return target.header(HttpHeaders.AUTHORIZATION, AUTHORIZATION_SCHEMA + token);
     }
-    
+
     /**
      * Build a new webtarget with provides base url and inner paths.
-     * 
+     *
      * @param paths inner paths
      * @return reequested webtarget
      */
     private Invocation.Builder getRequestToPath(List<String> paths) {
         WebTarget target = client.target(BASE_URL);
-        
-        for(String path : paths) {
+
+        for (String path : paths) {
             target = target.path(path);
         }
-                
+
         return target.request();
     }
-    
+
     /**
-     * Validates if the response from server is acceptable. If not send user to error page with error msg.
-     * 
+     * Validates if the response from server is acceptable. If not send user to
+     * error page with error msg.
+     *
      * @param response Response contaning response status
      * @return Response object
      */
     private Response validateResponseStatus(Response response) {
-        switch(response.getStatus()) {
+        switch (response.getStatus()) {
             case 401:
                 System.out.println("401 bsnitch");
                 triggerError(401, "BLOCKING YOU BeaCH");
@@ -265,13 +272,13 @@ public class RestCommunication {
                 System.out.println("defaulting: " + response.getStatus() + ", status: " + response.getStatusInfo());
                 break;
         }
-        
+
         return response;
     }
-    
+
     /**
      * Send user to error page with provided error message.
-     * 
+     *
      * @param code error code
      * @param msg error message
      */
@@ -279,11 +286,17 @@ public class RestCommunication {
         try {
             FacesContext.getCurrentInstance().getExternalContext().responseSendError(code, msg);
             FacesContext.getCurrentInstance().responseComplete();
-                            System.out.println("heres");
 
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             System.out.println("ERROR CAUGHT : " + ex.getMessage());
             ex.printStackTrace();
         }
+    }
+
+    public void changeAppStatus(JsonObject obj) {
+        Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, STATUS_PATH));
+        request = addAuthorizationHeader(request);
+        Response response = request.post(Entity.json(obj));
+        validateResponseStatus(response);
     }
 }

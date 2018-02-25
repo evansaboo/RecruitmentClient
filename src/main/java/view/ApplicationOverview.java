@@ -8,15 +8,23 @@ package view;
 import model.ApplicationDetailsDTO;
 import datarepresentation.CompetenceDTO;
 import datarepresentation.CompetenceProfileDTO1;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.GenericType;
 import model.LanguageChange;
 import rest.RestCommunication;
@@ -28,10 +36,10 @@ import rest.RestCommunication;
 @Named("applicationOverview")
 @SessionScoped
 public class ApplicationOverview implements Serializable {
-    
+
     private long applicationId;
     private ApplicationDetailsDTO appDetails = new ApplicationDetailsDTO();
-    
+
     private final Map<String, List<CompetenceProfileDTO1>> competenceHashMap = new HashMap<>();
     @Inject
     private RestCommunication rc;
@@ -58,8 +66,7 @@ public class ApplicationOverview implements Serializable {
     public void setApplicationId(long applicationId) {
         this.applicationId = applicationId;
     }
-    
-    
+
     public ApplicationDetailsDTO getAppDetails() {
         return appDetails;
     }
@@ -78,5 +85,19 @@ public class ApplicationOverview implements Serializable {
 
     public List<CompetenceProfileDTO1> getCompetenceProfiles() {
         return competenceHashMap.get(lc.getLanguage());
-    }   
+    }
+
+    public void changeStatus(long status) {
+        JsonObject jbuilder = Json.createObjectBuilder()
+                .add("applicationId", applicationId)
+                .add("appStatus", status)
+                .build();
+        rc.changeAppStatus(jbuilder);
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        try {
+            ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+        } catch (IOException ex) {
+            Logger.getLogger(ApplicationOverview.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

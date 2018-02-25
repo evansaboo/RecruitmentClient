@@ -33,10 +33,14 @@
                             <td colspan="2">
                                 <h:form>
                                     <div class="col-sm-6 col-xs-6">
-                                        <h:commandButton style="height:50px; width:100%" class="col-sm-12 btn btn-success" value="Accept"></h:commandButton>
+                                        <h:commandButton style="height:50px; width:100%" class="col-sm-12 btn btn-success"  action="#{applicationOverview.changeStatus(1)}" value="Accept">
+                                        <f:ajax execute="@form" render="@none" />
+                                        </h:commandButton>
                                     </div>
                                     <div class="col-sm-6 col-xs-6">
-                                        <h:commandButton style="height:50px; width:100%" class="col-sm-12 btn btn-danger" value="Reject"></h:commandButton>
+                                        <h:commandButton style="height:50px; width:100%" class="col-sm-12 btn btn-danger" action="#{applicationOverview.changeStatus(2)}" value="Reject">
+                                        <f:ajax execute="@form" render="@none" />
+                                        </h:commandButton>
                                     </div>
                                 </h:form>
                             </td>
