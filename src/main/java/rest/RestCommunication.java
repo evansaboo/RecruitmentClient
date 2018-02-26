@@ -98,6 +98,8 @@ public class RestCommunication {
 
         Response logoutResponse = request.get();
 
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        
         return logoutResponse;
     }
 

@@ -253,7 +253,6 @@ public class Authentication implements Serializable {
      */
     public String logout() {
         controller.logout();
-        loggedon = "";
         authenticated = "Logged out, goodbye!";
         return "login?faces-redirect=true";
     }
