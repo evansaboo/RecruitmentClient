@@ -29,14 +29,14 @@ and open the template in the editor.
 
                 <div class="btn-group navbar-right" role="group" aria-label="Basic example" id="headerbar">
                     <h:form>
-                        <h:outputText value="#{login.loggedon}"/>
+                        <h:outputText value="#{login.loggedon}" />
                     </h:form>
                 </div>
                 <ul class="nav navbar-nav navbar-right">
                     <li>
                         <h:link value="#{msg['lr']}" outcome="login" rendered="#{empty login.loggedon}" />
                     </li>    
-                    <h:panelGroup rendered="#{not empty login.loggedon}">
+                    <h:panelGroup id="user_menu" rendered="#{not empty login.loggedon}">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">#{login.user} <span class="caret"></span></a>
                         <ul class="dropdown-menu">
