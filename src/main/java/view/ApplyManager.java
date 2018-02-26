@@ -27,9 +27,9 @@ import model.LanguageChange;
 @Named("applyManager")
 @SessionScoped
 public class ApplyManager implements Serializable {
-    @Inject RestCommunication controller;
+    @Inject private RestCommunication controller;
+    @Inject private LanguageChange lc;
     
-    @Inject private LanguageChange lc;    
     private List<CompetenceDTO> competences;
     private final HashMap<String, Long> competenceMapper = new HashMap<>();
     
