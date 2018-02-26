@@ -46,9 +46,13 @@ public class ApplicationListing implements Serializable {
      * Fills the list of competences on initialize
      */
     public void initPage() {
+        try{
         cmptList = contr.getCompetencesForRecruiter().readEntity(new GenericType<List<CompetenceDTO>>() {
         });
         initList();
+        } catch(Exception e){
+            
+        }
     }
     /**
      * Returns the submission date

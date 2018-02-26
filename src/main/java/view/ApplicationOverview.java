@@ -48,14 +48,17 @@ public class ApplicationOverview implements Serializable {
     private LanguageChange lc;
 
     public void initPage() {
-        appDetails = rc.getApplicationDetails(applicationId).readEntity(new GenericType<ApplicationDetailsDTO>() {
-        });
-        competenceHashMap.clear();
-        for (CompetenceProfileDTO1 cp : appDetails.getCompetenceProfiles()) {
-            if (!competenceHashMap.containsKey(cp.getLanguage())) {
-                competenceHashMap.put(cp.getLanguage(), new ArrayList<>());
+        try {
+            appDetails = rc.getApplicationDetails(applicationId).readEntity(new GenericType<ApplicationDetailsDTO>() {
+            });
+            competenceHashMap.clear();
+            for (CompetenceProfileDTO1 cp : appDetails.getCompetenceProfiles()) {
+                if (!competenceHashMap.containsKey(cp.getLanguage())) {
+                    competenceHashMap.put(cp.getLanguage(), new ArrayList<>());
+                }
+                competenceHashMap.get(cp.getLanguage()).add(cp);
             }
-            competenceHashMap.get(cp.getLanguage()).add(cp);
+        } catch (Exception ex) {
         }
     }
 
