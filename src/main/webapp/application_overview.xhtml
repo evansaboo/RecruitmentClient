@@ -22,28 +22,28 @@
         <div class="container">
             
             <div class="col-sm-10 col-xs-12" style="padding-left: 0;">
-            <h1>Job Application Overview</h1>
+            <h1>#{msg['AO_title']}</h1>
             </div>
             <div class="col-sm-2 col-xs-12 " style="margin-top: 25px; padding: 0; margin-bottom: 15px;">
-                <button class="btn btn-primary pull-right" style="width:100%; height: 40px;">Generate PDF</button>
+                <button class="btn btn-primary pull-right" style="width:100%; height: 40px;">#{msg['AO_pdf_button']}</button>
             </div>
             <hr/>
             <ui:repeat value="#{applicationOverview.appDetails}" var="app">
                 <table class="table table-striped table-hover table-bordered" style="  table-layout: fixed;">
                     <tbody>
                         <tr>
-                            <th colspan="2" style="text-align: center; font-size: 18px;">Change Status</th>
+                            <th colspan="2" style="text-align: center; font-size: 18px;">#{msg['AO_change_status_title']}</th>
                         </tr>
                         <tr>
                             <td colspan="2">
                                 <h:form>
                                     <div class="col-sm-6 col-xs-6">
-                                        <h:commandButton style="height:50px; width:100%" class="col-sm-12 btn btn-success"  action="#{applicationOverview.changeStatus(1)}" value="Accept">
+                                        <h:commandButton style="height:50px; width:100%" class="col-sm-12 btn btn-success"  action="#{applicationOverview.changeStatus(3)}" value="#{msg['AO_status_accept']}">
                                         <f:ajax execute="@form" render="@none" />
                                         </h:commandButton>
                                     </div>
                                     <div class="col-sm-6 col-xs-6">
-                                        <h:commandButton style="height:50px; width:100%" class="col-sm-12 btn btn-danger" action="#{applicationOverview.changeStatus(2)}" value="Reject">
+                                        <h:commandButton style="height:50px; width:100%" class="col-sm-12 btn btn-danger" action="#{applicationOverview.changeStatus(2)}" value="#{msg['AO_status_reject']}">
                                         <f:ajax execute="@form" render="@none" />
                                         </h:commandButton>
                                     </div>
@@ -52,11 +52,11 @@
                         </tr>
                     </tbody>
                 </table>
-                <h3>Application Information</h3>
+                <h3>#{msg['AO_app_info_title']}</h3>
                 <table class="table table-striped table-hover table-bordered" style="  table-layout: fixed;">
                     <tbody>
                         <tr>
-                            <th style="width:30%;">Registration Date</th>
+                            <th style="width:30%;">#{msg['AO_reg_date']}</th>
                             <td>
                                 <h:outputText value="#{app.registrationDate}" >
                                     <f:convertDateTime pattern="d-M-yyyy"/>
@@ -64,7 +64,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <th>Current Status</th>
+                            <th>#{msg['AO_current_status']}</th>
                             <td>
                                 #{applicationOverview.status}
                             </td>
@@ -72,29 +72,29 @@
 
                     </tbody>
                 </table>
-                <h3>User Information</h3>
+                <h3>#{msg['AO_user_info']}</h3>
                 <table class="table table-striped table-hover table-bordered" style="  table-layout: fixed;">
                     <tbody>
                         <tr>
-                            <th style="width:30%;">First Name</th>
+                            <th style="width:30%;">#{msg['AO_first_name']}</th>
                             <td>
                                 #{app.user_firstname} 
                             </td>
                         </tr>
                         <tr>
-                            <th>Surname</th>
+                            <th>#{msg['AO_surname']}</th>
                             <td>
                                 #{app.user_surname}
                             </td>
                         </tr>
                         <tr>
-                            <th>Email</th>
+                            <th>#{msg['AO_email']}</th>
                             <td>
                                 #{app.user_email}
                             </td>
                         </tr>  
                         <tr>
-                            <th>Social Security Number</th>
+                            <th>#{msg['AO_ssn']}</th>
                             <td>
                                 #{app.user_ssn}
                             </td>
@@ -102,33 +102,33 @@
                     </tbody>
                 </table>
 
-                <h3>Competences</h3>
+                <h3>#{msg['AO_comp_title']}</h3>
                 <h:dataTable class="table table-striped table-hover table-bordered" style=" table-layout: fixed;"
                              value="#{applicationOverview.competenceProfiles}" var="cp">
                     <h:column>
-                        <f:facet name="header">Name</f:facet>
+                        <f:facet name="header">#{msg['AO_comp_name']}</f:facet>
                         #{cp.competenceName}
                     </h:column>
                     <h:column>
-                        <f:facet name="header">Years Of Experience</f:facet>
+                        <f:facet name="header">#{msg['AO_comp_yoe']}</f:facet>
                         
                         <h:outputText value="#{cp.yearsOfExperience}">
                             <f:convertNumber maxFractionDigits="2" />
                         </h:outputText>
                     </h:column>
                 </h:dataTable>
-                <h3>Availability</h3>
+                <h3>#{msg['AO_av_title']}</h3>
                 <h:dataTable class="table table-striped table-hover table-bordered" style=" table-layout: fixed;"
                              value="#{app.availabilities}" var="av">
                     <h:column>
-                        <f:facet name="header">From</f:facet>
+                        <f:facet name="header">#{msg['AO_av_from']}</f:facet>
                         <h:outputText value="#{av.fromDate}">
                             <f:convertDateTime pattern="d-M-yyyy"/>
                         </h:outputText>
                         
                     </h:column>
                     <h:column>
-                        <f:facet name="header">To</f:facet>
+                        <f:facet name="header">#{msg['AO_av_to']}</f:facet>
                         <h:outputText value="#{av.toDate}">
                             <f:convertDateTime pattern="d-M-yyyy"/>
                         </h:outputText>

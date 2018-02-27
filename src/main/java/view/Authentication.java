@@ -193,7 +193,11 @@ public class Authentication implements Serializable {
         authenticated = "";
         return s;
     }
-
+    
+    public String getRole(){
+        return role;
+    }
+    
     /**
      * Creates a JsonObject of the user credentials and sends it to authenticate
      * the user.
@@ -273,11 +277,20 @@ public class Authentication implements Serializable {
             loggedon = json.getString("token", "");
             token = loggedon;
             role = json.getString("role", "");
-            return "index?faces-redirect=true";
+            return roleRedirect();
         } else {
             authenticated = authMsg;
             return "login?faces-redirect=true";
         }
+    }
+    
+    private String roleRedirect(){
+        if(role.equals("Applicant"))
+            return "apply?faces-redirect=true";
+        else if(role.equals("Recruiter"))
+            return "applications?faces-redirect=true";
+            
+        return "index?faces-redirect=true";
     }
 
 }

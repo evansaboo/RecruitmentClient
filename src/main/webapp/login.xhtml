@@ -23,19 +23,19 @@
                         <div class="login-group bg-light">
                             <div class="form-group">
                                 <h:outputLabel for="lg_username" class="sr-only">#{msg['username']}</h:outputLabel>
-                                
+
                                 <h:inputText value="#{login.user}" class="form-control" id="lg_username" a:placeholder="#{msg['username']}" validatorMessage="*#{msg['username']} #{msg['reqfield']}">
                                     <f:validateRequired/></h:inputText>
-                                
+
                             </div>
                             <h:message for="lg_username"/>
                             <div class="form-group">
                                 <h:outputLabel for="lg_password" class="sr-only">#{msg['password']}</h:outputLabel>
-                                
+
                                 <h:inputSecret value="#{login.password}" class="form-control" id="lg_password" a:placeholder="#{msg['password']}" validatorMessage="*#{msg['password']} #{msg['reqfield']}">
                                     <f:validateRequired />
                                 </h:inputSecret>
-                                
+
                             </div>
                             <h:message for="lg_password"/>
                             <div class="form-group login-group-checkbox">
@@ -63,67 +63,82 @@
                                 <h:outputLabel for="name" class="cols-sm-2 control-label">#{msg['fname']}</h:outputLabel>
                                 <div class="cols-sm-10">
                                     <div class="input-group">
-                                        <h:message for="name"/>
-                                        <h:inputText value="#{login.name}" class="form-control" id="name" a:placeholder="#{msg['fname']}" validatorMessage="#{msg['fname']} #{msg['reqfield']}">
-                                            <f:validateRequired /></h:inputText>
+
+                                        <h:inputText value="#{login.name}" class="form-control" id="name" a:placeholder="#{msg['fname']}" validatorMessage="*#{msg['fname']} #{msg['reqfield']}">
+                                            <f:validateRequired />
+                                        </h:inputText>
+
                                     </div>
                                 </div>
+
                             </div>
+                            <h:message  class="errorMsg" for="name"/>
                             <div class="form-group">
                                 <h:outputLabel for="surname" class="cols-sm-2 control-label">#{msg['lname']}</h:outputLabel>
                                 <div class="cols-sm-10">
                                     <div class="input-group">
-                                        <h:message for="surname"/>
-                                        <h:inputText value="#{login.surname}" class="form-control" id="surname" a:placeholder="#{msg['lname']}" validatorMessage="#{msg['lname']} #{msg['reqfield']}">
-                                            <f:validateRequired /></h:inputText>
+
+                                        <h:inputText value="#{login.surname}" class="form-control" id="surname" a:placeholder="#{msg['lname']}" validatorMessage="*#{msg['lname']} #{msg['reqfield']}">
+                                            <f:validateRequired />
+                                        </h:inputText>
+
                                     </div>
                                 </div>
                             </div>
-
+                            <h:message class="errorMsg"  for="surname"/>
                             <div class="form-group">
                                 <h:outputLabel for="email" class="cols-sm-2 control-label">#{msg['email']}</h:outputLabel>
                                 <div class="cols-sm-10">
                                     <div class="input-group">
-                                        <h:message for="email"/>
-                                        <h:inputText value="#{login.email}" class="form-control" id="email" a:placeholder="#{msg['email']}" validatorMessage="#{msg['email']} #{msg['reqfield']}">
-                                            <f:validateRequired /></h:inputText>
+
+                                        <h:inputText value="#{login.email}" class="form-control" id="email" a:placeholder="#{msg['email']}" validatorMessage="*#{msg['email']} #{msg['reqfield']}">
+                                            <f:validateRequired />
+                                        </h:inputText>
+
                                     </div>
                                 </div>
                             </div>
-
+                            <h:message class="errorMsg" for="email"/>
                             <div class="form-group">
                                 <h:outputLabel for="username" class="cols-sm-2 control-label">#{msg['username']}</h:outputLabel>
                                 <div class="cols-sm-10">
                                     <div class="input-group">
-                                        <h:message for="username"/>
-                                        <h:inputText value="#{login.regUser}" class="form-control" id="username" a:placeholder="#{msg['username']}" validatorMessage="#{msg['username']} #{msg['reqfield']}">
-                                            <f:validateRequired /></h:inputText>
+
+                                        <h:inputText value="#{login.regUser}" class="form-control" id="username" a:placeholder="#{msg['username']}" validatorMessage="*#{msg['username']} #{msg['reqfield']}">
+                                            <f:validateRequired />
+                                        </h:inputText>
                                     </div>
                                 </div>
                             </div>
+                            <h:message class="errorMsg"  for="username"/>
 
                             <div class="form-group">
                                 <h:outputLabel for="password" class="cols-sm-2 control-label">#{msg['password']}</h:outputLabel>
                                 <div class="cols-sm-10">
                                     <div class="input-group">
-                                        <h:message for="password"/>
-                                        <h:inputSecret value="#{login.regPassword}" class="form-control" id="password" a:placeholder="#{msg['password']}" validatorMessage="#{msg['password']} #{msg['reqfield']}">
-                                            <f:validateRequired /></h:inputSecret>
+                                        <h:inputSecret value="#{login.regPassword}" class="form-control" id="password" a:placeholder="#{msg['password']}" validatorMessage="*#{msg['password']} #{msg['reqfield']}">
+                                            <f:validateRequired />
+                                        </h:inputSecret>
                                     </div>
+
+
                                 </div>
+
                             </div>
+                            <h:message class="errorMsg" for="password"/>
 
                             <div class="form-group">
                                 <h:outputLabel for="ssn" class="cols-sm-2 control-label">#{msg['ssn']}</h:outputLabel>
                                 <div class="cols-sm-10">
                                     <div class="input-group">
-                                        <h:message for="ssn"/>
-                                        <h:inputText value="#{login.ssn}" class="form-control" id="ssn" a:placeholder="#{msg['ssn']}" validatorMessage="#{msg['ssn']} #{msg['reqfield']}">
-                                            <f:validateRequired /></h:inputText>
+                                        <h:inputText value="#{login.ssn}" class="form-control" id="ssn" a:placeholder="#{msg['ssn']}" validatorMessage="*#{msg['ssn']} #{msg['reqfield']}">
+                                            <f:validateRequired />
+                                        </h:inputText>
                                     </div>
                                 </div>
                             </div>
 
+                            <h:message class="errorMsg" for="ssn"/>
 
                             <div class="form-group ">
                                 <h:commandButton  action="#{login.register}" class="btn btn-primary btn-lg btn-block" value="#{msg['register']}"/>
