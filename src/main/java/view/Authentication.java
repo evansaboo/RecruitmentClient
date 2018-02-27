@@ -2,7 +2,10 @@ package view;
 
 import rest.RestCommunication;
 import java.io.Serializable;
+import java.util.ResourceBundle;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.JsonObject;
@@ -24,7 +27,7 @@ public class Authentication implements Serializable {
     private String name;
     private String surname;
     private String email;
-    private String authenticated;
+    private String msgToUser;
     private String loggedon;
     public static String token;
     public static String role;
@@ -188,16 +191,21 @@ public class Authentication implements Serializable {
      *
      * @return the errormessage to display for user
      */
-    public String getAuthenticated() {
-        String s = authenticated;
-        authenticated = "";
+    public String getMsgToUser() {
+        String s = msgToUser;
+        msgToUser = null;
         return s;
     }
-    
-    public String getRole(){
+
+    public String getRole() {
         return role;
     }
-    
+
+    public ResourceBundle getLangProperties() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        return context.getApplication().evaluateExpressionGet(context, "#{msg}", ResourceBundle.class);
+    }
+
     /**
      * Creates a JsonObject of the user credentials and sends it to authenticate
      * the user.
@@ -214,7 +222,7 @@ public class Authentication implements Serializable {
                     .add("password", password).build();
 
             Response authResponse = controller.login(job);
-            return validateAndExtractAuthResponse(authResponse, "Authentication failed");
+            return validateAndExtractAuthResponse(authResponse, "errorMsg_authFailed");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -241,7 +249,7 @@ public class Authentication implements Serializable {
                     .add("username", reguser).build();
 
             Response authResponse = controller.register(job);
-            return validateAndExtractAuthResponse(authResponse, "Username taken");
+            return validateAndExtractAuthResponse(authResponse, "errorMsg_uTaken");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -257,7 +265,7 @@ public class Authentication implements Serializable {
      */
     public String logout() {
         controller.logout();
-        authenticated = "Logged out, goodbye!";
+
         return "login?faces-redirect=true";
     }
 
@@ -277,20 +285,25 @@ public class Authentication implements Serializable {
             loggedon = json.getString("token", "");
             token = loggedon;
             role = json.getString("role", "");
+            msgToUser = getLangProperty("logoutMsg");
             return roleRedirect();
         } else {
-            authenticated = authMsg;
+            msgToUser = getLangProperty(authMsg);
             return "login?faces-redirect=true";
         }
     }
-    
-    private String roleRedirect(){
-        if(role.equals("Applicant"))
+
+    private String roleRedirect() {
+        if (role.equals("Applicant")) {
             return "apply?faces-redirect=true";
-        else if(role.equals("Recruiter"))
+        } else if (role.equals("Recruiter")) {
             return "applications?faces-redirect=true";
-            
+        }
+
         return "index?faces-redirect=true";
     }
 
+    public String getLangProperty(String property) {
+        return getLangProperties().getString(property);
+    }
 }

@@ -81,7 +81,7 @@
                             <h:inputText id="t3" value="#{applyManager.availability.fromDate}" class="form-control" converterMessage="#{msg['dateFormatErrorMsg']}">
                                 <f:convertDateTime type="date" pattern="dd-MM-yyyy" />
                             </h:inputText>
-                            <h:message for="dateFrom" style="color:red"/>
+                            <h:message for="t3" style="color:red"/>
 
                         </div>
                         <div class="form-group" >
@@ -89,7 +89,7 @@
                             <h:inputText id="t4" value="#{applyManager.availability.toDate}" class="form-control" converterMessage="#{msg['dateFormatErrorMsg']}">
                                 <f:convertDateTime type="date" pattern="dd-MM-yyyy" />
                             </h:inputText>
-                            <h:message for="dateFrom" style="color:red"/>
+                            <h:message for="t4" style="color:red"/>
 
                         </div>
                         <h:commandButton value="#{msg['apply_av_addBtn']}"  id="availabilityButton" class="btn btn-primary">
