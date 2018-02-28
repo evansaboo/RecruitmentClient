@@ -285,6 +285,7 @@ public class Authentication implements Serializable {
             loggedon = json.getString("token", "");
             token = loggedon;
             role = json.getString("role", "");
+            user = json.getString("username");
             msgToUser = getLangProperty("logoutMsg");
             return roleRedirect();
         } else {
