@@ -27,27 +27,35 @@ and open the template in the editor.
 
             <div class="collapse navbar-collapse" id="dropdown">
 
-                <div class="btn-group navbar-right" role="group" aria-label="Basic example" id="headerbar">
-                    <h:form>
-                        <h:outputText value="#{login.loggedon}" />
-                    </h:form>
-                </div>
                 <ul class="nav navbar-nav navbar-right">
                     <li>
                         <h:link value="#{msg['lr']}" outcome="login" rendered="#{empty login.loggedon}" />
                     </li>    
-                    <h:panelGroup id="user_menu" rendered="#{not empty login.loggedon}">
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">#{login.user} <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Another action</a></li>
-                            <li><a href="#">Something else here</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><h:form><h:commandLink value="#{msg['logout']}" class="dropdown" action="#{login.logout}" style="padding-left: 1.5em;"/></h:form></li>
-                        </ul>
-                    </li>
-                        </h:panelGroup>
+                    <ui:fragment rendered="#{not empty login.loggedon}">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">#{login.user} <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <ui:fragment rendered="#{login.role == 'Recruiter'}">
+                                    <li>
+                                        <a href="applications.xhtml">Search Applications</a>
+                                    </li>
+                                </ui:fragment>
+                                <ui:fragment rendered="#{login.role == 'Applicant'}">
+                                    <li>
+                                        <a href="apply.xhtml">Create Application</a>
+                                    </li>
+                                </ui:fragment>
+                                <li role="separator" class="divider"></li>
+                                
+                                    <h:form>
+                                        <li>
+                                        <h:commandLink value="#{msg['logout']}" class="dropdown" action="#{login.logout}"/>
+                                        </li>
+                                    </h:form>
+                                
+                            </ul>
+                        </li>
+                    </ui:fragment>
                 </ul>
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->

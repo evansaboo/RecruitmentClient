@@ -7,7 +7,6 @@ package rest;
 
 import datarepresentation.AvailabilityDTO;
 import datarepresentation.Competence;
-import model.ApplicationDetailsDTO;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;

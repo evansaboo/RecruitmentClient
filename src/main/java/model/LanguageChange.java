@@ -48,8 +48,7 @@ public class LanguageChange implements Serializable {
      */
     public void changeLanguage(String language) {
         locale = new Locale(language);
-        System.out.println(locale.getLanguage());
-        FacesContext.getCurrentInstance().getViewRoot().setLocale(new Locale(language));
+        FacesContext.getCurrentInstance().getViewRoot().setLocale(locale);
     }
 
 }
