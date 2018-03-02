@@ -63,7 +63,7 @@
                                 <div class="cols-sm-10">
                                     <div class="input-group">
 
-                                        <h:inputText value="#{login.name}" class="form-control" id="name" a:placeholder="#{msg['fname']}" validatorMessage="*#{msg['fname']} #{msg['reqfield']}">
+                                        <h:inputText value="#{login.name}" class="form-control" id="name" a:placeholder="#{msg['fname']}">
                                             <f:validateRequired />
                                         </h:inputText>
 
@@ -77,7 +77,7 @@
                                 <div class="cols-sm-10">
                                     <div class="input-group">
 
-                                        <h:inputText value="#{login.surname}" class="form-control" id="surname" a:placeholder="#{msg['lname']}" validatorMessage="*#{msg['lname']} #{msg['reqfield']}">
+                                        <h:inputText value="#{login.surname}" class="form-control" id="surname" a:placeholder="#{msg['lname']}">
                                             <f:validateRequired />
                                         </h:inputText>
 
@@ -90,7 +90,7 @@
                                 <div class="cols-sm-10">
                                     <div class="input-group">
 
-                                        <h:inputText value="#{login.email}" class="form-control" id="email" a:placeholder="#{msg['email']}" validatorMessage="*#{msg['email']} #{msg['reqfield']}">
+                                        <h:inputText value="#{login.email}" class="form-control" id="email" a:placeholder="#{msg['email']}">
                                             <f:validateRequired />
                                         </h:inputText>
 
@@ -103,8 +103,10 @@
                                 <div class="cols-sm-10">
                                     <div class="input-group">
 
-                                        <h:inputText value="#{login.regUser}" class="form-control" id="username" a:placeholder="#{msg['username']}" validatorMessage="*#{msg['username']} #{msg['reqfield']}">
+                                        <h:inputText value="#{login.regUser}" class="form-control" id="username" a:placeholder="#{msg['username']}">
                                             <f:validateRequired />
+                                            <f:validateRegex
+                                                pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
                                         </h:inputText>
                                     </div>
                                 </div>
@@ -115,7 +117,7 @@
                                 <h:outputLabel for="password" class="cols-sm-2 control-label">#{msg['password']}</h:outputLabel>
                                 <div class="cols-sm-10">
                                     <div class="input-group">
-                                        <h:inputSecret value="#{login.regPassword}" class="form-control" id="password" a:placeholder="#{msg['password']}" validatorMessage="*#{msg['password']} #{msg['reqfield']}">
+                                        <h:inputSecret value="#{login.regPassword}" class="form-control" id="password" a:placeholder="#{msg['password']}">
                                             <f:validateRequired />
                                         </h:inputSecret>
                                     </div>
@@ -124,14 +126,31 @@
                                 </div>
 
                             </div>
-                            <h:message class="errorMsg" for="password"/>
+                            <h:message class="errorMsg" for="password2"/>
+
+                            <div class="form-group">
+                                <h:outputLabel for="password2" class="cols-sm-2 control-label">#{msg['password']}</h:outputLabel>
+                                <div class="cols-sm-10">
+                                    <div class="input-group">
+                                        <h:inputSecret value="#{login.regPassword2}" class="form-control" id="password2" a:placeholder="#{msg['password']}">
+                                            <f:validateRequired />
+                                        </h:inputSecret>
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                            <h:message class="errorMsg" for="password2"/>
 
                             <div class="form-group">
                                 <h:outputLabel for="ssn" class="cols-sm-2 control-label">#{msg['ssn']}</h:outputLabel>
                                 <div class="cols-sm-10">
                                     <div class="input-group">
-                                        <h:inputText value="#{login.ssn}" class="form-control" id="ssn" a:placeholder="#{msg['ssn']}" validatorMessage="*#{msg['ssn']} #{msg['reqfield']}">
+                                        <h:inputText value="#{login.ssn}" class="form-control" id="ssn" a:placeholder="#{msg['ssn']}">
                                             <f:validateRequired />
+                                            <f:validateLength minimum="8" maximum="15" />
+                                            <f:convertNumber integerOnly="true" type="number" />
                                         </h:inputText>
                                     </div>
                                 </div>
