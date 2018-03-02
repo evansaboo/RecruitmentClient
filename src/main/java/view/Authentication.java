@@ -4,14 +4,17 @@ import rest.RestCommunication;
 import java.io.Serializable;
 import java.util.ResourceBundle;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.JsonObject;
 import javax.json.spi.JsonProvider;
 import javax.ws.rs.core.Response;
-
+/**
+ * Takes the input from the login pages and sends them along to the restcommunication which returns a reponse 
+ * that is handled and the user redirected.
+ * @author Emil
+ */
 @Named("login")
 @SessionScoped
 public class Authentication implements Serializable {
@@ -23,6 +26,7 @@ public class Authentication implements Serializable {
     private String password;
     private String reguser;
     private String regpassword;
+    private String regpassword2;
     private String ssn;
     private String name;
     private String surname;
@@ -185,6 +189,23 @@ public class Authentication implements Serializable {
     public void setRegPassword(String regpassword) {
         this.regpassword = regpassword;
     }
+    /**
+     * Returns the registerers entered password.
+     *
+     * @return password entered
+     */
+    public String getRegPassword2() {
+        return regpassword2;
+    }
+
+    /**
+     * Sets the password for a user registering.
+     *
+     * @param regpassword an entered password from regiserer
+     */
+    public void setRegPassword2(String regpassword2) {
+        this.regpassword2 = regpassword2;
+    }
 
     /**
      * Get errormessage to display for user and then reset it.
@@ -238,6 +259,9 @@ public class Authentication implements Serializable {
      * @return redirect to start page on sucess
      */
     public String register() {
+        if(!regpassword.equals(regpassword2)){
+            msgToUser = getLangProperty("pmatch");
+        }else{
         try {
             JsonObject job;
             job = provider.createObjectBuilder()
@@ -253,6 +277,7 @@ public class Authentication implements Serializable {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
         }
         return "";
     }
