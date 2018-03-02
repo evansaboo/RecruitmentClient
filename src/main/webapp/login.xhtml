@@ -28,7 +28,7 @@
                                     <f:validateRequired/></h:inputText>
 
                             </div>
-                            <h:message for="lg_username"/>
+                            <h:message for="lg_username" id="errorUsername"/>
                             <div class="form-group">
                                 <h:outputLabel for="lg_password" class="sr-only">#{msg['password']}</h:outputLabel>
 
@@ -37,7 +37,7 @@
                                 </h:inputSecret>
 
                             </div>
-                            <h:message for="lg_password"/>
+                            <h:message for="lg_password" id="errorPassword"/>
                             <div class="form-group login-group-checkbox">
                                 <div class="dropdown">
                                     <button class="btn btn-secondary" type="button" id="dropdownMenuButton">

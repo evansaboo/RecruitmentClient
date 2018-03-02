@@ -32,7 +32,7 @@ and open the template in the editor.
                         <h:link value="#{msg['lr']}" outcome="login" rendered="#{empty login.loggedon}" />
                     </li>    
                     <ui:fragment rendered="#{not empty login.loggedon}">
-                        <li class="dropdown">
+                        <li class="dropdown" id="user_menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">#{login.user} <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <ui:fragment rendered="#{login.role == 'Recruiter'}">
