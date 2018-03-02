@@ -1,3 +1,4 @@
+
 $(document).ready(function () {
     $('#registerForm').hide();
     $('#dropdownMenuButton').click(function (e) {
