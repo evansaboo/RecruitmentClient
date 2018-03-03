@@ -72,6 +72,7 @@
 
                             </div>
                             <h:message  class="errorMsg" for="name"/>
+                            
                             <div class="form-group">
                                 <h:outputLabel for="surname" class="cols-sm-2 control-label">#{msg['lname']}</h:outputLabel>
                                 <div class="cols-sm-10">
@@ -85,13 +86,13 @@
                                 </div>
                             </div>
                             <h:message class="errorMsg"  for="surname"/>
+                            
                             <div class="form-group">
                                 <h:outputLabel for="email" class="cols-sm-2 control-label">#{msg['email']}</h:outputLabel>
                                 <div class="cols-sm-10">
                                     <div class="input-group">
 
                                         <h:inputText value="#{login.email}" class="form-control" id="email" a:placeholder="#{msg['email']}">
-                                            <f:validateRequired />
                                             <f:validateRegex
                                                 pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
                                         </h:inputText>
@@ -100,6 +101,7 @@
                                 </div>
                             </div>
                             <h:message class="errorMsg" for="email"/>
+                            
                             <div class="form-group">
                                 <h:outputLabel for="username" class="cols-sm-2 control-label">#{msg['username']}</h:outputLabel>
                                 <div class="cols-sm-10">
@@ -107,7 +109,6 @@
 
                                         <h:inputText value="#{login.regUser}" class="form-control" id="username" a:placeholder="#{msg['username']}">
                                             <f:validateRequired />
-                                            
                                         </h:inputText>
                                     </div>
                                 </div>
@@ -122,12 +123,10 @@
                                             <f:validateRequired />
                                         </h:inputSecret>
                                     </div>
-
-
                                 </div>
 
                             </div>
-                            <h:message class="errorMsg" for="password2"/>
+                            <h:message class="errorMsg" for="password"/>
 
                             <div class="form-group">
                                 <h:outputLabel for="password2" class="cols-sm-2 control-label">#{msg['password']}</h:outputLabel>
@@ -137,8 +136,6 @@
                                             <f:validateRequired />
                                         </h:inputSecret>
                                     </div>
-
-
                                 </div>
 
                             </div>
