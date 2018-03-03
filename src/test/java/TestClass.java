@@ -13,7 +13,7 @@ import org.testng.annotations.*;
  *
  * @author Evan
  */
-public class NewSeleneseIT {
+public class TestClass {
 
     WebDriver driver;
     AuthenticationTest test = new AuthenticationTest();
