@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="kth.iv1201_RecruitmentClient_war_1.0-SNAPSHOT">
+    
+    <test name="test"  preserve-order="true">
+        <classes>
+            <class name="TestClass">
+                <methods>
+                    <include name="testRegisterLink" />                    
+                    <include name="testRegister" />
+                    <include name="testLogout" />
+                    <include name="testRegisterLink" />
+
+                    <include name="testLogin" />
+                    <include name="testParticipantLinks"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite>

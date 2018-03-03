@@ -15,6 +15,9 @@
         <link  rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css"/>
         <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"/>
         <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"/>
+        <link rel="stylesheet" href="css/animate.css"/>
+        <script src="bootstrap-notify.min.js"></script>
+        <script src="resources/js/apply.js"></script>
     </ui:define>
     <ui:define name="body">
         <div class="container">
@@ -129,7 +132,7 @@
                     <h:commandButton value="#{msg['apply_submit_btn']}" action="#{applyManager.submitApplication}" class="btn btn-success btn-lg"
                                      />
                 </h:panelGroup>
-
+                <h:outputText id="msgToUser"  value="#{applyManager.msgToUser}" style="display: none;"/>
             </h:form>
 
         </div>
