@@ -14,6 +14,7 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.json.JsonObject;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -22,17 +23,22 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import model.LanguageChange;
 import view.Authentication;
 
 /**
- *
+ * Handles the communication with the remote REST server, all remote calls go 
+ * through here and this class also handles the authentication and authorizaton 
+ * errors. 
+ * 
  * @author Oscar
  */
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Stateless
 public class RestCommunication {
+    
+    @Inject private LanguageChange languageChange;
 
     private final String BASE_URL = "http://localhost:8080/RecruitmentServ/webresources";
     private final String AUTH_PATH = "auth";
@@ -48,9 +54,8 @@ public class RestCommunication {
     private final String LIST_APPLICATIONS_PATH = "listApplications";
     private final String SEARCH_APPLICATION_PATH = "searchApplication";
     private final String GET_APPLICATION_DETAILS_PATH = "getApplicationDetails";
+    private final String PDF_PATH = "pdf";
     private final String STATUS_PATH = "changeStatus";
-    //private String token = "";
-    //private String role = "";
 
     /**
      * This method sends a login json object to the remote server to login the
@@ -201,6 +206,27 @@ public class RestCommunication {
 
         return response;
     }
+    
+    /**
+     * Calls the remote server and asks for a pdf with the applications details
+     * belonging to a specific application id.
+     *
+     * @param applicationId the specific application id.
+     * @return Response with the resopnse from the server.
+     */
+    public Response generatePdf(long applicationId) {
+        Invocation.Builder request = getRequestToPath(Arrays.asList(
+                APPLICATIONS_PATH,
+                GET_APPLICATION_DETAILS_PATH, 
+                PDF_PATH, 
+                "" + applicationId)
+        );
+        request = addAuthorizationHeader(request);
+        addLocaleHeader(request);
+        
+        Response response = request.get();
+        return validateResponseStatus(response);
+    }
 
     public Response getApplicationDetails(long applicationId) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, GET_APPLICATION_DETAILS_PATH));
@@ -209,13 +235,7 @@ public class RestCommunication {
         Response response = request.get();
         return validateResponseStatus(response);
     }
-
-    /*private void exctractTokenAndRoleFromResponse(Response response) {
-        JsonObject json = response.readEntity(JsonObject.class);
-        token = json.getString("token", "");
-        role = json.getString("role", "");
-        System.out.println("CLINET RECEIVED TOKEN: " + token + ", ROLE: " + role);
-    }*/
+    
     /**
      * Adds token to target header for user validation in server side.
      *
@@ -300,4 +320,9 @@ public class RestCommunication {
         Response response = request.post(Entity.json(obj));
         validateResponseStatus(response);
     }
+
+    private void addLocaleHeader(Invocation.Builder request) {
+        request.header("locale", languageChange.getLanguage());
+    }
+    
 }
