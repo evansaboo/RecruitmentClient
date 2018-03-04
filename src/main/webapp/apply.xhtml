@@ -43,7 +43,7 @@
                                 <f:selectItems value="#{applyManager.yearsOfExp}" />
                             </h:selectOneMenu>
                         </div>
-                        <h:commandButton value="#{msg['apply_comp_addBtn']}" class="btn btn-primary">
+                        <h:commandButton id="addCompBtn" value="#{msg['apply_comp_addBtn']}" class="btn btn-primary">
                             <f:ajax execute="t1 t2" listener="#{applyManager.addCompetence}" render="@form" />
                         </h:commandButton>
                         <h:panelGroup rendered="#{!empty applyManager.comps}">
@@ -83,19 +83,21 @@
                             <label for="t3">#{msg['apply_av_from']}</label>
                             <h:inputText id="t3" value="#{applyManager.availability.fromDate}" class="form-control" converterMessage="#{msg['dateFormatErrorMsg']}">
                                 <f:convertDateTime type="date" pattern="dd-MM-yyyy" />
+                                <f:validateRequired/>
                             </h:inputText>
-                            <h:message for="t3" style="color:red"/>
+                            <h:message id="dateFromErrMsg" for="t3" style="color:red"/>
 
                         </div>
                         <div class="form-group" >
                             <label for="t4">#{msg['apply_av_to']}</label>
                             <h:inputText id="t4" value="#{applyManager.availability.toDate}" class="form-control" converterMessage="#{msg['dateFormatErrorMsg']}">
                                 <f:convertDateTime type="date" pattern="dd-MM-yyyy" />
+                                <f:validateRequired/>
                             </h:inputText>
-                            <h:message for="t4" style="color:red"/>
+                            <h:message id="dateToErrMsg" for="t4" style="color:red"/>
 
                         </div>
-                        <h:commandButton value="#{msg['apply_av_addBtn']}"  id="availabilityButton" class="btn btn-primary">
+                        <h:commandButton value="#{msg['apply_av_addBtn']}"  id="AddavailabilityButton" class="btn btn-primary">
                             <f:ajax execute="t3 t4" listener="#{applyManager.addAvailability}" render="@form" />
                         </h:commandButton>
                         <h:panelGroup rendered="#{!empty applyManager.availabilities}">
@@ -129,8 +131,8 @@
                 </div>
                 <h:panelGroup class="col-lg-12 text-center" layout="block" rendered="#{!empty applyManager.comps || !empty applyManager.availabilities}" >
                     <hr rendered="#{!empty applyManager.comps || !empty applyManager.availabilities}"/>
-                    <h:commandButton value="#{msg['apply_submit_btn']}" action="#{applyManager.submitApplication}" class="btn btn-success btn-lg"
-                                     />
+                    <h:commandButton id="submitAppBtn" value="#{msg['apply_submit_btn']}" action="#{applyManager.submitApplication}" class="btn btn-success btn-lg"
+                                     immediate="true"/>
                 </h:panelGroup>
                 <h:outputText id="msgToUser"  value="#{applyManager.msgToUser}" style="display: none;"/>
             </h:form>
