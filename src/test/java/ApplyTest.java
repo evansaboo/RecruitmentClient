@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.Test;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -17,7 +18,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  * @author Evan
  */
 public class ApplyTest {
-
+    @Test
+    public void test() {
+        System.out.println("hello");
+    }
     public void addCompetence(WebDriver driver, boolean selectComp, boolean selectYOE) {
         Random rand = new Random();
         Select selectorComp = new Select(driver.findElement(By.id("applyForm:t1")));

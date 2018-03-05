@@ -6,11 +6,12 @@
 
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang.RandomStringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -30,9 +31,17 @@ public class TestClass {
     WebDriver driver;
     AuthenticationTest authTest = new AuthenticationTest();
     ApplyTest applyTest = new ApplyTest();
+    ApplicationsTest appTest = new ApplicationsTest();
 
+    String firstname;
+    String surname;
+    String email;
+    String ssn;
     String username;
     String password;
+    String submissionDate;
+    String avFrom = "12-12-2019";
+    String avTo = "12-01-2020";
 
     @BeforeClass
     public void setUp() throws Exception {
@@ -44,8 +53,14 @@ public class TestClass {
         int length = 10;
         boolean useLetters = true;
         boolean useNumbers = false;
+        firstname = RandomStringUtils.random(length, useLetters, useNumbers);
+        surname = RandomStringUtils.random(length, useLetters, useNumbers);
+        ssn = RandomStringUtils.random(length, false, true);
+        email = RandomStringUtils.random(5, useLetters, useNumbers);
+        email = email + "@" + email + ".com";
         username = RandomStringUtils.random(length, useLetters, useNumbers);
         password = RandomStringUtils.random(length, useLetters, true);
+
     }
 
     @AfterClass
@@ -67,13 +82,15 @@ public class TestClass {
         authTest.register(driver, "test", "test", "test@gg.se", "test2", password, password + "1", "123456789", By.xpath("//span[@data-notify='message']"), false);
         authTest.register(driver, "test", "test", "test@gg.se", "test2", password + "1", password, "123456789", By.xpath("//span[@data-notify='message']"), false);
 
-        authTest.register(driver, "test", "test", "test@gg.se", username, password, password, "12345678", By.id("user_menu"), true);
-
+        authTest.register(driver, firstname, surname, email, username, password, password, ssn, By.id("user_menu"), true);
     }
 
     @Test
     public void testLogout() throws Exception {
-        driver.findElement(By.id("user_menu")).click();
+        (new WebDriverWait(driver, 10))
+                .until(ExpectedConditions.
+                        visibilityOfElementLocated(By.id("user_menu"))).click();
+
         driver.findElement(By.linkText("Logout")).click();
     }
 
@@ -130,7 +147,7 @@ public class TestClass {
 
         applyTest.addAvailablity(driver, "12-12-2017", "12-12-2018", By.id("applyForm:availabilityTable"));
         applyTest.addAvailablity(driver, "12-12-2018", "12-12-2019", By.id("applyForm:availabilityTable"));
-        applyTest.addAvailablity(driver, "12-12-2019", "12-12-2020", By.id("applyForm:availabilityTable"));
+        applyTest.addAvailablity(driver, avFrom, avTo, By.id("applyForm:availabilityTable"));
         int count_tableAv = countRowsIntable("applyForm:availabilityTable");
         Assert.assertEquals(count_tableAv, 4);
 
@@ -138,6 +155,10 @@ public class TestClass {
         ((JavascriptExecutor) driver).executeScript(
                 "arguments[0].scrollIntoView();", appSubmitBtn);
         appSubmitBtn.click();
+        DateFormat dateFormat = new SimpleDateFormat("d-MM-yyyy");
+        Date date = new Date();
+        submissionDate = dateFormat.format(date);
+
         applyTest.waitUntil(driver, By.xpath("//span[@data-notify='message']"));
 
     }
@@ -147,5 +168,87 @@ public class TestClass {
                 .until(ExpectedConditions.visibilityOfElementLocated(By.id(tableId)));
         List<WebElement> rows_table = table.findElements(By.tagName("tr"));
         return rows_table.size();
+    }
+
+    @Test
+    public void testRecruiterLogin() throws Exception {
+        (new WebDriverWait(driver, 10))
+                .until(ExpectedConditions.
+                        visibilityOfElementLocated(By.className("close"))).click();
+        Thread.sleep(1000);
+        testLogout();
+
+        authTest.login(driver, "recruiter", "1234", By.id("user_menu"));
+    }
+
+    @Test
+    public void testRecruiterLinks() throws Exception {
+
+        driver.get(new URI(driver.getCurrentUrl()).resolve("apply.xhtml").toString());
+        authTest.waitUntil(driver, By.xpath("//h1[contains(.,'403')]"));
+
+        driver.get(new URI(driver.getCurrentUrl()).resolve("index.xhtml").toString());
+        authTest.waitUntil(driver, By.className("index-content"));
+
+        driver.get(new URI(driver.getCurrentUrl()).resolve("applications.xhtml").toString());
+        authTest.waitUntil(driver, By.id("searchForm"));
+
+        driver.get(new URI(driver.getCurrentUrl()).resolve("application_overview.xhtml").toString());
+        Assert.assertEquals(driver.findElement(By.id("errorMsg")).getText(), "400 BAD REQUEST");
+    }
+
+    @Test
+    public void testApplicationsPage() throws Exception {
+
+        driver.get(new URI(driver.getCurrentUrl()).resolve("applications.xhtml").toString());
+        authTest.waitUntil(driver, By.id("searchForm"));
+        String tbId = "appListingTable";
+        int tbCount1 = countRowsIntable(tbId);
+
+        appTest.searchForApp(driver, "12", avFrom, avTo, true, firstname);
+        appTest.waitUntil(driver, By.id("searchForm:dateErrMsg"));
+
+        appTest.searchForApp(driver, submissionDate, "12", avTo, true, firstname);
+        appTest.waitUntil(driver, By.id("searchForm:dateFromErrMsg"));
+
+        appTest.searchForApp(driver, submissionDate, avFrom, "12", true, firstname);
+        appTest.waitUntil(driver, By.id("searchForm:dateToErrMsg"));
+
+        int tbCount2 = countRowsIntable(tbId);
+        Assert.assertEquals(tbCount2, tbCount1);
+
+        appTest.searchForApp(driver, "", "", "", false, "");
+        int tbCount3 = countRowsIntable(tbId);
+        Assert.assertEquals(tbCount3, tbCount1);
+
+        appTest.searchForApp(driver, submissionDate, avFrom, avTo, false, firstname);
+        int tbCount4 = countRowsIntable(tbId);
+
+        Assert.assertEquals(tbCount4, 2);
+
+        appTest.waitUntil(driver, By.linkText("View Application")).click();
+    }
+
+    @Test
+    public void testAppOverviewPage() throws Exception {
+        appTest.waitUntil(driver, By.xpath("//h1[contains(.,'Job Application Overview')]"));
+        Assert.assertEquals(driver.findElement(By.id("jsfRepeat:0:regDate")).getText(), submissionDate);
+        Assert.assertEquals(driver.findElement(By.id("firstName")).getText(), firstname);
+        Assert.assertEquals(driver.findElement(By.id("surname")).getText(), surname);
+        Assert.assertEquals(driver.findElement(By.id("email")).getText(), email);
+        Assert.assertEquals(driver.findElement(By.id("ssn")).getText(), ssn);
+        
+        Random rand = new Random();
+        for(int i = 0; i < 10; i++){
+            int chooseBtn = rand.nextInt(2);
+            if(chooseBtn == 0){
+                driver.findElement(By.id("jsfRepeat:0:changeStatusForm:AcceptBtn")).click();
+                Assert.assertEquals(appTest.waitUntil(driver, By.id("currentStatus")).getText(), "Accepted");
+            } else {
+                driver.findElement(By.id("jsfRepeat:0:changeStatusForm:RejectBtn")).click();
+                Assert.assertEquals(appTest.waitUntil(driver, By.id("currentStatus")).getText(), "Rejected");
+            }
+        }
+                
     }
 }
