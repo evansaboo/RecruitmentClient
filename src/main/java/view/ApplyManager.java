@@ -40,6 +40,7 @@ public class ApplyManager implements Serializable {
     private AvailabilityDTO availability = new AvailabilityDTO();
     private final List<Double> yearsOfExp = new ArrayList<>();
     
+    private String msgToUser;
     
     public void onPageLoad() {
         try {
@@ -53,15 +54,20 @@ public class ApplyManager implements Serializable {
             for (double i = interval; i <= 75; i += interval) {
                 yearsOfExp.add(i);
             }
-        } catch(Exception ex) {/* exception with reading objects*/}
+        } catch(Exception ex) {/* exception with reading objects*/
+            System.out.println("Error fetching stuff: " + ex.getMessage());
+            ex.printStackTrace();
+        }
     }
     
     public void submitApplication() throws Exception {
         if(comps.isEmpty() && availabilities.isEmpty()) { return; }
         
+        Response availResponse = Response.notModified().build();
+        Response compResponse = Response.notModified().build();
+        
         if(!comps.isEmpty()) {
-            Response compResponse = controller.sendCompetences(comps);
-
+            compResponse = controller.sendCompetences(comps);
             if(compResponse == null || !compResponse.getStatusInfo().equals(Response.Status.OK)) {
                 /* TODO */
                 System.out.println("COMPETENCE ERROR HANDLING");
@@ -70,7 +76,7 @@ public class ApplyManager implements Serializable {
         }
         
         if(!availabilities.isEmpty()) {
-            Response availResponse = controller.sendAvailabilities(availabilities);
+            availResponse = controller.sendAvailabilities(availabilities);
 
             if(availResponse == null || !availResponse.getStatusInfo().equals(Response.Status.OK)) {
                 /* TODO */
@@ -78,7 +84,9 @@ public class ApplyManager implements Serializable {
                 System.out.println("ERROR CODE = " + availResponse.getStatus() + ", REASON = " + availResponse.getStatusInfo().getReasonPhrase());
             }
         }
-
+        if(availResponse.getStatusInfo().equals(Response.Status.OK) || compResponse.getStatusInfo().equals(Response.Status.OK)){
+            msgToUser = "Your application has been successfully submitted.";
+        }
         comps = new ArrayList<>();
         availabilities = new ArrayList<>();
     }
@@ -154,5 +162,13 @@ public class ApplyManager implements Serializable {
     public void setCompetences(List<CompetenceDTO> competences) {
         this.competences = competences;
     }
+
+    public String getMsgToUser() {
+        String s = msgToUser;
+        msgToUser = null;
+        return s;
+    }
+    
+    
 
 }
