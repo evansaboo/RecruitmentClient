@@ -22,6 +22,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.Response;
 import model.Application;
 import model.LanguageChange;
 
@@ -54,13 +55,13 @@ public class ApplicationListing implements Serializable {
      * Fills the list of competences on initialize
      */
     public void initPage() {
-        try {
-            cmptList = contr.getCompetencesForRecruiter().readEntity(new GenericType<List<CompetenceDTO>>() {
-            });
-            initList();
-        } catch (Exception e) {
-            System.out.println("");
+        Response response = contr.getCompetencesForRecruiter();
+        if (response.getStatus() != 200) {
+            return;
         }
+        cmptList = response.readEntity(new GenericType<List<CompetenceDTO>>() {
+        });
+        initList();
     }
 
     /**
@@ -214,7 +215,8 @@ public class ApplicationListing implements Serializable {
                 .add("competence", competence)
                 .add("name", firstname)
                 .build();
-        JsonArray s = contr.searchApplication(jbuilder).readEntity(new GenericType<JsonArray>(){});
+        JsonArray s = contr.searchApplication(jbuilder).readEntity(new GenericType<JsonArray>() {
+        });
         applications.clear();
         for (int i = 0; i < s.size(); i++) {
             JsonObject obj = s.getJsonObject(i);
