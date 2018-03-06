@@ -343,7 +343,7 @@ public class Authentication implements Serializable {
                 msgToUser = getLangProperty("errorMsg_uTaken");
                 break;
             case 2:
-                msgToUser = getLangProperty("errorMsg_uTaken");
+                msgToUser = getLangProperty("errorMsg_ssnTaken");
                 break;
             default:
                 break;
