@@ -10,6 +10,7 @@ package model;
  * @author Evan
  */
 public class Application {
+    private static final long serialVersionUID = 1L;
     private long applicationId;
     private String firstname;
     private String surname;

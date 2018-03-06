@@ -12,6 +12,7 @@ import java.io.Serializable;
  * @author Evan
  */
 public class CompetenceProfileDTO1 implements Serializable {
+    private static final long serialVersionUID = 1L;
     private Long competenceId;
     private String competenceName;
     private double yearsOfExperience;
@@ -91,11 +92,16 @@ public class CompetenceProfileDTO1 implements Serializable {
     public void setCompetenceName(String name) {
         this.competenceName = name;
     }
-
+    /**
+     * 
+     */
     public String getLanguage() {
         return language;
     }
-
+    /**
+     * 
+     * @param language 
+     */
     public void setLanguage(String language) {
         this.language = language;
     }
