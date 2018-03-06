@@ -7,7 +7,6 @@ package rest;
 
 import datarepresentation.AvailabilityDTO;
 import datarepresentation.Competence;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -40,6 +39,7 @@ public class RestCommunication {
     
     @Inject private LanguageChange languageChange;
 
+    private final Client client = ClientBuilder.newClient();
     private final String BASE_URL = "http://localhost:8080/RecruitmentServ/webresources";
     private final String AUTH_PATH = "auth";
     private final String LOGIN_PATH = "login";
@@ -49,7 +49,6 @@ public class RestCommunication {
     private final String APPLICATIONS_PATH = "applications";
     private final String COMPETENCE_PATH = "competence";
     private final String AVAILABILITY_PATH = "availability";
-    private final Client client = ClientBuilder.newClient();
     private final String AUTHORIZATION_SCHEMA = "Bearer ";
     private final String LIST_APPLICATIONS_PATH = "listApplications";
     private final String SEARCH_APPLICATION_PATH = "searchApplication";
@@ -67,11 +66,11 @@ public class RestCommunication {
     public Response login(JsonObject json) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(AUTH_PATH, LOGIN_PATH));
 
-        Response loginResponse = request.post(Entity.json(json));
+        /*Response loginResponse = request.post(Entity.json(json));
         loginResponse.bufferEntity();
-        //exctractTokenAndRoleFromResponse(loginResponse);
 
-        return loginResponse;
+        return validateResponseStatus(loginResponse);*/
+        return sendGetRequest(request);
     }
 
     /**
@@ -84,11 +83,12 @@ public class RestCommunication {
     public Response register(JsonObject json) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(AUTH_PATH, REGISTER_PATH));
 
-        Response registerResponse = request.post(Entity.json(json));
+        /*Response registerResponse = request.post(Entity.json(json));
         registerResponse.bufferEntity();
         //exctractTokenAndRoleFromResponse(registerResponse);
 
-        return registerResponse;
+        return validateResponseStatus(registerResponse);*/
+        return sendPostRequest(request, Entity.json(json));
     }
 
     /**
@@ -100,11 +100,11 @@ public class RestCommunication {
         Invocation.Builder request = getRequestToPath(Arrays.asList(AUTH_PATH, LOGOUT_PATH));
         request = addAuthorizationHeader(request);
 
-        Response logoutResponse = request.get();
+        //Response logoutResponse = request.get();
 
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-        
-        return logoutResponse;
+        return sendGetRequest(request);
+        //return validateResponseStatus(logoutResponse);
     }
 
     /**
@@ -116,8 +116,9 @@ public class RestCommunication {
     public Response getCompetences() {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLY_PATH));
         request = addAuthorizationHeader(request);
-        Response response = request.get();
-        return validateResponseStatus(response);
+        /*Response response = request.get();
+        return validateResponseStatus(response);*/
+        return sendGetRequest(request);
     }
 
     /**
@@ -128,8 +129,9 @@ public class RestCommunication {
     public Response listApplications() {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, LIST_APPLICATIONS_PATH));
         request = addAuthorizationHeader(request);
-        Response response = request.get();
-        return validateResponseStatus(response);
+        /*Response response = request.get();
+        return validateResponseStatus(response);*/
+        return sendGetRequest(request);
     }
 
     /**
@@ -141,8 +143,9 @@ public class RestCommunication {
     public Response getCompetencesForRecruiter() {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, COMPETENCE_PATH));
         request = addAuthorizationHeader(request);
-        Response response = request.get();
-        return validateResponseStatus(response);
+        /*Response response = request.get();
+        return validateResponseStatus(response);*/
+        return sendGetRequest(request);
     }
 
     /**
@@ -160,10 +163,11 @@ public class RestCommunication {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLY_PATH, COMPETENCE_PATH));
         request = addAuthorizationHeader(request);
 
-        Response response = request.post(Entity.json(entity));
+        /*Response response = request.post(Entity.json(entity));
         validateResponseStatus(response);
 
-        return response;
+        return response;*/
+        return sendPostRequest(request, Entity.json(entity));
     }
 
     /**
@@ -181,10 +185,11 @@ public class RestCommunication {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLY_PATH, AVAILABILITY_PATH));
         request = addAuthorizationHeader(request);
 
-        Response response = request.post(Entity.json(entity));
+        /*Response response = request.post(Entity.json(entity));
         validateResponseStatus(response);
 
-        return response;
+        return response;*/
+        return sendPostRequest(request, Entity.json(entity));
     }
 
     /**
@@ -201,10 +206,11 @@ public class RestCommunication {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, SEARCH_APPLICATION_PATH));
         request = addAuthorizationHeader(request);
 
-        Response response = request.post(Entity.json(entity));
+        /*Response response = request.post(Entity.json(entity));
         validateResponseStatus(response);
 
-        return response;
+        return response;*/
+        return sendPostRequest(request, Entity.json(entity));
     }
     
     /**
@@ -224,16 +230,18 @@ public class RestCommunication {
         request = addAuthorizationHeader(request);
         addLocaleHeader(request);
         
-        Response response = request.get();
-        return validateResponseStatus(response);
+        /*Response response = request.get();
+        return validateResponseStatus(response);*/
+        return sendGetRequest(request);
     }
 
     public Response getApplicationDetails(long applicationId) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, GET_APPLICATION_DETAILS_PATH));
         request.header("applicationId", applicationId);
         request = addAuthorizationHeader(request);
-        Response response = request.get();
-        return validateResponseStatus(response);
+        /*Response response = request.get();
+        return validateResponseStatus(response);*/
+        return sendGetRequest(request);
     }
     
     /**
@@ -277,7 +285,9 @@ public class RestCommunication {
      * @return Response object
      */
     private Response validateResponseStatus(Response response) {
-        switch (response.getStatus()) {
+        response.bufferEntity();
+        
+        switch(response.getStatus()) {
             case 401:
                 System.out.println("401 bsnitch");
                 triggerError(401, "BLOCKING YOU BeaCH");
@@ -289,6 +299,11 @@ public class RestCommunication {
             case 400:
                 triggerError(400, "Bad Request");
                 break;
+            case 404:
+                triggerError(403, "Could not connect to the remote server");
+            case 500:
+                System.out.println("remote server issue");
+                triggerError(500, "Something wrong!");
             default:
                 System.out.println("defaulting: " + response.getStatus() + ", status: " + response.getStatusInfo());
                 break;
@@ -307,10 +322,12 @@ public class RestCommunication {
         try {
             FacesContext.getCurrentInstance().getExternalContext().responseSendError(code, msg);
             FacesContext.getCurrentInstance().responseComplete();
-
-        } catch (IOException ex) {
+            /*FacesContext facesContext = FacesContext.getCurrentInstance();
+            NavigationHandler navigationHandler = facesContext.getApplication().getNavigationHandler();
+            navigationHandler.handleNavigation(facesContext,null, 401 + "?faces-redirect=true");
+            facesContext.renderResponse();*/
+        } catch(Exception ex) {
             System.out.println("ERROR CAUGHT : " + ex.getMessage());
-            ex.printStackTrace();
         }
     }
 
@@ -323,6 +340,24 @@ public class RestCommunication {
 
     private void addLocaleHeader(Invocation.Builder request) {
         request.header("locale", languageChange.getLanguage());
+    }
+    
+    private Response sendGetRequest(Invocation.Builder request) {
+        try {
+            return validateResponseStatus(request.get());
+        } catch(Exception ex) {
+            triggerError(500, "Remote server issues me think...");
+            return null;
+        }
+    }
+    
+    private Response sendPostRequest(Invocation.Builder request, Entity<?> entity) {
+        try {
+            return validateResponseStatus(request.post(entity));
+        } catch(Exception ex) {
+            triggerError(500, "Remote server issues me think...");
+            return null;
+        }
     }
     
 }

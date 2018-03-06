@@ -52,7 +52,10 @@ public class ApplyManager implements Serializable {
             for (double i = interval; i <= 75; i += interval) {
                 yearsOfExp.add(i);
             }
-        } catch(Exception ex) {/* exception with reading objects*/}
+        } catch(Exception ex) {/* exception with reading objects*/
+            System.out.println("Error fetching stuff: " + ex.getMessage());
+            ex.printStackTrace();
+        }
     }
     
     public void submitApplication() throws Exception {

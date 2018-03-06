@@ -201,7 +201,7 @@ public class Authentication implements Serializable {
     /**
      * Sets the password for a user registering.
      *
-     * @param regpassword an entered password from regiserer
+     * @param regpassword2 an entered password from regiserer
      */
     public void setRegPassword2(String regpassword2) {
         this.regpassword2 = regpassword2;
@@ -246,7 +246,7 @@ public class Authentication implements Serializable {
             return validateAndExtractAuthResponse(authResponse, "errorMsg_authFailed");
 
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
 
         }
         return "";
@@ -261,10 +261,8 @@ public class Authentication implements Serializable {
     public String register() {
         if(!regpassword.equals(regpassword2)){
             msgToUser = getLangProperty("pmatch");
-        }else{
-        try {
-            JsonObject job;
-            job = provider.createObjectBuilder()
+        } else{
+            JsonObject job = provider.createObjectBuilder()
                     .add("name", name)
                     .add("surname", surname)
                     .add("ssn", ssn)
@@ -274,10 +272,6 @@ public class Authentication implements Serializable {
 
             Response authResponse = controller.register(job);
             return validateAndExtractAuthResponse(authResponse, "errorMsg_uTaken");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         }
         return "";
     }
@@ -303,20 +297,47 @@ public class Authentication implements Serializable {
      * @return
      */
     private String validateAndExtractAuthResponse(Response response, String authMsg) {
-        JsonObject json = response.readEntity(JsonObject.class);
-        String error = json.getString("error", "");
-
-        if (error.isEmpty()) {
-            loggedon = json.getString("token", "");
-            token = loggedon;
-            role = json.getString("role", "");
-            user = json.getString("username");
-            msgToUser = getLangProperty("logoutMsg");
-            return roleRedirect();
-        } else {
+        if(response.getStatus() == Response.Status.OK.getStatusCode()) {
+            System.out.println("Success... ");
+            return successfulLogin(response.readEntity(JsonObject.class));
+        } else if (response.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
+            System.out.println("BAD REQUEST");
             msgToUser = getLangProperty(authMsg);
             return "login?faces-redirect=true";
+        } else if (response.getStatus() == Response.Status.CONFLICT.getStatusCode()) {
+            System.out.println("NOT success... " + response.getStatusInfo().toString());
+            return unsuccessfulRegister(response.readEntity(JsonObject.class));
+        } else {
+            System.out.println("WHAAAAAAAAT?! " + response.getStatusInfo().toString());
+            //return "login?faces-redirect=true";
+            return "";
         }
+    }
+    
+    private String successfulLogin(JsonObject json) {
+        loggedon = json.getString("token", "");
+        token = loggedon;
+        role = json.getString("role", "");
+        user = json.getString("username");
+        msgToUser = getLangProperty("logoutMsg");
+        return roleRedirect();
+    }
+    
+    private String unsuccessfulRegister(JsonObject json) {
+        int errorCode = json.getInt("error", 0);
+        
+        switch(errorCode) {
+            case 1:
+                msgToUser = getLangProperty("errorMsg_uTaken");
+                break;
+            case 2:
+                msgToUser = getLangProperty("errorMsg_uTaken");
+                break;
+            default:
+                break;
+        }
+        
+        return "login?faces-redirect=true";
     }
 
     private String roleRedirect() {
