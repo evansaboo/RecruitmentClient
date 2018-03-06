@@ -37,12 +37,12 @@ and open the template in the editor.
                             <ul class="dropdown-menu">
                                 <ui:fragment rendered="#{login.role == 'Recruiter'}">
                                     <li>
-                                        <a href="applications.xhtml">Search Applications</a>
+                                        <a href="applications.xhtml">#{msg['searchAppNav']}</a>
                                     </li>
                                 </ui:fragment>
                                 <ui:fragment rendered="#{login.role == 'Applicant'}">
                                     <li>
-                                        <a href="apply.xhtml">Create Application</a>
+                                        <a href="apply.xhtml">#{msg['createAppNav']}</a>
                                     </li>
                                 </ui:fragment>
                                 <li role="separator" class="divider"></li>

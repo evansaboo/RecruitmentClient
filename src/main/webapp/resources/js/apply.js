@@ -4,11 +4,11 @@
  * and open the template in the editor.
  */
 $(document).ready(function () {
-    var errorMsg = $('span[id*="msgToUser"]').text();
-    if(!(errorMsg === ""))
-        notify(errorMsg, "success");
-    
-   
+    var msgToUser = $('span[id*="msgToUser"]').text().split("##");
+    var msgType = msgToUser[1];
+    msgToUser = msgToUser[0];
+    if(!(msgToUser === ""))
+        notify(msgToUser, msgType);
 });
 
 function notify(msg, alertType) {

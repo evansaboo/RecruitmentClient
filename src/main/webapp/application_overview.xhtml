@@ -8,7 +8,7 @@
     <ui:define name="preRender">
         <f:metadata>
             <f:viewParam name="appId" value="#{applicationOverview.applicationId}"/>
-            <f:viewAction action="#{applicationOverview.initPage()}"/>
+            <f:viewAction action="#{applicationOverview.initPage()}" />
         </f:metadata>
     </ui:define>
     <ui:define name="head">
@@ -20,9 +20,9 @@
     </ui:define>
     <ui:define name="body">
         <div class="container">
-            
+
             <div class="col-sm-10 col-xs-12" style="padding-left: 0;">
-            <h1>#{msg['AO_title']}</h1>
+                <h1>#{msg['AO_title']}</h1>
             </div>
             <h:form>
                 <div class="col-sm-2 col-xs-12 " style="margin-top: 25px; padding: 0; margin-bottom: 15px;">
@@ -41,12 +41,12 @@
                                 <h:form id="changeStatusForm">
                                     <div class="col-sm-6 col-xs-6">
                                         <h:commandButton id="AcceptBtn" style="height:50px; width:100%" class="col-sm-12 btn btn-success"  action="#{applicationOverview.changeStatus(3)}" value="#{msg['AO_status_accept']}">
-                                        <f:ajax execute="@form" render="@none" />
+                                            <f:ajax execute="@form" render="@none" />
                                         </h:commandButton>
                                     </div>
                                     <div class="col-sm-6 col-xs-6">
                                         <h:commandButton id="RejectBtn" style="height:50px; width:100%" class="col-sm-12 btn btn-danger" action="#{applicationOverview.changeStatus(2)}" value="#{msg['AO_status_reject']}">
-                                        <f:ajax execute="@form" render="@none" />
+                                            <f:ajax execute="@form" render="@none" />
                                         </h:commandButton>
                                     </div>
                                 </h:form>
@@ -61,7 +61,7 @@
                             <th style="width:30%;">#{msg['AO_reg_date']}</th>
                             <td>
                                 <h:outputText value="#{app.registrationDate}" id="regDate" >
-                                    <f:convertDateTime pattern="#{msg['datePattern']}"/>
+                                    <f:convertDateTime type="date" locale="" dateStyle="long"/>
                                 </h:outputText>
                             </td>
                         </tr>
@@ -109,11 +109,11 @@
                              value="#{applicationOverview.competenceProfiles}" var="cp">
                     <h:column>
                         <f:facet name="header">#{msg['AO_comp_name']}</f:facet>
-                        #{cp.competenceName}
+                            #{cp.competenceName}
                     </h:column>
                     <h:column>
                         <f:facet name="header">#{msg['AO_comp_yoe']}</f:facet>
-                        
+
                         <h:outputText value="#{cp.yearsOfExperience}">
                             <f:convertNumber maxFractionDigits="2" />
                         </h:outputText>
@@ -125,14 +125,14 @@
                     <h:column>
                         <f:facet name="header">#{msg['AO_av_from']}</f:facet>
                         <h:outputText value="#{av.fromDate}">
-                            <f:convertDateTime pattern="#{msg['datePattern']}"/>
+                            <f:convertDateTime type="date" locale="#{language.locale}" dateStyle="long"/>
                         </h:outputText>
-                        
+
                     </h:column>
                     <h:column>
                         <f:facet name="header">#{msg['AO_av_to']}</f:facet>
                         <h:outputText value="#{av.toDate}">
-                            <f:convertDateTime pattern="#{msg['datePattern']}"/>
+                            <f:convertDateTime type="date" locale="#{language.locale}" dateStyle="long"/>
                         </h:outputText>
                     </h:column>
                 </h:dataTable> 

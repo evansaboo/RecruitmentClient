@@ -84,7 +84,7 @@
                         <div class="form-group" >
                             <label for="t3">#{msg['apply_av_from']}</label>
                             <h:inputText id="t3" value="#{applyManager.availability.fromDate}" class="form-control" converterMessage="#{msg['dateFormatErrorMsg']}">
-                                <f:convertDateTime type="date" pattern="dd-MM-yyyy" />
+                                <f:convertDateTime type="date" locale="#{language.locale}" dateStyle="short"/>                                
                                 <f:validateRequired/>
                             </h:inputText>
                             <h:message id="dateFromErrMsg" for="t3" style="color:red"/>
@@ -93,10 +93,11 @@
                         <div class="form-group" >
                             <label for="t4">#{msg['apply_av_to']}</label>
                             <h:inputText id="t4" value="#{applyManager.availability.toDate}" class="form-control" converterMessage="#{msg['dateFormatErrorMsg']}">
-                                <f:convertDateTime type="date" pattern="dd-MM-yyyy" />
+                                <f:convertDateTime type="date" locale="#{language.locale}" dateStyle="short"/>
                                 <f:validateRequired/>
                             </h:inputText>
                             <h:message id="dateToErrMsg" for="t4" style="color:red"/>
+
 
                         </div>
                         <h:commandButton value="#{msg['apply_av_addBtn']}"  id="AddavailabilityButton" class="btn btn-primary">
@@ -110,15 +111,13 @@
                                 <h:column>
                                     <f:facet name="header">#{msg['apply_tb_av_from']}</f:facet>
                                     <h:outputText value="#{a.fromDate}">
-                                        <f:convertDateTime type="date" pattern="d-M-yyyy" />
-
+                                        <f:convertDateTime type="date" locale="#{language.locale}" dateStyle="short"/>
                                     </h:outputText>
                                 </h:column>
                                 <h:column>
                                     <f:facet name="header">#{msg['apply_tb_av_to']}</f:facet>
                                     <h:outputText value="#{a.toDate}">
-                                        <f:convertDateTime type="date" pattern="d-M-yyyy" />
-
+                                        <f:convertDateTime type="date" locale="#{language.locale}" dateStyle="short"/>
                                     </h:outputText>
                                 </h:column>
                                 <h:column >

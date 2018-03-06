@@ -16,8 +16,7 @@ public class AvailabilityDTO implements Serializable{
      * Constructor for DTO
      */
     public AvailabilityDTO() {
-        fromDate = new Date();
-        toDate = new Date();
+
     }
 
    /**
@@ -37,7 +36,7 @@ public class AvailabilityDTO implements Serializable{
      * @return fromDate as Date object
      */
     public Date getFromDate() {
-        return new Date(fromDate.getTime());
+        return fromDate != null ? new Date(fromDate.getTime()) : null;
     }
 
     /**
@@ -46,7 +45,7 @@ public class AvailabilityDTO implements Serializable{
      * @param fromDate the fromDate to set
      */
     public void setFromDate(Date fromDate) {
-        this.fromDate = new Date(fromDate.getTime());
+        this.fromDate = fromDate != null ? new Date(fromDate.getTime()) : null;
     }
 
     /**
@@ -55,7 +54,7 @@ public class AvailabilityDTO implements Serializable{
      * @return toDate as Date object
      */
     public Date getToDate() {
-        return new Date(toDate.getTime());
+        return toDate != null ? new Date(toDate.getTime()) : null;
     }
 
     /**
@@ -64,7 +63,7 @@ public class AvailabilityDTO implements Serializable{
      * @param toDate the toDate to set
      */
     public void setToDate(Date toDate) {
-        this.toDate = new Date(toDate.getTime());
+        this.toDate = toDate != null ? new Date(toDate.getTime()) : null;
     }
 
     @Override
