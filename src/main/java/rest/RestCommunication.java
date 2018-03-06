@@ -27,6 +27,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import model.LanguageChange;
 import view.Authentication;
+import view.ErrorView;
 
 /**
  * Handles the communication with the remote REST server, all remote calls go
@@ -44,6 +45,9 @@ public class RestCommunication implements Serializable {
 
     @Inject
     private LanguageChange languageChange;
+
+    @Inject
+    private ErrorView error;
 
     private final Client client = ClientBuilder.newClient();
     private final static String BASE_URL = "http://localhost:8080/RecruitmentServ/webresources";
@@ -334,8 +338,10 @@ public class RestCommunication implements Serializable {
      */
     private void triggerError(int code, String msg) {
         try {
-            FacesContext.getCurrentInstance().getExternalContext().responseSendError(code, msg);
-            FacesContext.getCurrentInstance().responseComplete();
+            error.setErrorCode("ERROR " + code);
+            error.setErrorMsg(msg);
+            FacesContext.getCurrentInstance()
+                    .getExternalContext().redirect("error.xhtml");
             /*FacesContext facesContext = FacesContext.getCurrentInstance();
             NavigationHandler navigationHandler = facesContext.getApplication().getNavigationHandler();
             navigationHandler.handleNavigation(facesContext,null, 401 + "?faces-redirect=true");
