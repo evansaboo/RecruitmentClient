@@ -72,11 +72,7 @@ public class RestCommunication implements Serializable {
      */
     public Response login(JsonObject json) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(AUTH_PATH, LOGIN_PATH));
-
-        /*Response loginResponse = request.post(Entity.json(json));
-        loginResponse.bufferEntity();
-
-        return validateResponseStatus(loginResponse);*/
+        
         return sendPostRequest(request, Entity.json(json));
     }
 
@@ -89,12 +85,7 @@ public class RestCommunication implements Serializable {
      */
     public Response register(JsonObject json) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(AUTH_PATH, REGISTER_PATH));
-
-        /*Response registerResponse = request.post(Entity.json(json));
-        registerResponse.bufferEntity();
-        //exctractTokenAndRoleFromResponse(registerResponse);
-
-        return validateResponseStatus(registerResponse);*/
+        
         return sendPostRequest(request, Entity.json(json));
     }
 
@@ -106,8 +97,7 @@ public class RestCommunication implements Serializable {
     public Response logout() {
         Invocation.Builder request = getRequestToPath(Arrays.asList(AUTH_PATH, LOGOUT_PATH));
         request = addAuthorizationHeader(request);
-
-        //Response logoutResponse = request.get();
+        
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 
         return sendGetRequest(request);
@@ -123,8 +113,7 @@ public class RestCommunication implements Serializable {
     public Response getCompetences() {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLY_PATH));
         request = addAuthorizationHeader(request);
-        /*Response response = request.get();
-        return validateResponseStatus(response);*/
+        
         return sendGetRequest(request);
     }
 
@@ -136,8 +125,7 @@ public class RestCommunication implements Serializable {
     public Response listApplications() {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, LIST_APPLICATIONS_PATH));
         request = addAuthorizationHeader(request);
-        /*Response response = request.get();
-        return validateResponseStatus(response);*/
+        
         return sendGetRequest(request);
     }
 
@@ -150,8 +138,7 @@ public class RestCommunication implements Serializable {
     public Response getCompetencesForRecruiter() {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, COMPETENCE_PATH));
         request = addAuthorizationHeader(request);
-        /*Response response = request.get();
-        return validateResponseStatus(response);*/
+        
         return sendGetRequest(request);
     }
 
@@ -169,11 +156,7 @@ public class RestCommunication implements Serializable {
 
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLY_PATH, COMPETENCE_PATH));
         request = addAuthorizationHeader(request);
-
-        /*Response response = request.post(Entity.json(entity));
-        validateResponseStatus(response);
-
-        return response;*/
+        
         return sendPostRequest(request, Entity.json(entity));
     }
 
@@ -191,11 +174,7 @@ public class RestCommunication implements Serializable {
 
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLY_PATH, AVAILABILITY_PATH));
         request = addAuthorizationHeader(request);
-
-        /*Response response = request.post(Entity.json(entity));
-        validateResponseStatus(response);
-
-        return response;*/
+        
         return sendPostRequest(request, Entity.json(entity));
     }
 
@@ -212,11 +191,7 @@ public class RestCommunication implements Serializable {
 
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, SEARCH_APPLICATION_PATH));
         request = addAuthorizationHeader(request);
-
-        /*Response response = request.post(Entity.json(entity));
-        validateResponseStatus(response);
-
-        return response;*/
+        
         return sendPostRequest(request, Entity.json(entity));
     }
 
@@ -236,9 +211,7 @@ public class RestCommunication implements Serializable {
         );
         request = addAuthorizationHeader(request);
         addLocaleHeader(request);
-
-        /*Response response = request.get();
-        return validateResponseStatus(response);*/
+        
         return sendGetRequest(request);
     }
 
@@ -252,8 +225,7 @@ public class RestCommunication implements Serializable {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, GET_APPLICATION_DETAILS_PATH));
         request.header("applicationId", applicationId);
         request = addAuthorizationHeader(request);
-        /*Response response = request.get();
-        return validateResponseStatus(response);*/
+        
         return sendGetRequest(request);
     }
 
