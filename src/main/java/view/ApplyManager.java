@@ -6,9 +6,8 @@
 package view;
 
 import rest.RestCommunication;
-import datarepresentation.AvailabilityDTO;
-import datarepresentation.Competence;
-import datarepresentation.CompetenceDTO;
+import model.AvailabilityDTO;
+import model.CompetenceDTO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +17,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
+import model.CompetenceProfileDTO;
 import model.LanguageChange;
 
 /**
@@ -34,8 +34,8 @@ public class ApplyManager implements Serializable {
     private List<CompetenceDTO> competences;
     private final HashMap<String, Long> competenceMapper = new HashMap<>();
     
-    private List<Competence> comps = new ArrayList<>();
-    private Competence comp = new Competence();
+    private List<CompetenceProfileDTO> compProfiles = new ArrayList<>();
+    private CompetenceProfileDTO compProfile = new CompetenceProfileDTO();
     private List<AvailabilityDTO> availabilities = new ArrayList<>();
     private AvailabilityDTO availability = new AvailabilityDTO();
     private final List<Double> yearsOfExp = new ArrayList<>();
@@ -46,8 +46,8 @@ public class ApplyManager implements Serializable {
         try {
             Response competencesResponse = controller.getCompetences();
             competences = competencesResponse.readEntity(new GenericType<List<CompetenceDTO>>() {});
-            competences.forEach((CompetenceDTO comp) -> {
-                competenceMapper.put(comp.getName(), comp.getCompetenceId());
+            competences.forEach(compet -> {
+                competenceMapper.put(compet.getName(), compet.getCompetenceId());
             });
             
             double interval = 0.25;
@@ -61,13 +61,13 @@ public class ApplyManager implements Serializable {
     }
     
     public void submitApplication() throws Exception {
-        if(comps.isEmpty() && availabilities.isEmpty()) { return; }
+        if(compProfiles.isEmpty() && availabilities.isEmpty()) { return; }
         
         Response availResponse = Response.notModified().build();
         Response compResponse = Response.notModified().build();
         
-        if(!comps.isEmpty()) {
-            compResponse = controller.sendCompetences(comps);
+        if(!compProfiles.isEmpty()) {
+            compResponse = controller.sendCompetences(compProfiles);
             if(compResponse == null || !compResponse.getStatusInfo().equals(Response.Status.OK)) {
                 /* TODO */
                 System.out.println("COMPETENCE ERROR HANDLING");
@@ -87,17 +87,17 @@ public class ApplyManager implements Serializable {
         if(availResponse.getStatusInfo().equals(Response.Status.OK) || compResponse.getStatusInfo().equals(Response.Status.OK)){
             msgToUser = "Your application has been successfully submitted.";
         }
-        comps = new ArrayList<>();
+        compProfiles = new ArrayList<>();
         availabilities = new ArrayList<>();
     }
     
     public void addCompetence() {
-        if(comp.getName() == null) { return; }
+        if(compProfile.getCompetenceName()== null) { return; }
         
-        Long compId = competenceMapper.get(comp.getName());
-        comp.setCompetenceId(compId);
-        comps.add(comp);
-        comp = new Competence();
+        Long compId = competenceMapper.get(compProfile.getCompetenceName());
+        compProfile.setCompetenceId(compId);
+        compProfiles.add(compProfile);
+        compProfile = new CompetenceProfileDTO();
     }
     
     public void addAvailability() {
@@ -109,36 +109,35 @@ public class ApplyManager implements Serializable {
     public void deleteEntry(Object entry) {
         if(entry instanceof AvailabilityDTO) {
             availabilities.remove(AvailabilityDTO.class.cast(entry));
-        } else if(entry instanceof Competence) {
-            comps.remove(Competence.class.cast(entry));
+        } else if(entry instanceof CompetenceProfileDTO) {
+            compProfiles.remove(CompetenceProfileDTO.class.cast(entry));
         } else {
             // log
         }
     }
 
-    public List<Competence> getComps() {
-        
-        return comps;
+    public List<CompetenceDTO> getCompetences() {
+        return competences;
     }
 
-    public void setComps(List<Competence> comps) {
-        this.comps = comps;
+    public List<CompetenceProfileDTO> getComps() {
+        return compProfiles;
     }
 
-    public Competence getComp() {
-        return comp;
+    public void setComps(List<CompetenceProfileDTO> comps) {
+        this.compProfiles = comps;
     }
 
-    public void setComp(Competence comp) {
-        this.comp = comp;
+    public CompetenceProfileDTO getComp() {
+        return compProfile;
+    }
+
+    public void setComp(CompetenceProfileDTO comp) {
+        this.compProfile = comp;
     }
 
     public List<AvailabilityDTO> getAvailabilities() {
         return availabilities;
-    }
-
-    public void setAvailabilities(List<AvailabilityDTO> availabilities) {
-        this.availabilities = availabilities;
     }
 
     public AvailabilityDTO getAvailability() {
@@ -152,16 +151,6 @@ public class ApplyManager implements Serializable {
     public List<Double> getYearsOfExp() {
         return yearsOfExp;
     }
-    
-    public List<CompetenceDTO> getCompetences() {
-        List<CompetenceDTO> tempList = new ArrayList<>(competences);
-        tempList.removeIf(c -> !c.getLanguage().equals(lc.getLanguage()));
-        return tempList;
-    }
-
-    public void setCompetences(List<CompetenceDTO> competences) {
-        this.competences = competences;
-    }
 
     public String getMsgToUser() {
         String s = msgToUser;
@@ -169,6 +158,4 @@ public class ApplyManager implements Serializable {
         return s;
     }
     
-    
-
 }

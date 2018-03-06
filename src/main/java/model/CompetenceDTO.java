@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package datarepresentation;
+package model;
 
 import java.io.Serializable;
 
@@ -12,7 +12,6 @@ import java.io.Serializable;
  * @author Oscar
  */
 public class CompetenceDTO implements Serializable {
-
     private static final long serialVersionUID = 1L;
     private Long competenceNameId;
     private String name;

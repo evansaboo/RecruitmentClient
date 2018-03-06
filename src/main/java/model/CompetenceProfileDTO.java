@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package datarepresentation;
+package model;
 
 import java.io.Serializable;
 
@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author Evan
  */
-public class CompetenceProfileDTO1 implements Serializable {
+public class CompetenceProfileDTO implements Serializable {
     private static final long serialVersionUID = 1L;
     private Long competenceId;
     private String competenceName;
@@ -21,7 +21,7 @@ public class CompetenceProfileDTO1 implements Serializable {
     /**
      * Class Constructor
      */
-    public CompetenceProfileDTO1() {
+    public CompetenceProfileDTO() {
     }
 
     /**
@@ -32,7 +32,7 @@ public class CompetenceProfileDTO1 implements Serializable {
      * @param yearsOfExperience sets the yearsOfExperience property
      * @param language
      */
-    public CompetenceProfileDTO1(Long competenceId, String name, double yearsOfExperience, String language) {
+    public CompetenceProfileDTO(Long competenceId, String name, double yearsOfExperience, String language) {
         this.competenceId = competenceId;
         this.competenceName = name;
         this.yearsOfExperience = yearsOfExperience;

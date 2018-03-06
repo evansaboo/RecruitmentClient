@@ -1,5 +1,5 @@
 
-package datarepresentation;
+package model;
 
 import java.util.Date;
 
@@ -14,6 +14,8 @@ public class AvailabilityDTO{
      * Constructor for DTO
      */
     public AvailabilityDTO() {
+        fromDate = new Date();
+        toDate = new Date();
     }
 
    /**

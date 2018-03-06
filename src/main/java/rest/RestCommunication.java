@@ -5,8 +5,7 @@
  */
 package rest;
 
-import datarepresentation.AvailabilityDTO;
-import datarepresentation.Competence;
+import model.AvailabilityDTO;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -25,6 +24,8 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
+import model.CompetenceDTO;
+import model.CompetenceProfileDTO;
 import model.LanguageChange;
 import view.Authentication;
 
@@ -76,7 +77,7 @@ public class RestCommunication implements Serializable {
         loginResponse.bufferEntity();
 
         return validateResponseStatus(loginResponse);*/
-        return sendGetRequest(request);
+        return sendPostRequest(request, Entity.json(json));
     }
 
     /**
@@ -162,9 +163,9 @@ public class RestCommunication implements Serializable {
      * @return Response from the remote server or an error page if the server
      * couldn't/wouldn't handle the request
      */
-    public Response sendCompetences(List<Competence> competenceProfiles) {
-        GenericEntity<List<Competence>> entity = new GenericEntity<List<Competence>>(competenceProfiles) {
-        };
+    public Response sendCompetences(List<CompetenceProfileDTO> competenceProfiles) {
+        GenericEntity<List<CompetenceProfileDTO>> entity = 
+                new GenericEntity<List<CompetenceProfileDTO>>(competenceProfiles) {};
 
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLY_PATH, COMPETENCE_PATH));
         request = addAuthorizationHeader(request);

@@ -31,7 +31,7 @@
                         <h3>1. #{msg['apply_comp_title']}</h3>
                         <div class="form-group" >
                             <label for="t1">#{msg['apply_comp_lbl']}</label>
-                            <h:selectOneMenu id="t1" value="#{applyManager.comp.name}" class="form-control" style="height: 34px;">
+                            <h:selectOneMenu id="t1" value="#{applyManager.comp.competenceName}" class="form-control" style="height: 34px;">
                                 <f:selectItem itemLabel="#{msg['apply_comp_select']}" itemValue="#{null}" />
                                 <f:selectItems value="#{applyManager.competences}" var="comp" itemLabel="#{comp.name}" itemValue="#{comp.name}" />
                             </h:selectOneMenu>
@@ -53,7 +53,7 @@
                                          class="table table-striped table-bordered nowrap">
                                 <h:column>
                                     <f:facet name="header">#{msg['apply_tb_comp_name']}</f:facet>
-                                        #{p.name}
+                                        #{p.competenceName}
                                 </h:column>
                                 <h:column>
                                     <f:facet name="header">#{msg['apply_tb_comp_id']}</f:facet>

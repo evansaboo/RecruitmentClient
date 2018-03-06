@@ -5,8 +5,6 @@
  */
 package model;
 
-import datarepresentation.AvailabilityDTO;
-import datarepresentation.CompetenceProfileDTO1;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -27,7 +25,7 @@ public class ApplicationDetailsDTO implements Serializable {
     private Date registrationDate;
     private Map<String, String> statusName;
 
-    private List<CompetenceProfileDTO1> competenceProfiles;
+    private List<CompetenceProfileDTO> competenceProfiles;
     private List<AvailabilityDTO> availabilities;
 
     /**
@@ -56,7 +54,7 @@ public class ApplicationDetailsDTO implements Serializable {
             String ssn,
             Date regDate,
             Map<String, String> statusName,
-            List<CompetenceProfileDTO1> cp,
+            List<CompetenceProfileDTO> cp,
             List<AvailabilityDTO> av) {
 
         this.user_firstname = firstname;
@@ -196,7 +194,7 @@ public class ApplicationDetailsDTO implements Serializable {
      *
      * @return applicants competences
      */
-    public List<CompetenceProfileDTO1> getCompetenceProfiles() {
+    public List<CompetenceProfileDTO> getCompetenceProfiles() {
         return competenceProfiles;
     }
 
@@ -205,7 +203,7 @@ public class ApplicationDetailsDTO implements Serializable {
      *
      * @param competenceProfiles list of applicants competences
      */
-    public void setCompetenceProfiles(List<CompetenceProfileDTO1> competenceProfiles) {
+    public void setCompetenceProfiles(List<CompetenceProfileDTO> competenceProfiles) {
         this.competenceProfiles = competenceProfiles;
     }
 

@@ -6,7 +6,7 @@
 package view;
 
 import rest.RestCommunication;
-import datarepresentation.CompetenceDTO;
+import model.CompetenceDTO;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

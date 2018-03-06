@@ -6,7 +6,7 @@
 package view;
 
 import model.ApplicationDetailsDTO;
-import datarepresentation.CompetenceProfileDTO1;
+import model.CompetenceProfileDTO;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class ApplicationOverview implements Serializable {
     private long applicationId;
     private ApplicationDetailsDTO appDetails = new ApplicationDetailsDTO();
 
-    private final Map<String, List<CompetenceProfileDTO1>> competenceHashMap = new HashMap<>();
+    private final Map<String, List<CompetenceProfileDTO>> competenceHashMap = new HashMap<>();
     @Inject
     private RestCommunication rc;
 
@@ -131,7 +131,7 @@ public class ApplicationOverview implements Serializable {
      *
      * @return CompetenceProfiles as  a List of CompetenceProfileDTO1 objects
      */
-    public List<CompetenceProfileDTO1> getCompetenceProfiles() {
+    public List<CompetenceProfileDTO> getCompetenceProfiles() {
         return competenceHashMap.get(lc.getLanguage());
     }
     
