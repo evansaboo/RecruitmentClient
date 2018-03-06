@@ -29,9 +29,9 @@ and open the template in the editor.
 
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <h:link value="#{msg['lr']}" outcome="login" rendered="#{empty login.loggedon}" />
+                        <h:link value="#{msg['lr']}" outcome="login" rendered="#{empty login.token}" />
                     </li>    
-                    <ui:fragment rendered="#{not empty login.loggedon}">
+                    <ui:fragment rendered="#{not empty login.token}">
                         <li class="dropdown" id="user_menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">#{login.user} <span class="caret"></span></a>
                             <ul class="dropdown-menu">

@@ -58,10 +58,12 @@ public class ApplyManager implements Serializable {
             }
         } catch(Exception ex) {/* exception with reading objects*/
             System.out.println("Error fetching stuff: " + ex.getMessage());
-            ex.printStackTrace();
         }
     }
-    
+    /**
+     * Submits an application to server
+     * @throws Exception 
+     */
     public void submitApplication() throws Exception {
         if(compProfiles.isEmpty() && availabilities.isEmpty()) { return; }
         
@@ -73,7 +75,7 @@ public class ApplyManager implements Serializable {
             if(compResponse == null || !compResponse.getStatusInfo().equals(Response.Status.OK)) {
                 /* TODO */
                 System.out.println("COMPETENCE ERROR HANDLING");
-                System.out.println("ERROR CODE = " + compResponse.getStatus() + ", REASON = " + compResponse.getStatusInfo().getReasonPhrase());
+                //System.out.println("ERROR CODE = " + compResponse.getStatus() + ", REASON = " + compResponse.getStatusInfo().getReasonPhrase());
             }
         }
         
@@ -83,7 +85,7 @@ public class ApplyManager implements Serializable {
             if(availResponse == null || !availResponse.getStatusInfo().equals(Response.Status.OK)) {
                 /* TODO */
                 System.out.println("AVAILABILITY ERROR HANDLING");
-                System.out.println("ERROR CODE = " + availResponse.getStatus() + ", REASON = " + availResponse.getStatusInfo().getReasonPhrase());
+                //System.out.println("ERROR CODE = " + availResponse.getStatus() + ", REASON = " + availResponse.getStatusInfo().getReasonPhrase());
             }
         }
         if(availResponse.getStatusInfo().equals(Response.Status.OK) || compResponse.getStatusInfo().equals(Response.Status.OK)){
@@ -92,7 +94,9 @@ public class ApplyManager implements Serializable {
         compProfiles = new ArrayList<>();
         availabilities = new ArrayList<>();
     }
-    
+    /**
+     * Adds a competence to applicant
+     */
     public void addCompetence() {
         if(compProfile.getCompetenceName()== null) { return; }
         
@@ -101,13 +105,18 @@ public class ApplyManager implements Serializable {
         compProfiles.add(compProfile);
         compProfile = new CompetenceProfileDTO();
     }
-    
+    /**
+     * Adds an availability to the applicant
+     */
     public void addAvailability() {
         if(availability.getToDate() == null || availability.getFromDate() == null) { return; }
         availabilities.add(availability);
         availability = new AvailabilityDTO();
     }
-    
+    /**
+     * Delete an availability or competenceprofile
+     * @param entry entry to be deleted
+     */
     public void deleteEntry(Object entry) {
         if(entry instanceof AvailabilityDTO) {
             availabilities.remove(AvailabilityDTO.class.cast(entry));
@@ -117,43 +126,73 @@ public class ApplyManager implements Serializable {
             // log
         }
     }
-
+    /**
+     * Returna a list of competences
+     * @return list of competences
+     */
     public List<CompetenceDTO> getCompetences() {
         return competences;
     }
-
+    /**
+     * Returna a list of availabilities
+     * @return list of avaliabilities
+     */
     public List<CompetenceProfileDTO> getComps() {
         return compProfiles;
     }
-
+    /**
+     * Sets the competences
+     * @param comps list of competences
+     */
     public void setComps(List<CompetenceProfileDTO> comps) {
         this.compProfiles = comps;
     }
-
+    /**
+     * Returns a competence profile
+     * @return competence profile
+     */
     public CompetenceProfileDTO getComp() {
         return compProfile;
     }
-
+    /**
+     * Sets a competece profile
+     * @param comp competence profile
+     */
     public void setComp(CompetenceProfileDTO comp) {
         this.compProfile = comp;
     }
-
+    /**
+     * Return availabilities
+     * @return  list of availabilities
+     */
     public List<AvailabilityDTO> getAvailabilities() {
         return availabilities;
     }
-
+    /**
+     * Return single availabilitiy
+     * @return an availability
+     */
     public AvailabilityDTO getAvailability() {
         return availability;
     }
-
+    /**
+     * Set an avalability
+     * @param availability an applicants availability
+     */
     public void setAvailability(AvailabilityDTO availability) {
         this.availability = availability;
     }
-
+    /**
+     * Returns a list of years of experience
+     * @return list of years of experience
+     */
     public List<Double> getYearsOfExp() {
         return yearsOfExp;
     }
-
+    /**
+     * Returns a message that will be displayed to the user
+     * @return message for the user
+     */
     public String getMsgToUser() {
         String s = msgToUser;
         msgToUser = null;
