@@ -1,13 +1,15 @@
 
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Class for sending availabilities from server to client
  * @author Oscar
  */
-public class AvailabilityDTO{
+public class AvailabilityDTO implements Serializable{
+    private static final long serialVersionUID = 1L;
     private Date fromDate;
     private Date toDate;
     /**

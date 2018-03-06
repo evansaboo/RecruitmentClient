@@ -45,6 +45,8 @@ public class RestCommunication implements Serializable {
 
     @Inject
     private LanguageChange languageChange;
+    @Inject
+    private Authentication auth;
 
     @Inject
     private ErrorView error;
@@ -239,7 +241,7 @@ public class RestCommunication implements Serializable {
     private Invocation.Builder addAuthorizationHeader(Invocation.Builder target) {
         String token;
         try {
-            token = Authentication.token;
+            token = auth.getToken();
         } catch (Exception ex) {
             token = "";
         }

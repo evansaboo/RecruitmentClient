@@ -17,6 +17,7 @@ import java.util.Map;
  */
 public class ApplicationDetailsDTO implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     private String user_firstname;
     private String user_surname;
     private String user_email;
@@ -61,7 +62,7 @@ public class ApplicationDetailsDTO implements Serializable {
         this.user_surname = surname;
         this.user_email = email;
         this.user_ssn = ssn;
-        this.registrationDate = regDate;
+        this.registrationDate = new Date(regDate.getTime());
         this.statusName = statusName;
         this.competenceProfiles = cp;
         this.availabilities = av;
@@ -145,7 +146,7 @@ public class ApplicationDetailsDTO implements Serializable {
      * @return social security number of applicant
      */
     public Date getRegistrationDate() {
-        return registrationDate;
+        return new Date(registrationDate.getTime());
     }
 
     /**
@@ -154,8 +155,9 @@ public class ApplicationDetailsDTO implements Serializable {
      * @param registrationDate entered social security number
      */
     public void setRegistrationDate(Date registrationDate) {
-        this.registrationDate = registrationDate;
+        this.registrationDate = new Date(registrationDate.getTime());
     }
+
     /**
      * Returns the status of the application
      *
@@ -164,6 +166,7 @@ public class ApplicationDetailsDTO implements Serializable {
     public Map<String, String> getStatusName() {
         return statusName;
     }
+
     /**
      * Set the status of the application
      *
@@ -172,6 +175,7 @@ public class ApplicationDetailsDTO implements Serializable {
     public void setStatusName(Map<String, String> statusName) {
         this.statusName = statusName;
     }
+
     /**
      * Returns the availabilities of the applicant
      *
@@ -182,7 +186,8 @@ public class ApplicationDetailsDTO implements Serializable {
     }
 
     /**
-     *  Set the availabilities of the applicant
+     * Set the availabilities of the applicant
+     *
      * @param availabilities applicants availabilities
      */
     public void setAvailabilities(List<AvailabilityDTO> availabilities) {

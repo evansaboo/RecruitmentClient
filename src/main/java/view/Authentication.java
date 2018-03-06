@@ -36,24 +36,22 @@ public class Authentication implements Serializable {
     private String surname;
     private String email;
     private String msgToUser;
-    private String loggedon;
-    /**
-     * Token will be a randomly generated token from the server
-     */
-    public static String token;
-    /**
-     * Role will be the role of the logged on user
-     */
-    public static String role;
+    private String token;
+    private String role;
     JsonProvider provider = JsonProvider.provider();
-
     /**
-     * A randomly generated token for a logged on user.
-     *
-     * @return a string containing the randomly generated token
+     * Returns logged on users unique token
+     * @return 
      */
-    public String getLoggedon() {
-        return loggedon;
+    public String getToken() {
+        return token;
+    }
+    /**
+     * Sets users token
+     * @param token generated token
+     */
+    public void setToken(String token) {
+        this.token = token;
     }
 
     /**
@@ -235,7 +233,6 @@ public class Authentication implements Serializable {
         return role;
     }
 
-
     /**
      * Creates a JsonObject of the user credentials and sends it to authenticate
      * the user.
@@ -351,9 +348,8 @@ public class Authentication implements Serializable {
     }
     
     private String successfulLogin(JsonObject json) {
-        loggedon = json.getString("token", "");
-        token = loggedon;
-        role = json.getString("role", "");
+        token = json.getString("token", "");
+        setRole(json.getString("role", ""));
         user = json.getString("username");
         msgToUser = lc.getLangProperty("logoutMsg");
         return roleRedirect();
