@@ -54,7 +54,7 @@ public class ApplicationListing implements Serializable {
      */
     public void initPage() {
         Response response = contr.getCompetencesForRecruiter();
-        if (response.getStatus() != 200) {
+        if (response.getStatus() != Response.Status.OK.getStatusCode()) {
             return;
         }
         cmptList = response.readEntity(new GenericType<List<CompetenceDTO>>() {
@@ -212,7 +212,12 @@ public class ApplicationListing implements Serializable {
                 .add("competence", competence)
                 .add("name", firstname)
                 .build();
-        JsonArray s = contr.searchApplication(jbuilder).readEntity(new GenericType<JsonArray>() {
+        
+        Response response = contr.searchApplication(jbuilder);
+        if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+            return;
+        }
+        JsonArray s = response.readEntity(new GenericType<JsonArray>() {
         });
         applications.clear();
         for (int i = 0; i < s.size(); i++) {

@@ -43,6 +43,7 @@ public class ApplicationOverview implements Serializable {
     private static final long serialVersionUID = 1L;
     private long applicationId;
     private ApplicationDetailsDTO appDetails = new ApplicationDetailsDTO();
+    private String msgToUser;
 
     private final Map<String, List<CompetenceProfileDTO>> competenceHashMap = new HashMap<>();
     @Inject
@@ -137,6 +138,13 @@ public class ApplicationOverview implements Serializable {
         return competenceHashMap.get(lc.getLanguage());
     }
 
+    public String getMsgToUser() {
+        String temp = msgToUser;
+        msgToUser = null;
+        return temp;
+    }
+
+    
     /**
      * Change current application status by sending the status to server
      *
@@ -164,20 +172,15 @@ public class ApplicationOverview implements Serializable {
         System.out.println("Generate pdf for application: " + applicationId);
         Response response = rc.generatePdf(applicationId);
 
-        System.out.println("Response status: " + response.getStatusInfo());
-
         try {
             if (response.getStatus() == Response.Status.OK.getStatusCode()) {
                 setFacesContextToPdf(response);
             } else if (response.getStatus() == Response.Status.EXPECTATION_FAILED.getStatusCode()) {
                 // show error msg with "The remote server had a problem generating the desired pdf." 
-                System.out.println("Error message");
-            } else {
-                // show error msg with "Unknown problem encountered while retreiving pdf." 
-                System.out.println("Generic Error message");
+                parseMsgToUser("The remote server had a problem generating the desired pdf", "danger");
             }
-        } catch (Exception ex) {
-            // show error msg with "Unable to display the pdf." 
+        } catch (Exception e) {
+
         }
 
     }
@@ -201,5 +204,15 @@ public class ApplicationOverview implements Serializable {
         httpResponse.getOutputStream().flush();
         httpResponse.getOutputStream().close();
         context.responseComplete();
+    }
+
+    /**
+     * Parses message to user by combining msg with msgType
+     *
+     * @param msg message to user
+     * @param msgType message type
+     */
+    private void parseMsgToUser(String msg, String msgType) {
+        msgToUser = msg + "##" + msgType;
     }
 }
