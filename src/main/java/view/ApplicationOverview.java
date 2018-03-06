@@ -36,7 +36,7 @@ import rest.RestCommunication;
 @Named("applicationOverview")
 @SessionScoped
 public class ApplicationOverview implements Serializable {
-
+    private static final long serialVersionUID = 1L;
     private long applicationId;
     private ApplicationDetailsDTO appDetails = new ApplicationDetailsDTO();
 
@@ -52,12 +52,14 @@ public class ApplicationOverview implements Serializable {
             appDetails = rc.getApplicationDetails(applicationId).readEntity(new GenericType<ApplicationDetailsDTO>() {
             });
             competenceHashMap.clear();
-            for (CompetenceProfileDTO1 cp : appDetails.getCompetenceProfiles()) {
+            appDetails.getCompetenceProfiles().stream().map((cp) -> {
                 if (!competenceHashMap.containsKey(cp.getLanguage())) {
                     competenceHashMap.put(cp.getLanguage(), new ArrayList<>());
                 }
+                return cp;
+            }).forEachOrdered((cp) -> {
                 competenceHashMap.get(cp.getLanguage()).add(cp);
-            }
+            });
         } catch (Exception ex) {
         }
     }

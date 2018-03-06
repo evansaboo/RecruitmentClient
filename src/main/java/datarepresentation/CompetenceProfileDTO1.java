@@ -93,13 +93,14 @@ public class CompetenceProfileDTO1 implements Serializable {
         this.competenceName = name;
     }
     /**
-     * 
+     * Return the language of the competence
+     * @return 
      */
     public String getLanguage() {
         return language;
     }
     /**
-     * 
+     * Return language of competence
      * @param language 
      */
     public void setLanguage(String language) {

@@ -8,6 +8,7 @@ package rest;
 import datarepresentation.AvailabilityDTO;
 import datarepresentation.Competence;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -32,25 +33,24 @@ import view.Authentication;
  */
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Stateless
-public class RestCommunication {
+public class RestCommunication implements Serializable {
 
-    private final String BASE_URL = "http://localhost:8080/RecruitmentServ/webresources";
-    private final String AUTH_PATH = "auth";
-    private final String LOGIN_PATH = "login";
-    private final String REGISTER_PATH = "register";
-    private final String LOGOUT_PATH = "logout";
-    private final String APPLY_PATH = "apply";
-    private final String APPLICATIONS_PATH = "applications";
-    private final String COMPETENCE_PATH = "competence";
-    private final String AVAILABILITY_PATH = "availability";
+    private static final long serialVersionUID = 1L;
+    private static final String BASE_URL = "http://localhost:8080/RecruitmentServ/webresources";
+    private static final String AUTH_PATH = "auth";
+    private static final String LOGIN_PATH = "login";
+    private static final String REGISTER_PATH = "register";
+    private static final String LOGOUT_PATH = "logout";
+    private static final String APPLY_PATH = "apply";
+    private static final String APPLICATIONS_PATH = "applications";
+    private static final String COMPETENCE_PATH = "competence";
+    private static final String AVAILABILITY_PATH = "availability";
     private final Client client = ClientBuilder.newClient();
-    private final String AUTHORIZATION_SCHEMA = "Bearer ";
-    private final String LIST_APPLICATIONS_PATH = "listApplications";
-    private final String SEARCH_APPLICATION_PATH = "searchApplication";
-    private final String GET_APPLICATION_DETAILS_PATH = "getApplicationDetails";
-    private final String STATUS_PATH = "changeStatus";
-    //private String token = "";
-    //private String role = "";
+    private static final String AUTHORIZATION_SCHEMA = "Bearer ";
+    private static final String LIST_APPLICATIONS_PATH = "listApplications";
+    private static final String SEARCH_APPLICATION_PATH = "searchApplication";
+    private static final String GET_APPLICATION_DETAILS_PATH = "getApplicationDetails";
+    private static final String STATUS_PATH = "changeStatus";
 
     /**
      * This method sends a login json object to the remote server to login the
@@ -98,7 +98,7 @@ public class RestCommunication {
         Response logoutResponse = request.get();
 
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-        
+
         return logoutResponse;
     }
 
@@ -202,6 +202,12 @@ public class RestCommunication {
         return response;
     }
 
+    /**
+     * Returns application details for certain application
+     *
+     * @param applicationId Id for an application
+     * @return details for an application
+     */
     public Response getApplicationDetails(long applicationId) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, GET_APPLICATION_DETAILS_PATH));
         request.header("applicationId", applicationId);
@@ -210,12 +216,6 @@ public class RestCommunication {
         return validateResponseStatus(response);
     }
 
-    /*private void exctractTokenAndRoleFromResponse(Response response) {
-        JsonObject json = response.readEntity(JsonObject.class);
-        token = json.getString("token", "");
-        role = json.getString("role", "");
-        System.out.println("CLINET RECEIVED TOKEN: " + token + ", ROLE: " + role);
-    }*/
     /**
      * Adds token to target header for user validation in server side.
      *
@@ -290,10 +290,14 @@ public class RestCommunication {
 
         } catch (IOException ex) {
             System.out.println("ERROR CAUGHT : " + ex.getMessage());
-            ex.printStackTrace();
         }
     }
 
+    /**
+     * Changed application status
+     *
+     * @param obj application
+     */
     public void changeAppStatus(JsonObject obj) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, STATUS_PATH));
         request = addAuthorizationHeader(request);
