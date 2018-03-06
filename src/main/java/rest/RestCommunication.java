@@ -185,8 +185,7 @@ public class RestCommunication implements Serializable {
      * @return Response with applications which fulfills every search criteria.
      */
     public Response searchApplication(JsonObject searchParams) {
-        GenericEntity<JsonObject> entity = new GenericEntity<JsonObject>(searchParams) {
-        };
+        GenericEntity<JsonObject> entity = new GenericEntity<JsonObject>(searchParams) {};
 
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, SEARCH_APPLICATION_PATH));
         request = addAuthorizationHeader(request);
@@ -279,9 +278,6 @@ public class RestCommunication implements Serializable {
             case 403:
                 System.out.println("403 forbidden");
                 triggerError(403, "I FORBID YOU!");
-                break;
-            case 400:
-                triggerError(400, "Bad Request");
                 break;
             case 404:
                 triggerError(403, "Could not connect to the remote server");

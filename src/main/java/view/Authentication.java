@@ -248,19 +248,15 @@ public class Authentication implements Serializable {
      */
     public String login() {
         try {
-            JsonObject job;
-
-            job = provider.createObjectBuilder()
+            JsonObject job = provider.createObjectBuilder()
                     .add("username", user)
                     .add("password", password).build();
 
             Response authResponse = controller.login(job);
-            return validateAndExtractAuthResponse(authResponse, "errorMsg_authFailed");
-
-        } catch (Exception e) {
-           //logging
-
+            return validateLoginResponse(authResponse);
+        } catch (Exception e) {//logging
         }
+        
         return "";
     }
 
@@ -283,7 +279,7 @@ public class Authentication implements Serializable {
                     .add("username", reguser).build();
 
             Response authResponse = controller.register(job);
-            return validateAndExtractAuthResponse(authResponse, "errorMsg_uTaken");
+            return validateRegisterResponse(authResponse);
         }
         return "";
     }
@@ -300,6 +296,37 @@ public class Authentication implements Serializable {
         return "login?faces-redirect=true";
     }
 
+    private String validateLoginResponse(Response response) {
+        if(response.getStatus() == Response.Status.OK.getStatusCode()) {
+            System.out.println("Success... ");
+            return successfulLogin(response.readEntity(JsonObject.class));
+        } else if (response.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
+            System.out.println("BAD REQUEST");
+            msgToUser = getLangProperty("errorMsg_authFailed");
+            return "";
+        } else {
+            System.out.println("WHAAAAAAAAT?! " + response.getStatusInfo().toString());
+            return "";
+        }
+    } 
+    
+    private String validateRegisterResponse(Response response) {
+        if(response.getStatus() == Response.Status.OK.getStatusCode()) {
+            System.out.println("Success... ");
+            return successfulLogin(response.readEntity(JsonObject.class));
+        } else if (response.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
+            System.out.println("BAD REQUEST");
+            msgToUser = getLangProperty("errorMsg_creds");
+            return "login?faces-redirect=true";
+        } else if (response.getStatus() == Response.Status.CONFLICT.getStatusCode()) {
+            System.out.println("NOT success... " + response.getStatusInfo().toString());
+            return unsuccessfulRegister(response.readEntity(JsonObject.class));
+        } else {
+            System.out.println("WHAAAAAAAAT?! " + response.getStatusInfo().toString());
+            return "";
+        }
+    }
+    
     /**
      * Validates the authorization reponse and redirects the user on success and
      * setting a token. Also redirects the user based on the result.
@@ -308,13 +335,13 @@ public class Authentication implements Serializable {
      * @param authMsg An errormessage based on the type of request
      * @return
      */
-    private String validateAndExtractAuthResponse(Response response, String authMsg) {
+    private String validateAndExtractAuthResponse(Response response) {
         if(response.getStatus() == Response.Status.OK.getStatusCode()) {
             System.out.println("Success... ");
             return successfulLogin(response.readEntity(JsonObject.class));
         } else if (response.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
             System.out.println("BAD REQUEST");
-            msgToUser = getLangProperty(authMsg);
+            msgToUser = getLangProperty("errorMsg_creds");
             return "login?faces-redirect=true";
         } else if (response.getStatus() == Response.Status.CONFLICT.getStatusCode()) {
             System.out.println("NOT success... " + response.getStatusInfo().toString());

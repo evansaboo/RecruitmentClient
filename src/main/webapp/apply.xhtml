@@ -31,17 +31,19 @@
                         <h3>1. #{msg['apply_comp_title']}</h3>
                         <div class="form-group" >
                             <label for="t1">#{msg['apply_comp_lbl']}</label>
-                            <h:selectOneMenu id="t1" value="#{applyManager.comp.competenceName}" class="form-control" style="height: 34px;">
+                            <h:selectOneMenu id="t1" value="#{applyManager.comp.competenceName}" class="form-control" style="height: 34px;" required="true" requiredMessage="#{msg['apply_comp_missing']}">
                                 <f:selectItem itemLabel="#{msg['apply_comp_select']}" itemValue="#{null}" />
                                 <f:selectItems value="#{applyManager.competences}" var="comp" itemLabel="#{comp.name}" itemValue="#{comp.name}" />
                             </h:selectOneMenu>
+                            <h:message id="apply_comp_missing" for="t1" style="color:red"/>
                         </div>
                         <div class="form-group">
                             <label for="t2">#{msg['apply_yoe_lbl']}</label>
-                            <h:selectOneMenu id="t2" value="#{applyManager.comp.yearsOfExperience}" class="form-control" style="height: 34px;">
+                            <h:selectOneMenu id="t2" value="#{applyManager.comp.yearsOfExperience}" class="form-control" style="height: 34px;" required="true" requiredMessage="#{msg['apply_yoe_missing']}">
                                 <f:selectItem itemLabel="#{msg['apply_yoe_select']}" itemValue="#{null}" />
                                 <f:selectItems value="#{applyManager.yearsOfExp}" />
                             </h:selectOneMenu>
+                            <h:message id="apply_yof_missing" for="t2" style="color:red"/>
                         </div>
                         <h:commandButton id="addCompBtn" value="#{msg['apply_comp_addBtn']}" class="btn btn-primary">
                             <f:ajax execute="t1 t2" listener="#{applyManager.addCompetence}" render="@form" />

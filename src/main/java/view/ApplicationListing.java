@@ -13,9 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.ResourceBundle;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.bean.ManagedProperty;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.Json;
@@ -55,8 +53,7 @@ public class ApplicationListing implements Serializable {
      */
     public void initPage() {
         try {
-            cmptList = contr.getCompetencesForRecruiter().readEntity(new GenericType<List<CompetenceDTO>>() {
-            });
+            cmptList = contr.getCompetencesForRecruiter().readEntity(new GenericType<List<CompetenceDTO>>() {});
             initList();
         } catch (Exception e) {
             System.out.println("");
@@ -69,7 +66,7 @@ public class ApplicationListing implements Serializable {
      * @return date of submission
      */
     public Date getRegDate() {
-        return regDate == null ? null : new Date(regDate.getTime());
+        return regDate;
 
     }
 
@@ -79,7 +76,7 @@ public class ApplicationListing implements Serializable {
      * @param date The date entered by the user for submission
      */
     public void setRegDate(Date date) {
-        this.regDate = new Date(date.getTime());
+        this.regDate = date;
     }
 
     /**
@@ -88,7 +85,7 @@ public class ApplicationListing implements Serializable {
      * @return the date from when the applicant is available
      */
     public Date getPeriodFrom() {
-        return periodFrom == null ? null : new Date(periodFrom.getTime());
+        return periodFrom;
     }
 
     /**
@@ -97,7 +94,7 @@ public class ApplicationListing implements Serializable {
      * @param periodFrom The date entered by the user
      */
     public void setPeriodFrom(Date periodFrom) {
-        this.periodFrom = new Date(periodFrom.getTime());
+        this.periodFrom = periodFrom == null ? null : new Date(periodFrom.getTime());
     }
 
     /**
@@ -106,7 +103,7 @@ public class ApplicationListing implements Serializable {
      * @return returns the period of
      */
     public Date getPeriodTo() {
-        return periodTo == null ? null : new Date(periodTo.getTime());
+        return periodTo;
     }
 
     /**
@@ -115,7 +112,7 @@ public class ApplicationListing implements Serializable {
      * @param periodTo The period as entered by the applicant
      */
     public void setPeriodTo(Date periodTo) {
-        this.periodTo = new Date(periodTo.getTime());
+        this.periodTo = periodTo == null ? null : new Date(periodTo.getTime());
     }
 
     /**
