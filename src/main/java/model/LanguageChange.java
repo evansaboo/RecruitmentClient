@@ -12,11 +12,14 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import view.ApplicationListing;
-
+/**
+ * Changes the language of the web application
+ * @author Emil
+ */
 @Named(value = "language")
 @SessionScoped
 public class LanguageChange implements Serializable {
-
+    private static final long serialVersionUID = 1L;
     @Inject
     ApplicationListing al;
 

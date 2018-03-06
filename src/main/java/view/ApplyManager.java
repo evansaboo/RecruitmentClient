@@ -41,7 +41,9 @@ public class ApplyManager implements Serializable {
     private final List<Double> yearsOfExp = new ArrayList<>();
     
     private String msgToUser;
-    
+    /**
+     * Initializes page by fetching relevant data
+     */
     public void onPageLoad() {
         try {
             Response competencesResponse = controller.getCompetences();
