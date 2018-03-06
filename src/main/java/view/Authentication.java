@@ -10,6 +10,7 @@ import javax.inject.Named;
 import javax.json.JsonObject;
 import javax.json.spi.JsonProvider;
 import javax.ws.rs.core.Response;
+import model.LanguageChange;
 /**
  * Takes the input from the login pages and sends them along to the restcommunication which returns a reponse 
  * that is handled and the user redirected.
@@ -21,6 +22,9 @@ public class Authentication implements Serializable {
     private static final long serialVersionUID = 1L;
     @Inject
     RestCommunication controller;
+    
+    @Inject
+    private LanguageChange lc;
 
     private String user;
     private String password;
@@ -228,21 +232,6 @@ public class Authentication implements Serializable {
     public String getRole() {
         return role;
     }
-    /**
-     * Sets the users role
-     * @param role role for user
-     */
-    public void setRole(String role) {
-        this.role = role;
-    }
-    /**
-     * Returns text for a property based on language
-     * @return text for certain property
-     */
-    public ResourceBundle getLangProperties() {
-        FacesContext context = FacesContext.getCurrentInstance();
-        return context.getApplication().evaluateExpressionGet(context, "#{msg}", ResourceBundle.class);
-    }
 
     /**
      * Creates a JsonObject of the user credentials and sends it to authenticate
@@ -253,19 +242,15 @@ public class Authentication implements Serializable {
      */
     public String login() {
         try {
-            JsonObject job;
-
-            job = provider.createObjectBuilder()
+            JsonObject job = provider.createObjectBuilder()
                     .add("username", user)
                     .add("password", password).build();
 
             Response authResponse = controller.login(job);
-            return validateAndExtractAuthResponse(authResponse, "errorMsg_authFailed");
-
-        } catch (Exception e) {
-           //logging
-
+            return validateLoginResponse(authResponse);
+        } catch (Exception e) {//logging
         }
+        
         return "";
     }
 
@@ -277,7 +262,7 @@ public class Authentication implements Serializable {
      */
     public String register() {
         if(!regpassword.equals(regpassword2)){
-            msgToUser = getLangProperty("pmatch");
+            msgToUser = lc.getLangProperty("pmatch");
         } else{
             JsonObject job = provider.createObjectBuilder()
                     .add("name", name)
@@ -288,7 +273,7 @@ public class Authentication implements Serializable {
                     .add("username", reguser).build();
 
             Response authResponse = controller.register(job);
-            return validateAndExtractAuthResponse(authResponse, "errorMsg_uTaken");
+            return validateRegisterResponse(authResponse);
         }
         return "";
     }
@@ -305,6 +290,37 @@ public class Authentication implements Serializable {
         return "login?faces-redirect=true";
     }
 
+    private String validateLoginResponse(Response response) {
+        if(response.getStatus() == Response.Status.OK.getStatusCode()) {
+            System.out.println("Success... ");
+            return successfulLogin(response.readEntity(JsonObject.class));
+        } else if (response.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
+            System.out.println("BAD REQUEST");
+            msgToUser = lc.getLangProperty("errorMsg_authFailed");
+            return "";
+        } else {
+            System.out.println("WHAAAAAAAAT?! " + response.getStatusInfo().toString());
+            return "";
+        }
+    } 
+    
+    private String validateRegisterResponse(Response response) {
+        if(response.getStatus() == Response.Status.OK.getStatusCode()) {
+            System.out.println("Success... ");
+            return successfulLogin(response.readEntity(JsonObject.class));
+        } else if (response.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
+            System.out.println("BAD REQUEST");
+            msgToUser = lc.getLangProperty("errorMsg_creds");
+            return "login?faces-redirect=true";
+        } else if (response.getStatus() == Response.Status.CONFLICT.getStatusCode()) {
+            System.out.println("NOT success... " + response.getStatusInfo().toString());
+            return unsuccessfulRegister(response.readEntity(JsonObject.class));
+        } else {
+            System.out.println("WHAAAAAAAAT?! " + response.getStatusInfo().toString());
+            return "";
+        }
+    }
+    
     /**
      * Validates the authorization reponse and redirects the user on success and
      * setting a token. Also redirects the user based on the result.
@@ -313,13 +329,13 @@ public class Authentication implements Serializable {
      * @param authMsg An errormessage based on the type of request
      * @return
      */
-    private String validateAndExtractAuthResponse(Response response, String authMsg) {
+    private String validateAndExtractAuthResponse(Response response) {
         if(response.getStatus() == Response.Status.OK.getStatusCode()) {
             System.out.println("Success... ");
             return successfulLogin(response.readEntity(JsonObject.class));
         } else if (response.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
             System.out.println("BAD REQUEST");
-            msgToUser = getLangProperty(authMsg);
+            msgToUser = lc.getLangProperty("errorMsg_creds");
             return "login?faces-redirect=true";
         } else if (response.getStatus() == Response.Status.CONFLICT.getStatusCode()) {
             System.out.println("NOT success... " + response.getStatusInfo().toString());
@@ -335,7 +351,7 @@ public class Authentication implements Serializable {
         token = json.getString("token", "");
         setRole(json.getString("role", ""));
         user = json.getString("username");
-        msgToUser = getLangProperty("logoutMsg");
+        msgToUser = lc.getLangProperty("logoutMsg");
         return roleRedirect();
     }
     
@@ -344,10 +360,10 @@ public class Authentication implements Serializable {
         
         switch(errorCode) {
             case 1:
-                msgToUser = getLangProperty("errorMsg_uTaken");
+                msgToUser = lc.getLangProperty("errorMsg_uTaken");
                 break;
             case 2:
-                msgToUser = getLangProperty("errorMsg_ssnTaken");
+                msgToUser = lc.getLangProperty("errorMsg_ssnTaken");
                 break;
             default:
                 break;
@@ -364,13 +380,5 @@ public class Authentication implements Serializable {
         }
 
         return "index?faces-redirect=true";
-    }
-    /**
-     * Returns text based on current language for a certain property
-     * @param property property to get message for
-     * @return text for entered property
-     */
-    public String getLangProperty(String property) {
-        return getLangProperties().getString(property);
     }
 }

@@ -56,20 +56,22 @@ public class ApplicationOverview implements Serializable {
      * rendering it to xhtml page with JSF
      */
     public void initPage() {
-        try {
-            appDetails = rc.getApplicationDetails(applicationId).readEntity(new GenericType<ApplicationDetailsDTO>() {
-            });
-            competenceHashMap.clear();
-            appDetails.getCompetenceProfiles().stream().map((cp) -> {
-                if (!competenceHashMap.containsKey(cp.getLanguage())) {
-                    competenceHashMap.put(cp.getLanguage(), new ArrayList<>());
-                }
-                return cp;
-            }).forEachOrdered((cp) -> {
-                competenceHashMap.get(cp.getLanguage()).add(cp);
-            });
-        } catch (ProcessingException | IllegalStateException ex) {
+        Response response = rc.getApplicationDetails(applicationId);
+
+        if (response.getStatus() != 200) {
+            return;
         }
+        appDetails = response.readEntity(new GenericType<ApplicationDetailsDTO>() {
+        });
+        competenceHashMap.clear();
+        appDetails.getCompetenceProfiles().stream().map((cp) -> {
+            if (!competenceHashMap.containsKey(cp.getLanguage())) {
+                competenceHashMap.put(cp.getLanguage(), new ArrayList<>());
+            }
+            return cp;
+        }).forEachOrdered((cp) -> {
+            competenceHashMap.get(cp.getLanguage()).add(cp);
+        });
     }
 
     /**
@@ -98,7 +100,7 @@ public class ApplicationOverview implements Serializable {
     public ApplicationDetailsDTO getAppDetails() {
         return appDetails;
     }
-    
+
     /**
      * Sets the appDetails property
      *
@@ -116,7 +118,7 @@ public class ApplicationOverview implements Serializable {
     public String getStatus() {
         return appDetails.getStatusName().get(lc.getLanguage());
     }
-    
+
     /**
      * Sets the status property
      *
@@ -125,19 +127,19 @@ public class ApplicationOverview implements Serializable {
     public void setStatus(String status) {
         appDetails.getStatusName().put(lc.getLanguage(), status);
     }
-    
+
     /**
      * Gets a list if all Competence profiles
      *
-     * @return CompetenceProfiles as  a List of CompetenceProfileDTO1 objects
+     * @return CompetenceProfiles as a List of CompetenceProfileDTO1 objects
      */
     public List<CompetenceProfileDTO> getCompetenceProfiles() {
         return competenceHashMap.get(lc.getLanguage());
     }
-    
+
     /**
      * Change current application status by sending the status to server
-     * 
+     *
      * @param status used to change Status i the application
      */
     public void changeStatus(long status) {
@@ -182,7 +184,7 @@ public class ApplicationOverview implements Serializable {
 
     /**
      * Sets the faces context to pdf
-     * 
+     *
      * @param response from server
      * @throws Exception if Response doesn't have any entity to read
      */

@@ -13,15 +13,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.ResourceBundle;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.bean.ManagedProperty;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.Response;
 import model.Application;
 import model.LanguageChange;
 
@@ -54,13 +53,13 @@ public class ApplicationListing implements Serializable {
      * Fills the list of competences on initialize
      */
     public void initPage() {
-        try {
-            cmptList = contr.getCompetencesForRecruiter().readEntity(new GenericType<List<CompetenceDTO>>() {
-            });
-            initList();
-        } catch (Exception e) {
-            System.out.println("");
+        Response response = contr.getCompetencesForRecruiter();
+        if (response.getStatus() != 200) {
+            return;
         }
+        cmptList = response.readEntity(new GenericType<List<CompetenceDTO>>() {
+        });
+        initList();
     }
 
     /**
@@ -69,8 +68,7 @@ public class ApplicationListing implements Serializable {
      * @return date of submission
      */
     public Date getRegDate() {
-        return regDate != null ? new Date(regDate.getTime()) : null;
-
+        return regDate;
     }
 
     /**
@@ -79,7 +77,7 @@ public class ApplicationListing implements Serializable {
      * @param date The date entered by the user for submission
      */
     public void setRegDate(Date date) {
-        this.regDate = regDate != null ? new Date(date.getTime()) : null;
+        this.regDate = date;
     }
 
     /**
@@ -88,7 +86,7 @@ public class ApplicationListing implements Serializable {
      * @return the date from when the applicant is available
      */
     public Date getPeriodFrom() {
-        return periodFrom != null ? new Date(periodFrom.getTime()) : null;
+        return periodFrom;
     }
 
     /**
@@ -97,7 +95,7 @@ public class ApplicationListing implements Serializable {
      * @param periodFrom The date entered by the user
      */
     public void setPeriodFrom(Date periodFrom) {
-        this.periodFrom = periodFrom != null ? new Date(periodFrom.getTime()) : null;
+        this.periodFrom = periodFrom == null ? null : new Date(periodFrom.getTime());
     }
 
     /**
@@ -106,7 +104,7 @@ public class ApplicationListing implements Serializable {
      * @return returns the period of
      */
     public Date getPeriodTo() {
-        return periodTo != null ? new Date(periodTo.getTime()) : null;
+        return periodTo;
     }
 
     /**
@@ -115,7 +113,7 @@ public class ApplicationListing implements Serializable {
      * @param periodTo The period as entered by the applicant
      */
     public void setPeriodTo(Date periodTo) {
-        this.periodTo = periodTo != null ? new Date(periodTo.getTime()) : null;
+        this.periodTo = periodTo == null ? null : new Date(periodTo.getTime());
     }
 
     /**
@@ -214,7 +212,8 @@ public class ApplicationListing implements Serializable {
                 .add("competence", competence)
                 .add("name", firstname)
                 .build();
-        JsonArray s = contr.searchApplication(jbuilder).readEntity(new GenericType<JsonArray>(){});
+        JsonArray s = contr.searchApplication(jbuilder).readEntity(new GenericType<JsonArray>() {
+        });
         applications.clear();
         for (int i = 0; i < s.size(); i++) {
             JsonObject obj = s.getJsonObject(i);

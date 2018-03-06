@@ -7,6 +7,7 @@ package model;
 
 import java.io.Serializable;
 import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -52,6 +53,27 @@ public class LanguageChange implements Serializable {
     public void changeLanguage(String language) {
         locale = new Locale(language);
         FacesContext.getCurrentInstance().getViewRoot().setLocale(locale);
+    }
+
+    /**
+     * Returns text for a property based on language
+     *
+     * @return text for certain property
+     */
+    public ResourceBundle getLangProperties() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.getViewRoot().setLocale(locale);
+        return context.getApplication().evaluateExpressionGet(context, "#{msg}", ResourceBundle.class);
+    }
+
+    /**
+     * Returns text based on current language for a certain property
+     *
+     * @param property property to get message for
+     * @return text for entered property
+     */
+    public String getLangProperty(String property) {
+        return getLangProperties().getString(property);
     }
 
 }

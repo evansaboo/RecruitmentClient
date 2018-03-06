@@ -12,7 +12,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.GenericType;
@@ -27,27 +29,32 @@ import model.LanguageChange;
 @Named("applyManager")
 @SessionScoped
 public class ApplyManager implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Inject private RestCommunication controller;
     @Inject private LanguageChange lc;
     
     private List<CompetenceDTO> competences;
     private final HashMap<String, Long> competenceMapper = new HashMap<>();
-    
+
     private List<CompetenceProfileDTO> compProfiles = new ArrayList<>();
     private CompetenceProfileDTO compProfile = new CompetenceProfileDTO();
     private List<AvailabilityDTO> availabilities = new ArrayList<>();
     private AvailabilityDTO availability = new AvailabilityDTO();
-    private final List<Double> yearsOfExp = new ArrayList<>();
-    
+    private final List<Double> yearsOfExp = new ArrayList<>();    
+
     private String msgToUser;
     /**
      * Initializes page by fetching relevant data
      */
     public void onPageLoad() {
-        try {
+        if(competences == null || competences.isEmpty()) {
             Response competencesResponse = controller.getCompetences();
+            
+            if(competencesResponse.getStatus() != Response.Status.OK.getStatusCode()) { return; }
+            
             competences = competencesResponse.readEntity(new GenericType<List<CompetenceDTO>>() {});
+
             competences.forEach(compet -> {
                 competenceMapper.put(compet.getName(), compet.getCompetenceId());
             });
@@ -56,8 +63,6 @@ public class ApplyManager implements Serializable {
             for (double i = interval; i <= 75; i += interval) {
                 yearsOfExp.add(i);
             }
-        } catch(Exception ex) {/* exception with reading objects*/
-            System.out.println("Error fetching stuff: " + ex.getMessage());
         }
     }
     /**
@@ -67,30 +72,24 @@ public class ApplyManager implements Serializable {
     public void submitApplication() throws Exception {
         if(compProfiles.isEmpty() && availabilities.isEmpty()) { return; }
         
-        Response availResponse = Response.notModified().build();
-        Response compResponse = Response.notModified().build();
+        Response availResponse = Response.noContent().build();
+        Response compResponse = Response.noContent().build();
         
         if(!compProfiles.isEmpty()) {
             compResponse = controller.sendCompetences(compProfiles);
-            if(compResponse == null || !compResponse.getStatusInfo().equals(Response.Status.OK)) {
-                /* TODO */
-                System.out.println("COMPETENCE ERROR HANDLING");
-                //System.out.println("ERROR CODE = " + compResponse.getStatus() + ", REASON = " + compResponse.getStatusInfo().getReasonPhrase());
-            }
         }
         
         if(!availabilities.isEmpty()) {
             availResponse = controller.sendAvailabilities(availabilities);
+        }
+        
+        if(availResponse.getStatus() == Response.Status.NO_CONTENT.getStatusCode() 
+                && compResponse.getStatus() == Response.Status.NO_CONTENT.getStatusCode()) {
+            msgToUser = getLangProperties().getString("success_apply");
+        } else {
+            msgToUser = getLangProperties().getString("errorMsg_applyFailed");
+        }
 
-            if(availResponse == null || !availResponse.getStatusInfo().equals(Response.Status.OK)) {
-                /* TODO */
-                System.out.println("AVAILABILITY ERROR HANDLING");
-                //System.out.println("ERROR CODE = " + availResponse.getStatus() + ", REASON = " + availResponse.getStatusInfo().getReasonPhrase());
-            }
-        }
-        if(availResponse.getStatusInfo().equals(Response.Status.OK) || compResponse.getStatusInfo().equals(Response.Status.OK)){
-            msgToUser = "Your application has been successfully submitted.";
-        }
         compProfiles = new ArrayList<>();
         availabilities = new ArrayList<>();
     }
@@ -122,16 +121,16 @@ public class ApplyManager implements Serializable {
             availabilities.remove(AvailabilityDTO.class.cast(entry));
         } else if(entry instanceof CompetenceProfileDTO) {
             compProfiles.remove(CompetenceProfileDTO.class.cast(entry));
-        } else {
-            // log
-        }
+        } 
     }
     /**
      * Returna a list of competences
      * @return list of competences
      */
     public List<CompetenceDTO> getCompetences() {
-        return competences;
+        List<CompetenceDTO> tempComp = new ArrayList<>(competences);
+        tempComp.removeIf(comp -> !comp.getLanguage().equals(lc.getLanguage()));
+        return tempComp;
     }
     /**
      * Returna a list of availabilities
@@ -197,6 +196,11 @@ public class ApplyManager implements Serializable {
         String s = msgToUser;
         msgToUser = null;
         return s;
+    }
+    
+    private ResourceBundle getLangProperties() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        return context.getApplication().evaluateExpressionGet(context, "#{msg}", ResourceBundle.class);
     }
     
 }
