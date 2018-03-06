@@ -1,33 +1,30 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package datarepresentation;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
- *
+ * Class for sending availabilities from server to client
  * @author Oscar
  */
-public class AvailabilityDTO implements Serializable{
+public class AvailabilityDTO{
     private Date fromDate;
     private Date toDate;
-
+    /**
+     * Constructor for DTO
+     */
     public AvailabilityDTO() {
     }
 
    /**
      * Class Constructor
      *
-     * @param fromDate sets the fromDate property
-     * @param toDate sets the toDAte property
+     * @param fDate sets the fromDate property
+     * @param tDate sets the toDAte property
      */
-    public AvailabilityDTO(Date fromDate, Date toDate) {
-        this.fromDate = fromDate;
-        this.toDate = toDate;
+    public AvailabilityDTO(Date fDate, Date tDate) {
+        this.fromDate = new Date(fDate.getTime());
+        this.toDate = new Date(tDate.getTime());
     }
 
     /**
@@ -36,7 +33,7 @@ public class AvailabilityDTO implements Serializable{
      * @return fromDate as Date object
      */
     public Date getFromDate() {
-        return fromDate;
+        return new Date(fromDate.getTime());
     }
 
     /**
@@ -45,7 +42,7 @@ public class AvailabilityDTO implements Serializable{
      * @param fromDate the fromDate to set
      */
     public void setFromDate(Date fromDate) {
-        this.fromDate = fromDate;
+        this.fromDate = new Date(fromDate.getTime());
     }
 
     /**
@@ -54,7 +51,7 @@ public class AvailabilityDTO implements Serializable{
      * @return toDate as Date object
      */
     public Date getToDate() {
-        return toDate;
+        return new Date(toDate.getTime());
     }
 
     /**
@@ -63,7 +60,7 @@ public class AvailabilityDTO implements Serializable{
      * @param toDate the toDate to set
      */
     public void setToDate(Date toDate) {
-        this.toDate = toDate;
+        this.toDate = new Date(toDate.getTime());
     }
 
     @Override

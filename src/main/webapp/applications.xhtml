@@ -27,21 +27,21 @@
                     <h:inputText value="#{applicationListing.regDate}" class="form-control" id="date" converterMessage="#{msg['dateFormatErrorMsg']}">
                         <f:convertDateTime pattern="d-M-yyyy"/>
                     </h:inputText>
-                    <h:message for="date" style="color:red"/>
+                    <h:message id="dateErrMsg" for="date" style="color:red"/>
                 </div>
                 <div class="form-group col-xs-6" style="padding-left: 0">
                     <label for="dateFrom">#{msg['availability_form']}</label>
                     <h:inputText value="#{applicationListing.periodFrom}" class="form-control" id="dateFrom" converterMessage="#{msg['dateFormatErrorMsg']}">
                         <f:convertDateTime pattern="d-M-yyyy"/>
                     </h:inputText>
-                    <h:message for="dateFrom" style="color:red"/>
+                    <h:message id="dateFromErrMsg" for="dateFrom" style="color:red"/>
                 </div>
                 <div class="form-group col-xs-6" style="padding-right: 0">
                     <label for="dateTo">#{msg['availability_to']}</label>
                     <h:inputText value="#{applicationListing.periodTo}" class="form-control" id="dateTo" converterMessage="#{msg['dateFormatErrorMsg']}">
                         <f:convertDateTime pattern="d-M-yyyy"/>
                     </h:inputText>
-                    <h:message for="dateTo" style="color:red"/>
+                    <h:message id="dateToErrMsg" for="dateTo" style="color:red"/>
                 </div>
                 <div class="form-group">
                     <label for="sell">#{msg['competence']}</label>
@@ -54,7 +54,7 @@
                     <label for="name">#{msg['applicant_name']}</label>
                     <h:inputText value="#{applicationListing.firstname}" class="form-control" id="name"/>
                 </div>
-                <h:commandButton class="btn btn-default" value="#{msg['search_button']}" action="#{applicationListing.searchApplications}"/>
+                <h:commandButton id="searchBtn" class="btn btn-default" value="#{msg['search_button']}" action="#{applicationListing.searchApplications}"/>
             </h:form>
         </div>
         <div class="container">

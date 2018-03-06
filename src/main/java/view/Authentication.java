@@ -33,7 +33,13 @@ public class Authentication implements Serializable {
     private String email;
     private String msgToUser;
     private String loggedon;
+    /**
+     * Token will be a randomly generated token from the server
+     */
     public static String token;
+    /**
+     * ROle will be the role of the logged on user
+     */
     public static String role;
     JsonProvider provider = JsonProvider.provider();
 
@@ -217,11 +223,17 @@ public class Authentication implements Serializable {
         msgToUser = null;
         return s;
     }
-
+    /**
+     * Returns the role of the logged on user
+     * @return logged on users role
+     */
     public String getRole() {
         return role;
     }
-
+    /**
+     * Returns text for a property based on language
+     * @return text for certain property
+     */
     public ResourceBundle getLangProperties() {
         FacesContext context = FacesContext.getCurrentInstance();
         return context.getApplication().evaluateExpressionGet(context, "#{msg}", ResourceBundle.class);
@@ -349,7 +361,11 @@ public class Authentication implements Serializable {
 
         return "index?faces-redirect=true";
     }
-
+    /**
+     * Returns text based on current language for a certain property
+     * @param property property to get message for
+     * @return text for entered property
+     */
     public String getLangProperty(String property) {
         return getLangProperties().getString(property);
     }

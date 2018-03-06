@@ -24,7 +24,10 @@ import javax.json.JsonObject;
 import javax.ws.rs.core.GenericType;
 import model.Application;
 import model.LanguageChange;
-
+/**
+ * Handles all applications
+ * @author Emil
+ */
 @Named("applicationListing")
 @SessionScoped
 public class ApplicationListing implements Serializable {
