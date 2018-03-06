@@ -24,7 +24,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
-import model.CompetenceDTO;
 import model.CompetenceProfileDTO;
 import model.LanguageChange;
 import view.Authentication;
