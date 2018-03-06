@@ -277,22 +277,16 @@ public class RestCommunication implements Serializable {
 
         switch (response.getStatus()) {
             case 401:
-                System.out.println("401 bsnitch");
-                triggerError(401, "BLOCKING YOU BeaCH");
+                triggerError(401, languageChange.getLangProperty("error401"));
                 break;
             case 403:
-                System.out.println("403 forbidden");
-                triggerError(403, "I FORBID YOU!");
-                break;
-            case 400:
-                triggerError(400, "Bad Request");
+                triggerError(403,  languageChange.getLangProperty("error403"));
                 break;
             case 404:
-                triggerError(403, "Could not connect to the remote server");
+                triggerError(404,  languageChange.getLangProperty("error404"));
                 break;
             case 500:
-                System.out.println("remote server issue");
-                triggerError(500, "Something wrong!");
+                triggerError(500,  languageChange.getLangProperty("error500"));
                 break;
             default:
                 System.out.println("defaulting: " + response.getStatus() + ", status: " + response.getStatusInfo());
