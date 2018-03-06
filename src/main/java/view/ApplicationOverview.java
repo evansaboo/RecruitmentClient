@@ -24,18 +24,22 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import model.LanguageChange;
 import rest.RestCommunication;
 
 /**
+ * Application Overview i used to render the Application Overview xhtml page
+ * with JSF
  *
  * @author Evan
  */
 @Named("applicationOverview")
 @SessionScoped
 public class ApplicationOverview implements Serializable {
+
     private static final long serialVersionUID = 1L;
     private long applicationId;
     private ApplicationDetailsDTO appDetails = new ApplicationDetailsDTO();
@@ -47,6 +51,10 @@ public class ApplicationOverview implements Serializable {
     @Inject
     private LanguageChange lc;
 
+    /**
+     * Initilizes the page by getting job application details from server and
+     * rendering it to xhtml page with JSF
+     */
     public void initPage() {
         try {
             appDetails = rc.getApplicationDetails(applicationId).readEntity(new GenericType<ApplicationDetailsDTO>() {
@@ -60,38 +68,78 @@ public class ApplicationOverview implements Serializable {
             }).forEachOrdered((cp) -> {
                 competenceHashMap.get(cp.getLanguage()).add(cp);
             });
-        } catch (Exception ex) {
+        } catch (ProcessingException | IllegalStateException ex) {
         }
     }
 
+    /**
+     * Gets the value of applicationId property
+     *
+     * @return applicationId as long
+     */
     public long getApplicationId() {
         return applicationId;
     }
 
+    /**
+     * Sets the applicationId property
+     *
+     * @param applicationId the applicationId to set
+     */
     public void setApplicationId(long applicationId) {
         this.applicationId = applicationId;
     }
 
+    /**
+     * Gets the value of appDetails property
+     *
+     * @return applicationId as ApplicationDetailsDTO object
+     */
     public ApplicationDetailsDTO getAppDetails() {
         return appDetails;
     }
-
+    
+    /**
+     * Sets the appDetails property
+     *
+     * @param app the appDetails to set
+     */
     public void setAppDetails(ApplicationDetailsDTO app) {
         this.appDetails = app;
     }
 
+    /**
+     * Gets the value of statusName property
+     *
+     * @return statusName as String object
+     */
     public String getStatus() {
         return appDetails.getStatusName().get(lc.getLanguage());
     }
-
+    
+    /**
+     * Sets the status property
+     *
+     * @param status the status to set
+     */
     public void setStatus(String status) {
         appDetails.getStatusName().put(lc.getLanguage(), status);
     }
-
+    
+    /**
+     * Gets a list if all Competence profiles
+     *
+     * @return CompetenceProfiles as  a List of CompetenceProfileDTO1 objects
+     */
     public List<CompetenceProfileDTO1> getCompetenceProfiles() {
         return competenceHashMap.get(lc.getLanguage());
     }
-
+    
+    /**
+     * Change current application status by sending the status to server
+     * 
+     * @param status used to change Status i the application
+     */
     public void changeStatus(long status) {
         JsonObject jbuilder = Json.createObjectBuilder()
                 .add("applicationId", applicationId)
@@ -105,33 +153,39 @@ public class ApplicationOverview implements Serializable {
             Logger.getLogger(ApplicationOverview.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /**
-     * Generates a pdf of the application on successful retreival, else generates 
-     * an error message to the user depending on the error. 
+     * Generates a pdf of the application on successful retreival, else
+     * generates an error message to the user depending on the error.
      */
     public void generatePdf() {
         System.out.println("Generate pdf for application: " + applicationId);
         Response response = rc.generatePdf(applicationId);
-        
+
         System.out.println("Response status: " + response.getStatusInfo());
-        
+
         try {
-            if(response.getStatus() == Response.Status.OK.getStatusCode()) {
+            if (response.getStatus() == Response.Status.OK.getStatusCode()) {
                 setFacesContextToPdf(response);
-            } else if(response.getStatus() == Response.Status.EXPECTATION_FAILED.getStatusCode()) {
+            } else if (response.getStatus() == Response.Status.EXPECTATION_FAILED.getStatusCode()) {
                 // show error msg with "The remote server had a problem generating the desired pdf." 
                 System.out.println("Error message");
             } else {
                 // show error msg with "Unknown problem encountered while retreiving pdf." 
                 System.out.println("Generic Error message");
             }
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             // show error msg with "Unable to display the pdf." 
         }
-        
+
     }
-    
+
+    /**
+     * Sets the faces context to pdf
+     * 
+     * @param response from server
+     * @throws Exception if Response doesn't have any entity to read
+     */
     private void setFacesContextToPdf(Response response) throws Exception {
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletResponse httpResponse = (HttpServletResponse) context.getExternalContext().getResponse();
@@ -139,7 +193,8 @@ public class ApplicationOverview implements Serializable {
         httpResponse.setContentType("application/pdf");
         //httpResponse.setHeader("Content-Disposition", "inline; filename=file.pdf");
 
-        byte[] pdf = response.readEntity(new GenericType<byte[]>() {});
+        byte[] pdf = response.readEntity(new GenericType<byte[]>() {
+        });
         httpResponse.getOutputStream().write(pdf);
         httpResponse.getOutputStream().flush();
         httpResponse.getOutputStream().close();

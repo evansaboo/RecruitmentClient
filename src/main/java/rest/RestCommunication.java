@@ -29,35 +29,38 @@ import model.LanguageChange;
 import view.Authentication;
 
 /**
- * Handles the communication with the remote REST server, all remote calls go 
- * through here and this class also handles the authentication and authorizaton 
- * errors. 
- * 
+ * Handles the communication with the remote REST server, all remote calls go
+ * through here and this class also handles the authentication and authorizaton
+ * errors.
+ *
  * @author Oscar
  */
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Stateless
 
 public class RestCommunication implements Serializable {
-    
-    @Inject private LanguageChange languageChange;
+
+    private static final long serialVersionUID = 1L;
+
+    @Inject
+    private LanguageChange languageChange;
 
     private final Client client = ClientBuilder.newClient();
-    private final String BASE_URL = "http://localhost:8080/RecruitmentServ/webresources";
-    private final String AUTH_PATH = "auth";
-    private final String LOGIN_PATH = "login";
-    private final String REGISTER_PATH = "register";
-    private final String LOGOUT_PATH = "logout";
-    private final String APPLY_PATH = "apply";
-    private final String APPLICATIONS_PATH = "applications";
-    private final String COMPETENCE_PATH = "competence";
-    private final String AVAILABILITY_PATH = "availability";
-    private final String AUTHORIZATION_SCHEMA = "Bearer ";
-    private final String LIST_APPLICATIONS_PATH = "listApplications";
-    private final String SEARCH_APPLICATION_PATH = "searchApplication";
-    private final String GET_APPLICATION_DETAILS_PATH = "getApplicationDetails";
-    private final String PDF_PATH = "pdf";
-    private final String STATUS_PATH = "changeStatus";
+    private final static String BASE_URL = "http://localhost:8080/RecruitmentServ/webresources";
+    private final static String AUTH_PATH = "auth";
+    private final static String LOGIN_PATH = "login";
+    private final static String REGISTER_PATH = "register";
+    private final static String LOGOUT_PATH = "logout";
+    private final static String APPLY_PATH = "apply";
+    private final static String APPLICATIONS_PATH = "applications";
+    private final static String COMPETENCE_PATH = "competence";
+    private final static String AVAILABILITY_PATH = "availability";
+    private final static String AUTHORIZATION_SCHEMA = "Bearer ";
+    private final static String LIST_APPLICATIONS_PATH = "listApplications";
+    private final static String SEARCH_APPLICATION_PATH = "searchApplication";
+    private final static String GET_APPLICATION_DETAILS_PATH = "getApplicationDetails";
+    private final static String PDF_PATH = "pdf";
+    private final static String STATUS_PATH = "changeStatus";
 
     /**
      * This method sends a login json object to the remote server to login the
@@ -104,7 +107,6 @@ public class RestCommunication implements Serializable {
         request = addAuthorizationHeader(request);
 
         //Response logoutResponse = request.get();
-
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 
         return sendGetRequest(request);
@@ -216,7 +218,7 @@ public class RestCommunication implements Serializable {
         return response;*/
         return sendPostRequest(request, Entity.json(entity));
     }
-    
+
     /**
      * Calls the remote server and asks for a pdf with the applications details
      * belonging to a specific application id.
@@ -227,13 +229,13 @@ public class RestCommunication implements Serializable {
     public Response generatePdf(long applicationId) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(
                 APPLICATIONS_PATH,
-                GET_APPLICATION_DETAILS_PATH, 
-                PDF_PATH, 
+                GET_APPLICATION_DETAILS_PATH,
+                PDF_PATH,
                 "" + applicationId)
         );
         request = addAuthorizationHeader(request);
         addLocaleHeader(request);
-        
+
         /*Response response = request.get();
         return validateResponseStatus(response);*/
         return sendGetRequest(request);
@@ -296,8 +298,8 @@ public class RestCommunication implements Serializable {
      */
     private Response validateResponseStatus(Response response) {
         response.bufferEntity();
-        
-        switch(response.getStatus()) {
+
+        switch (response.getStatus()) {
             case 401:
                 System.out.println("401 bsnitch");
                 triggerError(401, "BLOCKING YOU BeaCH");
@@ -311,9 +313,11 @@ public class RestCommunication implements Serializable {
                 break;
             case 404:
                 triggerError(403, "Could not connect to the remote server");
+                break;
             case 500:
                 System.out.println("remote server issue");
                 triggerError(500, "Something wrong!");
+                break;
             default:
                 System.out.println("defaulting: " + response.getStatus() + ", status: " + response.getStatusInfo());
                 break;
@@ -336,7 +340,7 @@ public class RestCommunication implements Serializable {
             NavigationHandler navigationHandler = facesContext.getApplication().getNavigationHandler();
             navigationHandler.handleNavigation(facesContext,null, 401 + "?faces-redirect=true");
             facesContext.renderResponse();*/
-        } catch(Exception ex) {
+        } catch (IOException ex) {
             System.out.println("ERROR CAUGHT : " + ex.getMessage());
         }
     }
@@ -356,23 +360,23 @@ public class RestCommunication implements Serializable {
     private void addLocaleHeader(Invocation.Builder request) {
         request.header("locale", languageChange.getLanguage());
     }
-    
+
     private Response sendGetRequest(Invocation.Builder request) {
         try {
             return validateResponseStatus(request.get());
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             triggerError(500, "Remote server issues me think...");
             return null;
         }
     }
-    
+
     private Response sendPostRequest(Invocation.Builder request, Entity<?> entity) {
         try {
             return validateResponseStatus(request.post(entity));
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             triggerError(500, "Remote server issues me think...");
             return null;
         }
     }
-    
+
 }
