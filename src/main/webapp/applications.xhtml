@@ -25,21 +25,21 @@
                 <div class="form-group" >
                     <label for="date">#{msg['app_submission_date']}</label>
                     <h:inputText value="#{applicationListing.regDate}" class="form-control" id="date" converterMessage="#{msg['dateFormatErrorMsg']}">
-                        <f:convertDateTime pattern="d-M-yyyy"/>
+                        <f:convertDateTime pattern="#{msg['datePattern']}"/>
                     </h:inputText>
                     <h:message id="dateErrMsg" for="date" style="color:red"/>
                 </div>
                 <div class="form-group col-xs-6" style="padding-left: 0">
                     <label for="dateFrom">#{msg['availability_form']}</label>
                     <h:inputText value="#{applicationListing.periodFrom}" class="form-control" id="dateFrom" converterMessage="#{msg['dateFormatErrorMsg']}">
-                        <f:convertDateTime pattern="d-M-yyyy"/>
+                        <f:convertDateTime pattern="#{msg['datePattern']}"/>
                     </h:inputText>
                     <h:message id="dateFromErrMsg" for="dateFrom" style="color:red"/>
                 </div>
                 <div class="form-group col-xs-6" style="padding-right: 0">
                     <label for="dateTo">#{msg['availability_to']}</label>
                     <h:inputText value="#{applicationListing.periodTo}" class="form-control" id="dateTo" converterMessage="#{msg['dateFormatErrorMsg']}">
-                        <f:convertDateTime pattern="d-M-yyyy"/>
+                        <f:convertDateTime pattern="#{msg['datePattern']}"/>
                     </h:inputText>
                     <h:message id="dateToErrMsg" for="dateTo" style="color:red"/>
                 </div>

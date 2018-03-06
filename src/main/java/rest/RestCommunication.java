@@ -27,6 +27,7 @@ import javax.ws.rs.core.Response;
 import model.CompetenceProfileDTO;
 import model.LanguageChange;
 import view.Authentication;
+import view.ErrorView;
 
 /**
  * Handles the communication with the remote REST server, all remote calls go
@@ -44,6 +45,9 @@ public class RestCommunication implements Serializable {
 
     @Inject
     private LanguageChange languageChange;
+
+    @Inject
+    private ErrorView error;
 
     private final Client client = ClientBuilder.newClient();
     private final static String BASE_URL = "http://localhost:8080/RecruitmentServ/webresources";
@@ -97,10 +101,9 @@ public class RestCommunication implements Serializable {
         Invocation.Builder request = getRequestToPath(Arrays.asList(AUTH_PATH, LOGOUT_PATH));
         request = addAuthorizationHeader(request);
         
-        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        //FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 
         return sendGetRequest(request);
-
     }
 
     /**
@@ -272,19 +275,16 @@ public class RestCommunication implements Serializable {
 
         switch (response.getStatus()) {
             case 401:
-                System.out.println("401 bsnitch");
-                triggerError(401, "BLOCKING YOU BeaCH");
+                triggerError(401, languageChange.getLangProperty("error401"));
                 break;
             case 403:
-                System.out.println("403 forbidden");
-                triggerError(403, "I FORBID YOU!");
+                triggerError(403,  languageChange.getLangProperty("error403"));
                 break;
             case 404:
-                triggerError(403, "Could not connect to the remote server");
+                triggerError(404,  languageChange.getLangProperty("error404"));
                 break;
             case 500:
-                System.out.println("remote server issue");
-                triggerError(500, "Something wrong!");
+                triggerError(500,  languageChange.getLangProperty("error500"));
                 break;
             default:
                 System.out.println("defaulting: " + response.getStatus() + ", status: " + response.getStatusInfo());
@@ -302,8 +302,10 @@ public class RestCommunication implements Serializable {
      */
     private void triggerError(int code, String msg) {
         try {
-            FacesContext.getCurrentInstance().getExternalContext().responseSendError(code, msg);
-            FacesContext.getCurrentInstance().responseComplete();
+            error.setErrorCode("ERROR " + code);
+            error.setErrorMsg(msg);
+            FacesContext.getCurrentInstance()
+                    .getExternalContext().redirect("error.xhtml");
             /*FacesContext facesContext = FacesContext.getCurrentInstance();
             NavigationHandler navigationHandler = facesContext.getApplication().getNavigationHandler();
             navigationHandler.handleNavigation(facesContext,null, 401 + "?faces-redirect=true");
