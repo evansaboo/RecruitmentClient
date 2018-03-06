@@ -5,11 +5,13 @@
  */
 package model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Evan
  */
-public class Application {
+public class Application implements Serializable {
     private static final long serialVersionUID = 1L;
     private long applicationId;
     private String firstname;

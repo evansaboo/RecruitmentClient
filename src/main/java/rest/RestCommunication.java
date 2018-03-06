@@ -7,6 +7,8 @@ package rest;
 
 import datarepresentation.AvailabilityDTO;
 import datarepresentation.Competence;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -35,7 +37,8 @@ import view.Authentication;
  */
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Stateless
-public class RestCommunication {
+
+public class RestCommunication implements Serializable {
     
     @Inject private LanguageChange languageChange;
 
@@ -103,8 +106,9 @@ public class RestCommunication {
         //Response logoutResponse = request.get();
 
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+
         return sendGetRequest(request);
-        //return validateResponseStatus(logoutResponse);
+
     }
 
     /**
@@ -235,6 +239,12 @@ public class RestCommunication {
         return sendGetRequest(request);
     }
 
+    /**
+     * Returns application details for certain application
+     *
+     * @param applicationId Id for an application
+     * @return details for an application
+     */
     public Response getApplicationDetails(long applicationId) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, GET_APPLICATION_DETAILS_PATH));
         request.header("applicationId", applicationId);
@@ -243,7 +253,7 @@ public class RestCommunication {
         return validateResponseStatus(response);*/
         return sendGetRequest(request);
     }
-    
+
     /**
      * Adds token to target header for user validation in server side.
      *
@@ -331,6 +341,11 @@ public class RestCommunication {
         }
     }
 
+    /**
+     * Changed application status
+     *
+     * @param obj application
+     */
     public void changeAppStatus(JsonObject obj) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, STATUS_PATH));
         request = addAuthorizationHeader(request);

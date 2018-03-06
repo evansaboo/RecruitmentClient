@@ -18,7 +18,7 @@ import javax.ws.rs.core.Response;
 @Named("login")
 @SessionScoped
 public class Authentication implements Serializable {
-
+    private static final long serialVersionUID = 1L;
     @Inject
     RestCommunication controller;
 
@@ -38,7 +38,7 @@ public class Authentication implements Serializable {
      */
     public static String token;
     /**
-     * ROle will be the role of the logged on user
+     * Role will be the role of the logged on user
      */
     public static String role;
     JsonProvider provider = JsonProvider.provider();
@@ -258,7 +258,7 @@ public class Authentication implements Serializable {
             return validateAndExtractAuthResponse(authResponse, "errorMsg_authFailed");
 
         } catch (Exception e) {
-            //e.printStackTrace();
+           //logging
 
         }
         return "";

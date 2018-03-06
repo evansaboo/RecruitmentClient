@@ -27,6 +27,7 @@ import model.LanguageChange;
 @Named("applyManager")
 @SessionScoped
 public class ApplyManager implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Inject private RestCommunication controller;
     @Inject private LanguageChange lc;
     
