@@ -349,7 +349,7 @@ public class Authentication implements Serializable {
     
     private String successfulLogin(JsonObject json) {
         token = json.getString("token", "");
-        setRole(json.getString("role", ""));
+        role = json.getString("role", "");
         user = json.getString("username");
         msgToUser = lc.getLangProperty("logoutMsg");
         return roleRedirect();
