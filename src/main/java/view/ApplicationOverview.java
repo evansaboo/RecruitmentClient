@@ -7,27 +7,22 @@ package view;
 
 import model.ApplicationDetailsDTO;
 import model.CompetenceProfileDTO;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.Json;
 import javax.json.JsonObject;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.ProcessingException;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import model.LanguageChange;
+import model.StatusNameDTO;
 import rest.RestCommunication;
 
 /**
@@ -117,16 +112,14 @@ public class ApplicationOverview implements Serializable {
      * @return statusName as String object
      */
     public String getStatus() {
-        return appDetails.getStatusName().get(lc.getLanguage());
-    }
-
-    /**
-     * Sets the status property
-     *
-     * @param status the status to set
-     */
-    public void setStatus(String status) {
-        appDetails.getStatusName().put(lc.getLanguage(), status);
+        String statusName = null;
+        for (StatusNameDTO status : appDetails.getStatusName()) {
+            if (status.getSupportedLanguage().equals(lc.getLanguage())) {
+                statusName = status.getName();
+                break;
+            }
+        }
+        return statusName;
     }
 
     /**
@@ -144,24 +137,25 @@ public class ApplicationOverview implements Serializable {
         return temp;
     }
 
-    
     /**
      * Change current application status by sending the status to server
      *
      * @param status used to change Status i the application
      */
-    public void changeStatus(long status) {
+    public void changeStatus(String status) {
         JsonObject jbuilder = Json.createObjectBuilder()
                 .add("applicationId", applicationId)
                 .add("appStatus", status)
                 .build();
-        rc.changeAppStatus(jbuilder);
-        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-        try {
-            ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
-        } catch (IOException ex) {
-            Logger.getLogger(ApplicationOverview.class.getName()).log(Level.SEVERE, null, ex);
+
+        Response response = rc.changeAppStatus(jbuilder);
+
+        if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+            return;
         }
+        appDetails.setStatusName(response.readEntity(new GenericType<List<StatusNameDTO>>() {
+        }));
+
     }
 
     /**
