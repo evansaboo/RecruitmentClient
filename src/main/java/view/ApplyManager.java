@@ -15,6 +15,8 @@ import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.json.JsonObject;
+import javax.json.spi.JsonProvider;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import model.CompetenceProfileDTO;
@@ -43,9 +45,24 @@ public class ApplyManager implements Serializable {
     private List<AvailabilityDTO> availabilities = new ArrayList<>();
     private AvailabilityDTO availability = new AvailabilityDTO();
     private final List<Double> yearsOfExp = new ArrayList<>();
-
+    private String password;
     private String msgToUser;
-
+    JsonProvider provider = JsonProvider.provider();
+    /**
+     * Return user password
+     * @return user password
+     */
+    public String getPassword() {
+        return password;
+    }
+    /**
+     * Set user password
+     * @param password 
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
     /**
      * Initializes page by fetching relevant data
      */
@@ -69,8 +86,24 @@ public class ApplyManager implements Serializable {
                 yearsOfExp.add(i);
             }
         }
+    }/**
+     * Sees that the user entered the correct password
+     * @throws Exception 
+     */
+    public void authenticateSubmit() throws Exception {
+        System.out.println("pass " + password);
+        JsonObject job = provider.createObjectBuilder()
+                    .add("password", "sa").build();
+        Response validateResponse = controller.validate(job);
+        
+        if (validateResponse.getStatus() == 204){
+            System.out.println("here");
+            submitApplication();
+        }else{
+            System.out.println("hi" + validateResponse.getStatus());
+        }
+        
     }
-
     /**
      * Submits an application to server
      *
@@ -80,7 +113,7 @@ public class ApplyManager implements Serializable {
         if (compProfiles.isEmpty() && availabilities.isEmpty()) {
             return;
         }
-
+        //authenticate
         Response availResponse = Response.noContent().build();
         Response compResponse = Response.noContent().build();
 

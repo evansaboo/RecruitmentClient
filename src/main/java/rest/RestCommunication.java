@@ -55,6 +55,7 @@ public class RestCommunication implements Serializable {
     private final static String BASE_URL = "http://localhost:8080/RecruitmentServ/webresources";
     private final static String AUTH_PATH = "auth";
     private final static String LOGIN_PATH = "login";
+    private final static String VALIDATE_PATH = "validate";
     private final static String REGISTER_PATH = "register";
     private final static String LOGOUT_PATH = "logout";
     private final static String APPLY_PATH = "apply";
@@ -78,6 +79,17 @@ public class RestCommunication implements Serializable {
     public Response login(JsonObject json) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(AUTH_PATH, LOGIN_PATH));
         
+        return sendPostRequest(request, Entity.json(json));
+    }
+    /**
+     * This method sends a validate json object to the remote server to validate the
+     * user.
+     *
+     * @param json credentials to validate with.
+     * @return Response the servers response to the validation attempt.
+     */
+    public Response validate(JsonObject json) {
+        Invocation.Builder request = getRequestToPath(Arrays.asList(AUTH_PATH, VALIDATE_PATH));
         return sendPostRequest(request, Entity.json(json));
     }
 
