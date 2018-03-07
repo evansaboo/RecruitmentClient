@@ -18,7 +18,10 @@ public class AvailabilityDTO implements Serializable {
      */
     
     LanguageChange lc = new LanguageChange();
-
+    
+    /**
+     * Contructor
+     */
     public AvailabilityDTO() {
 
     }
@@ -69,7 +72,11 @@ public class AvailabilityDTO implements Serializable {
     public void setToDate(Date toDate) {
         this.toDate = lc.parseDateAfterLocale(toDate);
     }
-
+    
+    /**
+     * Converts object of this class to string
+     * @return string of object
+     */
     @Override
     public String toString() {
         return "AvailabilityDTO{" + "fromDate=" + fromDate + ", toDate=" + toDate + '}';

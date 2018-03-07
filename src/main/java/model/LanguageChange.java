@@ -80,7 +80,12 @@ public class LanguageChange implements Serializable {
     public String getLangProperty(String property) {
         return getLangProperties().getString(property);
     }
-
+    
+    /**
+     * Parses date to current locale. return null if given date is null
+     * @param date given date
+     * @return parsed date, else null
+     */
     public Date parseDateAfterLocale(Date date) {
 
         Locale lc = FacesContext.getCurrentInstance().getViewRoot().getLocale();
