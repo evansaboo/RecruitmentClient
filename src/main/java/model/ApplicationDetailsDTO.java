@@ -29,13 +29,17 @@ public class ApplicationDetailsDTO implements Serializable {
     private List<CompetenceProfileDTO> competenceProfiles;
     private List<AvailabilityDTO> availabilities;
 
-    /**
+
+    LanguageChange lc = new LanguageChange();
+   
+     /**
      * Constructor
      */
-    public ApplicationDetailsDTO() {
+    public ApplicationDetailsDTO(){
+        
     }
 
-    /**
+     /**
      * Creates DTO of application
      *
      * @param firstname sets first name property
@@ -146,7 +150,7 @@ public class ApplicationDetailsDTO implements Serializable {
      * @return social security number of applicant
      */
     public Date getRegistrationDate() {
-        return new Date(registrationDate.getTime());
+        return lc.parseDateAfterLocale(registrationDate);
     }
 
     /**
@@ -155,7 +159,7 @@ public class ApplicationDetailsDTO implements Serializable {
      * @param registrationDate entered social security number
      */
     public void setRegistrationDate(Date registrationDate) {
-        this.registrationDate = new Date(registrationDate.getTime());
+        this.registrationDate = lc.parseDateAfterLocale(registrationDate);
     }
 
       /**

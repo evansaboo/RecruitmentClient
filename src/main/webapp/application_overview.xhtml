@@ -64,7 +64,7 @@
                             <th style="width:30%;">#{msg['AO_reg_date']}</th>
                             <td>
                                 <h:outputText value="#{app.registrationDate}" id="regDate" >
-                                    <f:convertDateTime type="date" locale="#{language.locale}" dateStyle="long"/>
+                                        <f:convertDateTime type="date"  dateStyle="long" />
                                 </h:outputText>
                             </td>
                         </tr>
@@ -132,14 +132,14 @@
                     <h:column>
                         <f:facet name="header">#{msg['AO_av_from']}</f:facet>
                         <h:outputText value="#{av.fromDate}">
-                            <f:convertDateTime type="date" locale="#{language.locale}" dateStyle="long"/>
+                            <f:convertDateTime type="date"  dateStyle="long" />
                         </h:outputText>
 
                     </h:column>
                     <h:column>
                         <f:facet name="header">#{msg['AO_av_to']}</f:facet>
                         <h:outputText value="#{av.toDate}">
-                            <f:convertDateTime type="date" locale="#{language.locale}" dateStyle="long"/>
+                            <f:convertDateTime type="date"  dateStyle="long" />
                         </h:outputText>
                     </h:column>
                 </h:dataTable> 

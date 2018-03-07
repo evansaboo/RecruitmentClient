@@ -6,25 +6,33 @@
 package model;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.inject.Inject;
 import javax.inject.Named;
-import view.ApplicationListing;
+
 /**
  * Changes the language of the web application
+ *
  * @author Emil
  */
 @Named(value = "language")
 @SessionScoped
 public class LanguageChange implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    @Inject
-    ApplicationListing al;
 
     private Locale locale = FacesContext.getCurrentInstance().getApplication().getDefaultLocale();
+
+    LanguageChange() {
+        System.out.println(locale.toString());
+    }
 
     /**
      * Returns the current language of the application
@@ -76,4 +84,23 @@ public class LanguageChange implements Serializable {
         return getLangProperties().getString(property);
     }
 
+    public Date parseDateAfterLocale(Date date) {
+
+        Locale lc = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+        if (date != null) {
+            DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, lc);
+            Date tempdate = null;
+            try {
+                tempdate = df.parse(df.format(date));
+            } catch (ParseException ex) {
+                Logger.getLogger(AvailabilityDTO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            System.out.println(df.format(date));
+            System.out.println(tempdate.toString());
+
+            return tempdate;
+        } else {
+            return null;
+        }
+    }
 }
