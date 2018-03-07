@@ -6,25 +6,30 @@
 package model;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.inject.Inject;
 import javax.inject.Named;
-import view.ApplicationListing;
+
 /**
  * Changes the language of the web application
+ *
  * @author Emil
  */
 @Named(value = "language")
 @SessionScoped
 public class LanguageChange implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    @Inject
-    ApplicationListing al;
 
     private Locale locale = FacesContext.getCurrentInstance().getApplication().getDefaultLocale();
+
 
     /**
      * Returns the current language of the application
@@ -75,5 +80,27 @@ public class LanguageChange implements Serializable {
     public String getLangProperty(String property) {
         return getLangProperties().getString(property);
     }
+    
+    /**
+     * Parses date to current locale. return null if given date is null
+     * @param date given date
+     * @return parsed date, else null
+     */
+    public Date parseDateAfterLocale(Date date) {
 
+        Locale lc = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+        if (date != null) {
+            DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, lc);
+            Date tempdate = null;
+            try {
+                tempdate = df.parse(df.format(date));
+            } catch (ParseException ex) {
+                Logger.getLogger(AvailabilityDTO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            return tempdate;
+        } else {
+            return null;
+        }
+    }
 }

@@ -2,9 +2,7 @@ package view;
 
 import rest.RestCommunication;
 import java.io.Serializable;
-import java.util.ResourceBundle;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.JsonObject;
@@ -280,7 +278,7 @@ public class Authentication implements Serializable {
                     .add("surname", surname)
                     .add("ssn", ssn)
                     .add("email", email)
-                    .add("password", regpassword)
+                    .add("password", password)
                     .add("username", reguser).build();
 
             Response authResponse = controller.register(job);
