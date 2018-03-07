@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * DTO for status
+ * 
  * @author Emil
  */
 

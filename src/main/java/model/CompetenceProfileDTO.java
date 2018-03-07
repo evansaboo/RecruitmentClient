@@ -8,6 +8,7 @@ package model;
 import java.io.Serializable;
 
 /**
+ * DTO for competence profile
  *
  * @author Evan
  */
