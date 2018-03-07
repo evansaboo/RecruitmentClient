@@ -10,6 +10,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
 /**
+ * Handles the error views.
  *
  * @author Evan
  */

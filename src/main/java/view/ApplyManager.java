@@ -21,7 +21,8 @@ import model.CompetenceProfileDTO;
 import model.LanguageChange;
 
 /**
- *
+ * Handles the view where applicants can create new applications.
+ * 
  * @author Oscar
  */
 @Named("applyManager")

@@ -308,10 +308,6 @@ public class RestCommunication implements Serializable {
             error.setErrorMsg(msg);
             FacesContext.getCurrentInstance()
                     .getExternalContext().redirect("error.xhtml");
-            /*FacesContext facesContext = FacesContext.getCurrentInstance();
-            NavigationHandler navigationHandler = facesContext.getApplication().getNavigationHandler();
-            navigationHandler.handleNavigation(facesContext,null, 401 + "?faces-redirect=true");
-            facesContext.renderResponse();*/
         } catch (IOException ex) {
             System.out.println("ERROR CAUGHT : " + ex.getMessage());
         }
