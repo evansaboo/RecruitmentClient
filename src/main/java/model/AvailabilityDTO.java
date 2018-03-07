@@ -1,14 +1,7 @@
 package model;
 
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.Date;
-import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
 
 /**
  * Class for sending availabilities from server to client
