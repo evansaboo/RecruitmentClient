@@ -43,13 +43,13 @@
                             <td colspan="2" >
                                 <h:form id="changeStatusForm">
                                     <div class="col-sm-6 col-xs-6">
-                                        <h:commandButton id="AcceptBtn" style="height:50px; width:100%" class="col-sm-12 btn btn-success"  action="#{applicationOverview.changeStatus(3)}" value="#{msg['AO_status_accept']}">
-                                            <f:ajax execute="@form" render="@none" />
+                                        <h:commandButton id="AcceptBtn" style="height:50px; width:100%" class="col-sm-12 btn btn-success"  action="#{applicationOverview.changeStatus('Accepted')}" value="#{msg['AO_status_accept']}">
+                                            <f:ajax execute="@form" render="jsfRepeat:0:renderStatus" />
                                         </h:commandButton>
                                     </div>
                                     <div class="col-sm-6 col-xs-6">
-                                        <h:commandButton id="RejectBtn" style="height:50px; width:100%" class="col-sm-12 btn btn-danger" action="#{applicationOverview.changeStatus(2)}" value="#{msg['AO_status_reject']}">
-                                            <f:ajax execute="@form" render="@none" />
+                                        <h:commandButton id="RejectBtn" style="height:50px; width:100%" class="col-sm-12 btn btn-danger" action="#{applicationOverview.changeStatus('Rejected')}" value="#{msg['AO_status_reject']}">
+                                            <f:ajax execute="@form" render="jsfRepeat:0:renderStatus" />
                                         </h:commandButton>
                                     </div>
                                 </h:form>
@@ -64,15 +64,19 @@
                             <th style="width:30%;">#{msg['AO_reg_date']}</th>
                             <td>
                                 <h:outputText value="#{app.registrationDate}" id="regDate" >
-                                    <f:convertDateTime type="date" locale="" dateStyle="long"/>
+                                    <f:convertDateTime type="date" locale="#{language.locale}" dateStyle="long"/>
                                 </h:outputText>
                             </td>
                         </tr>
                         <tr>
                             <th>#{msg['AO_current_status']}</th>
+
                             <td id="currentStatus">
-                                #{applicationOverview.status}
+                                <h:panelGroup id="renderStatus">
+                                    #{applicationOverview.status}
+                                </h:panelGroup>
                             </td>
+
                         </tr>
 
                     </tbody>

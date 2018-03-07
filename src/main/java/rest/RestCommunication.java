@@ -321,12 +321,13 @@ public class RestCommunication implements Serializable {
      * Changed application status
      *
      * @param obj application
+     * @return Response object with data if Response status is ok
      */
-    public void changeAppStatus(JsonObject obj) {
+    public Response changeAppStatus(JsonObject obj) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(APPLICATIONS_PATH, STATUS_PATH));
         request = addAuthorizationHeader(request);
         Response response = request.post(Entity.json(obj));
-        validateResponseStatus(response);
+        return validateResponseStatus(response);
     }
 
     private void addLocaleHeader(Invocation.Builder request) {
