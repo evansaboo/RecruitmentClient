@@ -148,7 +148,7 @@ public class ApplyManager implements Serializable {
      * @return list of competences
      */
     public List<CompetenceDTO> getCompetences() {
-        List<CompetenceDTO> tempComp = new ArrayList<>(competences);
+        List<CompetenceDTO> tempComp =competences == null ? new ArrayList<>() : new ArrayList<>(competences);
         tempComp.removeIf(comp -> !comp.getLanguage().equals(lc.getLanguage()));
         return tempComp;
     }

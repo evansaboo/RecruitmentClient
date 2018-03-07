@@ -158,8 +158,7 @@ public class ApplicationOverview implements Serializable {
         if (response.getStatus() != Response.Status.OK.getStatusCode()) {
             return;
         }
-        appDetails.setStatusName(response.readEntity(new GenericType<List<StatusNameDTO>>() {
-        }));
+        appDetails.setStatusName(response.readEntity(new GenericType<List<StatusNameDTO>>() {}));
 
     }
 
@@ -197,8 +196,7 @@ public class ApplicationOverview implements Serializable {
         httpResponse.setContentType("application/pdf");
         //httpResponse.setHeader("Content-Disposition", "inline; filename=file.pdf");
 
-        byte[] pdf = response.readEntity(new GenericType<byte[]>() {
-        });
+        byte[] pdf = response.readEntity(new GenericType<byte[]>() {});
         httpResponse.getOutputStream().write(pdf);
         httpResponse.getOutputStream().flush();
         httpResponse.getOutputStream().close();
