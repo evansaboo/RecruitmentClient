@@ -19,8 +19,8 @@ public class ExceptionLogger {
 
     private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger("Client_Logger");
     private final String CLIENT_LOGGER_SEVERE_FILE = "Client_Logger_Severe.log";
-    private final String CLIENT_LOGGER_WARNING_FILE = "Client_Logger_Severe.log";
-    private final String CLIENT_LOGGER_INFO_FILE = "Client_Logger_Severe.log";
+    private final String CLIENT_LOGGER_WARNING_FILE = "Client_Logger_Warning.log";
+    private final String CLIENT_LOGGER_INFO_FILE = "Client_Logger_Info.log";
 
     private FileHandler fh;
 
