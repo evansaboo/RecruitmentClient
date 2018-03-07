@@ -90,6 +90,7 @@ public class RestCommunication implements Serializable {
      */
     public Response validate(JsonObject json) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(AUTH_PATH, VALIDATE_PATH));
+        request = addAuthorizationHeader(request);
         return sendPostRequest(request, Entity.json(json));
     }
 

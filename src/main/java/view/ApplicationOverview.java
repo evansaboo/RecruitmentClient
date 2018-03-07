@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.Json;
 import javax.json.JsonObject;
+import javax.json.spi.JsonProvider;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
@@ -39,13 +40,28 @@ public class ApplicationOverview implements Serializable {
     private long applicationId;
     private ApplicationDetailsDTO appDetails = new ApplicationDetailsDTO();
     private String msgToUser;
-
+    private String password;
     private final Map<String, List<CompetenceProfileDTO>> competenceHashMap = new HashMap<>();
+    JsonProvider provider = JsonProvider.provider();
     @Inject
     private RestCommunication rc;
 
     @Inject
     private LanguageChange lc;
+    /**
+     * Return recruiter password
+     * @return password of reqruiter
+     */
+    public String getPassword() {
+        return password;
+    }
+    /**
+     * Set reqruiter password
+     * @param password reqruiter password
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     /**
      * Initilizes the page by getting job application details from server and
@@ -141,7 +157,24 @@ public class ApplicationOverview implements Serializable {
         msgToUser = null;
         return temp;
     }
-
+    /**
+     * Sees that the user entered the correct password
+     * @param status status to change
+     * @throws Exception 
+     */
+    public void authenticateSubmit(String status) throws Exception {
+        JsonObject job = provider.createObjectBuilder()
+                    .add("password", password).build();
+        Response validateResponse = rc.validate(job);
+        
+        if (validateResponse.getStatus() == 204){
+            changeStatus(status);
+        }else{
+            parseMsgToUser(lc.getLangProperty("errorMsg_creds"), "danger");
+        }
+        
+    }
+    
     /**
      * Change current application status by sending the status to server
      *

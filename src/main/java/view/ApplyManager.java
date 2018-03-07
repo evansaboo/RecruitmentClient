@@ -86,7 +86,8 @@ public class ApplyManager implements Serializable {
                 yearsOfExp.add(i);
             }
         }
-    }/**
+    }
+    /**
      * Sees that the user entered the correct password
      * @throws Exception 
      */
@@ -97,10 +98,9 @@ public class ApplyManager implements Serializable {
         Response validateResponse = controller.validate(job);
         
         if (validateResponse.getStatus() == 204){
-            System.out.println("here");
             submitApplication();
         }else{
-            System.out.println("hi" + validateResponse.getStatus());
+            parseMsgToUser(lc.getLangProperty("errorMsg_applyFailed"), "danger");
         }
         
     }
