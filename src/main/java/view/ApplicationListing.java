@@ -68,7 +68,7 @@ public class ApplicationListing implements Serializable {
      * @return date of submission
      */
     public Date getRegDate() {
-        return regDate;
+        return regDate == null ? null : new Date(regDate.getTime());
     }
 
     /**
@@ -77,7 +77,7 @@ public class ApplicationListing implements Serializable {
      * @param date The date entered by the user for submission
      */
     public void setRegDate(Date date) {
-        this.regDate = date;
+        this.regDate = new Date(date.getTime());
     }
 
     /**
@@ -86,7 +86,7 @@ public class ApplicationListing implements Serializable {
      * @return the date from when the applicant is available
      */
     public Date getPeriodFrom() {
-        return periodFrom;
+        return periodFrom == null ? null : new Date(periodFrom.getTime());
     }
 
     /**
@@ -104,7 +104,7 @@ public class ApplicationListing implements Serializable {
      * @return returns the period of
      */
     public Date getPeriodTo() {
-        return periodTo;
+        return periodTo == null ? null : new Date(periodTo.getTime());
     }
 
     /**
