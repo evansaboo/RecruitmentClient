@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite thread-count="2" guice-stage="DEVELOPMENT" name="Failed suite [kth.iv1201_RecruitmentClient_war_1.0-SNAPSHOT]" parallel="tests">
+  <test thread-count="2" name="testChrome(failed)">
+    <parameter name="browser" value="chrome"/>
+    <classes>
+      <class name="RunTests">
+        <methods>
+          <include name="testAppOverviewPage"/>
+          <include name="tearDown"/>
+          <include name="setUp"/>
+        </methods>
+      </class> <!-- RunTests -->
+    </classes>
+  </test> <!-- testChrome(failed) -->
+</suite> <!-- Failed suite [kth.iv1201_RecruitmentClient_war_1.0-SNAPSHOT] -->

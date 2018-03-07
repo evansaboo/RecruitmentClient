@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -20,11 +21,12 @@ import javax.json.spi.JsonProvider;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import model.CompetenceProfileDTO;
+import model.ExceptionLogger;
 import model.LanguageChange;
 
 /**
  * Handles the view where applicants can create new applications.
- * 
+ *
  * @author Oscar
  */
 @Named("applyManager")
@@ -47,7 +49,10 @@ public class ApplyManager implements Serializable {
     private final List<Double> yearsOfExp = new ArrayList<>();
     private String msgToUser;
     JsonProvider provider = JsonProvider.provider();
-    
+
+
+    private final ExceptionLogger log = new ExceptionLogger();
+
     /**
      * Initializes page by fetching relevant data
      */
@@ -56,6 +61,7 @@ public class ApplyManager implements Serializable {
             Response competencesResponse = controller.getCompetences();
 
             if (competencesResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+                log.logErrorMsg("Could not get Competences from server, ERROR CODE: " + competencesResponse.getStatus(), Level.WARNING, null);
                 return;
             }
 
@@ -92,9 +98,8 @@ public class ApplyManager implements Serializable {
     /**
      * Submits an application to server
      *
-     * @throws Exception
      */
-    public void submitApplication() throws Exception {
+    public void submitApplication() {
         if (compProfiles.isEmpty() && availabilities.isEmpty()) {
             return;
         }
@@ -114,6 +119,8 @@ public class ApplyManager implements Serializable {
                 && compResponse.getStatus() == Response.Status.NO_CONTENT.getStatusCode()) {
             parseMsgToUser(lc.getLangProperty("success_apply"), "success");
         } else {
+
+            log.logErrorMsg("Could not get submit application, ERROR CODE: " + availResponse.getStatus(), Level.WARNING, null);
             parseMsgToUser(lc.getLangProperty("errorMsg_creds"), "danger");
         }
 
@@ -165,7 +172,7 @@ public class ApplyManager implements Serializable {
      * @return list of competences
      */
     public List<CompetenceDTO> getCompetences() {
-        List<CompetenceDTO> tempComp =competences == null ? new ArrayList<>() : new ArrayList<>(competences);
+        List<CompetenceDTO> tempComp = competences == null ? new ArrayList<>() : new ArrayList<>(competences);
         tempComp.removeIf(comp -> !comp.getLanguage().equals(lc.getLanguage()));
         return tempComp;
     }
@@ -252,8 +259,10 @@ public class ApplyManager implements Serializable {
         msgToUser = null;
         return s;
     }
+
     /**
      * Parses message to user by combining msg with msgType
+     *
      * @param msg message to user
      * @param msgType message type
      */

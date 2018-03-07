@@ -2,12 +2,15 @@ package view;
 
 import rest.RestCommunication;
 import java.io.Serializable;
+import java.util.logging.Level;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.JsonObject;
 import javax.json.spi.JsonProvider;
 import javax.ws.rs.core.Response;
+import model.ExceptionLogger;
 import model.LanguageChange;
 
 /**
@@ -41,6 +44,8 @@ public class Authentication implements Serializable {
     private String token;
     private String role;
     JsonProvider provider = JsonProvider.provider();
+
+    private final ExceptionLogger log = new ExceptionLogger();
 
     /**
      * Returns logged on users unique token
@@ -257,7 +262,7 @@ public class Authentication implements Serializable {
 
             Response authResponse = controller.login(job);
             return validateLoginResponse(authResponse);
-        } catch (Exception e) {//logging
+        } catch (Exception e) {
         }
 
         return "";
@@ -278,7 +283,7 @@ public class Authentication implements Serializable {
                     .add("surname", surname)
                     .add("ssn", ssn)
                     .add("email", email)
-                    .add("password", password)
+                    .add("password", regpassword)
                     .add("username", reguser).build();
 
             Response authResponse = controller.register(job);
@@ -295,39 +300,32 @@ public class Authentication implements Serializable {
      */
     public String logout() {
         controller.logout();
-
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         return "login?faces-redirect=true";
     }
 
     private String validateLoginResponse(Response response) {
         if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-            System.out.println("Success... ");
             return successfulLogin(response.readEntity(JsonObject.class));
         } else if (response.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
-            System.out.println("BAD REQUEST");
             parseMsgToUser(lc.getLangProperty("errorMsg_authFailed"), "danger");
-            return "";
-        } else {
-            System.out.println("WHAAAAAAAAT?! " + response.getStatusInfo().toString());
-            return "";
         }
+        log.logErrorMsg("Could not login user with username (" + user + "), ERROR CODE: " + response.getStatus(), Level.INFO, null);
+        return "";
     }
 
     private String validateRegisterResponse(Response response) {
         if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-            System.out.println("Success... ");
             return successfulLogin(response.readEntity(JsonObject.class));
         } else if (response.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
-            System.out.println("BAD REQUEST");
             parseMsgToUser(lc.getLangProperty("errorMsg_creds"), "danger");
             return "login?faces-redirect=true";
         } else if (response.getStatus() == Response.Status.CONFLICT.getStatusCode()) {
-            System.out.println("NOT success... " + response.getStatusInfo().toString());
+            log.logErrorMsg("Could not register user with username (" + user + ") and ssn (" + ssn + "), ERROR CODE: " + response.getStatus(), Level.INFO, null);
             return unsuccessfulRegister(response.readEntity(JsonObject.class));
-        } else {
-            System.out.println("WHAAAAAAAAT?! " + response.getStatusInfo().toString());
-            return "";
         }
+        log.logErrorMsg("Could not register user with username (" + user + ") and ssn (" + ssn + "), ERROR CODE: " + response.getStatus(), Level.INFO, null);
+        return "";
     }
 
     private String successfulLogin(JsonObject json) {
