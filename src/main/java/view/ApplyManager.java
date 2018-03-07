@@ -16,6 +16,8 @@ import java.util.logging.Level;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.json.JsonObject;
+import javax.json.spi.JsonProvider;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import model.CompetenceProfileDTO;
@@ -45,8 +47,9 @@ public class ApplyManager implements Serializable {
     private List<AvailabilityDTO> availabilities = new ArrayList<>();
     private AvailabilityDTO availability = new AvailabilityDTO();
     private final List<Double> yearsOfExp = new ArrayList<>();
-
     private String msgToUser;
+    JsonProvider provider = JsonProvider.provider();
+
 
     private final ExceptionLogger log = new ExceptionLogger();
 
@@ -75,7 +78,23 @@ public class ApplyManager implements Serializable {
             }
         }
     }
-
+    /**
+     * Sees that the user entered the correct password
+     * @param pass user password
+     * @throws Exception 
+     */
+    public void authenticateSubmit(String pass) throws Exception {
+        JsonObject job = provider.createObjectBuilder()
+                    .add("password", pass).build();
+        Response validateResponse = controller.validate(job);
+        
+        if (validateResponse.getStatus() == 204){
+            submitApplication();
+        }else{
+            parseMsgToUser(lc.getLangProperty("errorMsg_applyFailed"), "danger");
+        }
+        
+    }
     /**
      * Submits an application to server
      *
@@ -84,7 +103,7 @@ public class ApplyManager implements Serializable {
         if (compProfiles.isEmpty() && availabilities.isEmpty()) {
             return;
         }
-
+        //authenticate
         Response availResponse = Response.noContent().build();
         Response compResponse = Response.noContent().build();
 
@@ -100,9 +119,9 @@ public class ApplyManager implements Serializable {
                 && compResponse.getStatus() == Response.Status.NO_CONTENT.getStatusCode()) {
             parseMsgToUser(lc.getLangProperty("success_apply"), "success");
         } else {
-            log.logErrorMsg("Could not get submit application, ERROR CODE: " + availResponse.getStatus(), Level.WARNING, null);
 
-            parseMsgToUser(lc.getLangProperty("errorMsg_applyFailed"), "danger");
+            log.logErrorMsg("Could not get submit application, ERROR CODE: " + availResponse.getStatus(), Level.WARNING, null);
+            parseMsgToUser(lc.getLangProperty("errorMsg_creds"), "danger");
         }
 
         compProfiles = new ArrayList<>();
