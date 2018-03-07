@@ -332,32 +332,6 @@ public class Authentication implements Serializable {
         }
     }
 
-    /**
-     * Validates the authorization reponse and redirects the user on success and
-     * setting a token. Also redirects the user based on the result.
-     *
-     * @param response The reseult of the authentication
-     * @param authMsg An errormessage based on the type of request
-     * @return
-     */
-    private String validateAndExtractAuthResponse(Response response) {
-        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-            System.out.println("Success... ");
-            return successfulLogin(response.readEntity(JsonObject.class));
-        } else if (response.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
-            System.out.println("BAD REQUEST");
-            parseMsgToUser(lc.getLangProperty("errorMsg_creds"), "danger");
-            return "login?faces-redirect=true";
-        } else if (response.getStatus() == Response.Status.CONFLICT.getStatusCode()) {
-            System.out.println("NOT success... " + response.getStatusInfo().toString());
-            return unsuccessfulRegister(response.readEntity(JsonObject.class));
-        } else {
-            System.out.println("WHAAAAAAAAT?! " + response.getStatusInfo().toString());
-            //return "login?faces-redirect=true";
-            return "";
-        }
-    }
-
     private String successfulLogin(JsonObject json) {
         token = json.getString("token", "");
         role = json.getString("role", "");

@@ -131,6 +131,11 @@ public class ApplicationOverview implements Serializable {
         return competenceHashMap.get(lc.getLanguage());
     }
 
+    /**
+     * Returns message to display for user
+     *
+     * @return message for user
+     */
     public String getMsgToUser() {
         String temp = msgToUser;
         msgToUser = null;
