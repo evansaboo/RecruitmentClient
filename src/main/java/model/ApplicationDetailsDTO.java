@@ -27,6 +27,8 @@ public class ApplicationDetailsDTO implements Serializable {
     private List<CompetenceProfileDTO> competenceProfiles;
     private List<AvailabilityDTO> availabilities;
     
+    LanguageChange lc = new LanguageChange();
+    
     public ApplicationDetailsDTO(){
         
     }
@@ -83,11 +85,11 @@ public class ApplicationDetailsDTO implements Serializable {
     }
 
     public Date getRegistrationDate() {
-        return registrationDate;
+        return lc.parseDateAfterLocale(registrationDate);
     }
 
     public void setRegistrationDate(Date registrationDate) {
-        this.registrationDate = registrationDate;
+        this.registrationDate = lc.parseDateAfterLocale(registrationDate);
     }
 
     public List<StatusNameDTO> getStatusName() {

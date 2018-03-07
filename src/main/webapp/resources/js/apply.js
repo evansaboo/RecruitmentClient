@@ -7,7 +7,7 @@ $(document).ready(function () {
     var msgToUser = $('span[id*="msgToUser"]').text().split("##");
     var msgType = msgToUser[1];
     msgToUser = msgToUser[0];
-    if(!(msgToUser === ""))
+    if (!(msgToUser === ""))
         notify(msgToUser, msgType);
 });
 
