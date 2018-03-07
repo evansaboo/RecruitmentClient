@@ -166,10 +166,10 @@ public class ApplicationOverview implements Serializable {
         JsonObject job = provider.createObjectBuilder()
                     .add("password", password).build();
         Response validateResponse = rc.validate(job);
-        
         if (validateResponse.getStatus() == 204){
             changeStatus(status);
-        }else{
+        }else if(validateResponse.getStatus() == 400){
+            System.out.println("let it goooo");
             parseMsgToUser(lc.getLangProperty("errorMsg_creds"), "danger");
         }
         

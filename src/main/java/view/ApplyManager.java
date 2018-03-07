@@ -45,23 +45,8 @@ public class ApplyManager implements Serializable {
     private List<AvailabilityDTO> availabilities = new ArrayList<>();
     private AvailabilityDTO availability = new AvailabilityDTO();
     private final List<Double> yearsOfExp = new ArrayList<>();
-    private String password;
     private String msgToUser;
     JsonProvider provider = JsonProvider.provider();
-    /**
-     * Return user password
-     * @return user password
-     */
-    public String getPassword() {
-        return password;
-    }
-    /**
-     * Set user password
-     * @param password 
-     */
-    public void setPassword(String password) {
-        this.password = password;
-    }
     
     /**
      * Initializes page by fetching relevant data
@@ -89,12 +74,12 @@ public class ApplyManager implements Serializable {
     }
     /**
      * Sees that the user entered the correct password
+     * @param pass user password
      * @throws Exception 
      */
-    public void authenticateSubmit() throws Exception {
-        System.out.println("pass " + password);
+    public void authenticateSubmit(String pass) throws Exception {
         JsonObject job = provider.createObjectBuilder()
-                    .add("password", "sa").build();
+                    .add("password", pass).build();
         Response validateResponse = controller.validate(job);
         
         if (validateResponse.getStatus() == 204){
@@ -129,7 +114,7 @@ public class ApplyManager implements Serializable {
                 && compResponse.getStatus() == Response.Status.NO_CONTENT.getStatusCode()) {
             parseMsgToUser(lc.getLangProperty("success_apply"), "success");
         } else {
-            parseMsgToUser(lc.getLangProperty("errorMsg_applyFailed"), "danger");
+            parseMsgToUser(lc.getLangProperty("errorMsg_creds"), "danger");
         }
 
         compProfiles = new ArrayList<>();

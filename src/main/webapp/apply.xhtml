@@ -134,10 +134,10 @@
                 <div class="form-group" >
                     <h:panelGroup class="col-lg-12 text-center" layout="block" rendered="#{!empty applyManager.comps || !empty applyManager.availabilities}" >
                         <hr rendered="#{!empty applyManager.comps || !empty applyManager.availabilities}"/>
-                        <h:inputSecret value="#{applyManager.password}" class="form-control" id="password" a:placeholder="#{msg['password']}">
+                        <h:inputSecret binding="#{input1}" class="form-control" id="password" a:placeholder="#{msg['password']}" immediate="true">
                             <f:validateRequired />
                         </h:inputSecret>
-                        <h:commandButton id="submitAppBtn" value="#{msg['apply_submit_btn']}" action="#{applyManager.authenticateSubmit}" class="btn btn-success btn-lg"
+                        <h:commandButton id="submitAppBtn" value="#{msg['apply_submit_btn']}" action="#{applyManager.authenticateSubmit(input1.value)}" class="btn btn-success btn-lg"
                                          immediate="true"/>
                     </h:panelGroup>
                 </div>
