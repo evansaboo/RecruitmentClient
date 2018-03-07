@@ -2,12 +2,14 @@ package view;
 
 import rest.RestCommunication;
 import java.io.Serializable;
+import java.util.logging.Level;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.JsonObject;
 import javax.json.spi.JsonProvider;
 import javax.ws.rs.core.Response;
+import model.ExceptionLogger;
 import model.LanguageChange;
 
 /**
@@ -41,6 +43,8 @@ public class Authentication implements Serializable {
     private String token;
     private String role;
     JsonProvider provider = JsonProvider.provider();
+
+    private final ExceptionLogger log = new ExceptionLogger();
 
     /**
      * Returns logged on users unique token
@@ -257,7 +261,8 @@ public class Authentication implements Serializable {
 
             Response authResponse = controller.login(job);
             return validateLoginResponse(authResponse);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
         return "";
     }
@@ -302,13 +307,10 @@ public class Authentication implements Serializable {
         if (response.getStatus() == Response.Status.OK.getStatusCode()) {
             return successfulLogin(response.readEntity(JsonObject.class));
         } else if (response.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
-            // LOG INFO UNABLE TO LOGIN USER (USERNAME)
             parseMsgToUser(lc.getLangProperty("errorMsg_authFailed"), "danger");
-            return "";
-        } else {
-            System.out.println("WHAAAAAAAAT?! " + response.getStatusInfo().toString());
-            return "";
         }
+        log.logErrorMsg("Could not login user with username (" + user + "), ERROR CODE: " + response.getStatus(), Level.INFO, null);
+        return "";
     }
 
     private String validateRegisterResponse(Response response) {
@@ -318,12 +320,11 @@ public class Authentication implements Serializable {
             parseMsgToUser(lc.getLangProperty("errorMsg_creds"), "danger");
             return "login?faces-redirect=true";
         } else if (response.getStatus() == Response.Status.CONFLICT.getStatusCode()) {
-            // LOG INFO COULD NOT CREATE AN ACCOUNT (USERAME, SSN)
+            log.logErrorMsg("Could not register user with username (" + user + ") and ssn (" + ssn + "), ERROR CODE: " + response.getStatus(), Level.INFO, null);
             return unsuccessfulRegister(response.readEntity(JsonObject.class));
-        } else {
-            System.out.println("WHAAAAAAAAT?! " + response.getStatusInfo().toString());
-            return "";
         }
+        log.logErrorMsg("Could not register user with username (" + user + ") and ssn (" + ssn + "), ERROR CODE: " + response.getStatus(), Level.INFO, null);
+        return "";
     }
 
     private String successfulLogin(JsonObject json) {

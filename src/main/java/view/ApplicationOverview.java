@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -21,6 +22,7 @@ import javax.json.JsonObject;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
+import model.ExceptionLogger;
 import model.LanguageChange;
 import model.StatusNameDTO;
 import rest.RestCommunication;
@@ -47,6 +49,8 @@ public class ApplicationOverview implements Serializable {
     @Inject
     private LanguageChange lc;
 
+    ExceptionLogger log = new ExceptionLogger();
+
     /**
      * Initilizes the page by getting job application details from server and
      * rendering it to xhtml page with JSF
@@ -55,7 +59,8 @@ public class ApplicationOverview implements Serializable {
         Response response = rc.getApplicationDetails(applicationId);
 
         if (response.getStatus() != 200) {
-            // LOG INFO COULD NOT GET THE APPLICATION IDS (USERNAME)
+            log.logErrorMsg("Could not get application (application ID = " + applicationId + ") details  from server, ERROR CODE: " + response.getStatus(), Level.INFO, null);
+
             return;
         }
         appDetails = response.readEntity(new GenericType<ApplicationDetailsDTO>() {
@@ -160,7 +165,8 @@ public class ApplicationOverview implements Serializable {
             // LOG INFO SOMWTHING WENT WRONG CHANGING STATUS (USERNAME)
             return;
         }
-        appDetails.setStatusName(response.readEntity(new GenericType<List<StatusNameDTO>>() {}));
+        appDetails.setStatusName(response.readEntity(new GenericType<List<StatusNameDTO>>() {
+        }));
 
     }
 
@@ -176,11 +182,12 @@ public class ApplicationOverview implements Serializable {
             if (response.getStatus() == Response.Status.OK.getStatusCode()) {
                 setFacesContextToPdf(response);
             } else if (response.getStatus() == Response.Status.EXPECTATION_FAILED.getStatusCode()) {
-                // LOG WERNING PROBLEM GENERATING PDF
+                log.logErrorMsg("Could not generate pdf, ERROR CODE: " + response.getStatus(), Level.WARNING, null);
+
                 parseMsgToUser("The remote server had a problem generating the desired pdf", "danger");
             }
         } catch (Exception e) {
-
+            log.logErrorMsg("Could not generate PDF because, ERROR: " + e.getMessage(), Level.SEVERE, e);
         }
 
     }
@@ -198,7 +205,8 @@ public class ApplicationOverview implements Serializable {
         httpResponse.setContentType("application/pdf");
         //httpResponse.setHeader("Content-Disposition", "inline; filename=file.pdf");
 
-        byte[] pdf = response.readEntity(new GenericType<byte[]>() {});
+        byte[] pdf = response.readEntity(new GenericType<byte[]>() {
+        });
         httpResponse.getOutputStream().write(pdf);
         httpResponse.getOutputStream().flush();
         httpResponse.getOutputStream().close();

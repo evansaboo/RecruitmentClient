@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -22,6 +23,7 @@ import javax.json.JsonObject;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import model.Application;
+import model.ExceptionLogger;
 import model.LanguageChange;
 
 /**
@@ -49,12 +51,15 @@ public class ApplicationListing implements Serializable {
     @Inject
     private LanguageChange lc;
 
+    ExceptionLogger log = new ExceptionLogger();
+
     /**
      * Fills the list of competences on initialize
      */
     public void initPage() {
         Response response = contr.getCompetencesForRecruiter();
         if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+            log.logErrorMsg("Could not initialize Application listing page, ERROR CODE: "+ response.getStatus(), Level.INFO, null);
             return;
         }
         cmptList = response.readEntity(new GenericType<List<CompetenceDTO>>() {
@@ -213,10 +218,11 @@ public class ApplicationListing implements Serializable {
                 .add("competence", competence)
                 .add("name", firstname)
                 .build();
-        
+
         Response response = contr.searchApplication(jbuilder);
         if (response.getStatus() != Response.Status.OK.getStatusCode()) {
-            // LOG INFO NO APPLICATION FOUND
+            log.logErrorMsg("Could not get applications by using search form, ERROR CODE: "+ response.getStatus(), Level.INFO, null);
+
             return;
         }
         JsonArray s = response.readEntity(new GenericType<JsonArray>() {
