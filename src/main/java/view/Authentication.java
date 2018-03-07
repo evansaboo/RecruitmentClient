@@ -257,8 +257,7 @@ public class Authentication implements Serializable {
 
             Response authResponse = controller.login(job);
             return validateLoginResponse(authResponse);
-        } catch (Exception e) {//logging
-        }
+        } catch (Exception e) {}
 
         return "";
     }
@@ -301,10 +300,9 @@ public class Authentication implements Serializable {
 
     private String validateLoginResponse(Response response) {
         if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-            System.out.println("Success... ");
             return successfulLogin(response.readEntity(JsonObject.class));
         } else if (response.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
-            System.out.println("BAD REQUEST");
+            // LOG INFO UNABLE TO LOGIN USER (USERNAME)
             parseMsgToUser(lc.getLangProperty("errorMsg_authFailed"), "danger");
             return "";
         } else {
@@ -315,14 +313,12 @@ public class Authentication implements Serializable {
 
     private String validateRegisterResponse(Response response) {
         if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-            System.out.println("Success... ");
             return successfulLogin(response.readEntity(JsonObject.class));
         } else if (response.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
-            System.out.println("BAD REQUEST");
             parseMsgToUser(lc.getLangProperty("errorMsg_creds"), "danger");
             return "login?faces-redirect=true";
         } else if (response.getStatus() == Response.Status.CONFLICT.getStatusCode()) {
-            System.out.println("NOT success... " + response.getStatusInfo().toString());
+            // LOG INFO COULD NOT CREATE AN ACCOUNT (USERAME, SSN)
             return unsuccessfulRegister(response.readEntity(JsonObject.class));
         } else {
             System.out.println("WHAAAAAAAAT?! " + response.getStatusInfo().toString());

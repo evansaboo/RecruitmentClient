@@ -216,6 +216,7 @@ public class ApplicationListing implements Serializable {
         
         Response response = contr.searchApplication(jbuilder);
         if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+            // LOG INFO NO APPLICATION FOUND
             return;
         }
         JsonArray s = response.readEntity(new GenericType<JsonArray>() {

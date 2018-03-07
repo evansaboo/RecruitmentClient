@@ -54,6 +54,7 @@ public class ApplyManager implements Serializable {
             Response competencesResponse = controller.getCompetences();
 
             if (competencesResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+                // LOG INFO NO STATUSES RETRIEVED FROM THE DB (USERNAME)
                 return;
             }
 
@@ -96,6 +97,7 @@ public class ApplyManager implements Serializable {
                 && compResponse.getStatus() == Response.Status.NO_CONTENT.getStatusCode()) {
             parseMsgToUser(lc.getLangProperty("success_apply"), "success");
         } else {
+            // LOG WARNING APPLY FAILED (USER)
             parseMsgToUser(lc.getLangProperty("errorMsg_applyFailed"), "danger");
         }
 

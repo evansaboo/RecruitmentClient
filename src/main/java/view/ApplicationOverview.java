@@ -55,6 +55,7 @@ public class ApplicationOverview implements Serializable {
         Response response = rc.getApplicationDetails(applicationId);
 
         if (response.getStatus() != 200) {
+            // LOG INFO COULD NOT GET THE APPLICATION IDS (USERNAME)
             return;
         }
         appDetails = response.readEntity(new GenericType<ApplicationDetailsDTO>() {
@@ -156,6 +157,7 @@ public class ApplicationOverview implements Serializable {
         Response response = rc.changeAppStatus(jbuilder);
 
         if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+            // LOG INFO SOMWTHING WENT WRONG CHANGING STATUS (USERNAME)
             return;
         }
         appDetails.setStatusName(response.readEntity(new GenericType<List<StatusNameDTO>>() {}));
@@ -174,7 +176,7 @@ public class ApplicationOverview implements Serializable {
             if (response.getStatus() == Response.Status.OK.getStatusCode()) {
                 setFacesContextToPdf(response);
             } else if (response.getStatus() == Response.Status.EXPECTATION_FAILED.getStatusCode()) {
-                // show error msg with "The remote server had a problem generating the desired pdf." 
+                // LOG WERNING PROBLEM GENERATING PDF
                 parseMsgToUser("The remote server had a problem generating the desired pdf", "danger");
             }
         } catch (Exception e) {
