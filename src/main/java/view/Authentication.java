@@ -4,6 +4,7 @@ import rest.RestCommunication;
 import java.io.Serializable;
 import java.util.logging.Level;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.JsonObject;
@@ -282,7 +283,7 @@ public class Authentication implements Serializable {
                     .add("surname", surname)
                     .add("ssn", ssn)
                     .add("email", email)
-                    .add("password", password)
+                    .add("password", regpassword)
                     .add("username", reguser).build();
 
             Response authResponse = controller.register(job);
@@ -299,7 +300,7 @@ public class Authentication implements Serializable {
      */
     public String logout() {
         controller.logout();
-
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         return "login?faces-redirect=true";
     }
 
