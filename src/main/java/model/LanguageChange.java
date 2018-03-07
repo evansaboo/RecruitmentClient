@@ -30,9 +30,6 @@ public class LanguageChange implements Serializable {
 
     private Locale locale = FacesContext.getCurrentInstance().getApplication().getDefaultLocale();
 
-    LanguageChange() {
-        System.out.println(locale.toString());
-    }
 
     /**
      * Returns the current language of the application
@@ -95,8 +92,6 @@ public class LanguageChange implements Serializable {
             } catch (ParseException ex) {
                 Logger.getLogger(AvailabilityDTO.class.getName()).log(Level.SEVERE, null, ex);
             }
-            System.out.println(df.format(date));
-            System.out.println(tempdate.toString());
 
             return tempdate;
         } else {

@@ -280,7 +280,7 @@ public class Authentication implements Serializable {
                     .add("surname", surname)
                     .add("ssn", ssn)
                     .add("email", email)
-                    .add("password", regpassword)
+                    .add("password", "")
                     .add("username", reguser).build();
 
             Response authResponse = controller.register(job);

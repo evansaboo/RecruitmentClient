@@ -3,7 +3,8 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
 
     <ui:define name="preRender">
         <f:metadata>
@@ -24,21 +25,21 @@
             <h:form class="form col-xs-12 col-md-6 col-md-offset-3" id="searchForm">
                 <div class="form-group" >
                     <label for="date">#{msg['app_submission_date']}</label>
-                    <h:inputText value="#{applicationListing.regDate}" class="form-control" id="date" converterMessage="#{msg['dateFormatErrorMsg']}">
+                    <h:inputText value="#{applicationListing.regDate}" class="form-control" id="date" converterMessage="#{msg['dateFormatErrorMsg']} #{msg['localeDate']}" a:placeholder="#{msg['localeDate']}">
                         <f:convertDateTime type="date"  dateStyle="short" />
                     </h:inputText>
                     <h:message id="dateErrMsg" for="date" style="color:red"/>
                 </div>
                 <div class="form-group col-xs-6" style="padding-left: 0">
                     <label for="dateFrom">#{msg['availability_form']}</label>
-                    <h:inputText value="#{applicationListing.periodFrom}" class="form-control" id="dateFrom" converterMessage="#{msg['dateFormatErrorMsg']}">
+                    <h:inputText value="#{applicationListing.periodFrom}" class="form-control" id="dateFrom" converterMessage="#{msg['dateFormatErrorMsg']} #{msg['localeDate']}" a:placeholder="#{msg['localeDate']}">
                         <f:convertDateTime type="date"  dateStyle="short" />
                     </h:inputText>
                     <h:message id="dateFromErrMsg" for="dateFrom" style="color:red"/>
                 </div>
                 <div class="form-group col-xs-6" style="padding-right: 0">
                     <label for="dateTo">#{msg['availability_to']}</label>
-                    <h:inputText value="#{applicationListing.periodTo}" class="form-control" id="dateTo" converterMessage="#{msg['dateFormatErrorMsg']}">
+                    <h:inputText value="#{applicationListing.periodTo}" class="form-control" id="dateTo" converterMessage="#{msg['dateFormatErrorMsg']} #{msg['localeDate']}" a:placeholder="#{msg['localeDate']}">
                         <f:convertDateTime type="date"  dateStyle="short" />
                     </h:inputText>
                     <h:message id="dateToErrMsg" for="dateTo" style="color:red"/>
