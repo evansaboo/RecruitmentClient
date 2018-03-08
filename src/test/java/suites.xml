@@ -26,6 +26,8 @@
     </test>-->
     <test name="testChrome"  preserve-order="true" parallel="false">
         <parameter name="browser" value="chrome" />
+        <parameter name="recUserName" value="qwer"/>
+        <parameter name="recUserPassword" value="qwer"/>
 
         <classes>
             <class name="RunTests">
@@ -51,7 +53,8 @@
     </test>
        <test name="testFirefox"  preserve-order="true" parallel="false">
         <parameter name="browser" value="firefox" />
-
+        <parameter name="recUserName" value="recruiter"/>
+        <parameter name="recUserPassword" value="1234"/>
         <classes>
             <class name="RunTests">
                 <methods>

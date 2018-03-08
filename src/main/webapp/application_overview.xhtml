@@ -42,19 +42,18 @@
                         </tr>
                         <tr id="hello">
                             <td colspan="2" >
-                                    
+
                                 <h:form id="changeStatusForm">
-                                    <h:inputSecret value="#{applicationOverview.password}" class="form-control" id="password" a:placeholder="#{msg['password']}">
+                                    <h:message id="pwdErrorMsg" for="password" />
+                                    <h:inputSecret value="#{applicationOverview.password}" class="form-control" id="password" a:placeholder="#{msg['password']}" style="margin-bottom: 20px;">
                                         <f:validateRequired />
                                     </h:inputSecret>
                                     <div class="col-sm-6 col-xs-6">
                                         <h:commandButton id="AcceptBtn" style="height:50px; width:100%" class="col-sm-12 btn btn-success"  action="#{applicationOverview.authenticateSubmit('Accepted')}" value="#{msg['AO_status_accept']}">
-                                            <f:ajax execute="@form" render="jsfRepeat:0:renderStatus" />
                                         </h:commandButton>
                                     </div>
                                     <div class="col-sm-6 col-xs-6">
                                         <h:commandButton id="RejectBtn" style="height:50px; width:100%" class="col-sm-12 btn btn-danger" action="#{applicationOverview.authenticateSubmit('Rejected')}" value="#{msg['AO_status_reject']}">
-                                            <f:ajax execute="@form" render="jsfRepeat:0:renderStatus" />
                                         </h:commandButton>
                                     </div>
                                 </h:form>
@@ -70,7 +69,7 @@
                             <td>
                                 <h:outputText value="#{app.registrationDate}" id="regDate" >
 
-                                        <f:convertDateTime type="date"  dateStyle="short" />
+                                    <f:convertDateTime type="date"  dateStyle="short" />
                                 </h:outputText>
                             </td>
                         </tr>
@@ -78,9 +77,7 @@
                             <th>#{msg['AO_current_status']}</th>
 
                             <td id="currentStatus">
-                                <h:panelGroup id="renderStatus">
-                                    #{applicationOverview.status}
-                                </h:panelGroup>
+                                #{applicationOverview.status}
                             </td>
 
                         </tr>

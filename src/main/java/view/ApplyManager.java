@@ -91,7 +91,7 @@ public class ApplyManager implements Serializable {
         if (validateResponse.getStatus() == 204){
             submitApplication();
         }else{
-            parseMsgToUser(lc.getLangProperty("errorMsg_applyFailed"), "danger");
+            parseMsgToUser(lc.getLangProperty("errorMsg_creds"), "danger");
         }
         
     }

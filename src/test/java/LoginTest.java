@@ -18,8 +18,8 @@ import org.testng.annotations.Test;
 public class LoginTest extends CommonMethods {
 
     @Test
-    public void testRecruiterLogin(WebDriver driver) throws Exception {
-        (new LoginTest()).login(driver, "recruiter", "1234", By.id("user_menu"));
+    public void testRecruiterLogin(WebDriver driver, String username, String password) throws Exception {
+        (new LoginTest()).login(driver, username, password, By.id("user_menu"));
     }
 
     @Test

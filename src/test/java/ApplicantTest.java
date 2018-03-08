@@ -49,7 +49,8 @@ public class ApplicantTest extends CommonMethods {
     public String testApplyPage(WebDriver driver,
             String avFrom,
             String avTo,
-            String submissionDate) throws Exception {
+            String submissionDate,
+            String password) throws Exception {
         driver.get(new URI(driver.getCurrentUrl()).resolve("apply.xhtml").toString());
 
         addCompetence(driver, true, true);
@@ -76,15 +77,27 @@ public class ApplicantTest extends CommonMethods {
         int count_tableAv = countRowsIntable(driver, "applyForm:availabilityTable");
         Assert.assertEquals(count_tableAv, 4);
 
-        WebElement appSubmitBtn = driver.findElement(By.id("applyForm:submitAppBtn"));
-        ((JavascriptExecutor) driver).executeScript(
-                "arguments[0].scrollIntoView();", appSubmitBtn);
-        appSubmitBtn.click();
+        clickSubmitBtn(driver, "");
+        clickSubmitBtn(driver, "0");
+        clickSubmitBtn(driver, password);
+
         String date = parseDateAfterLocale(new Date());
-        
-        waitUntil(driver, By.xpath("//span[@data-notify='message']"));
+
         return date;
 
+    }
+
+    private void clickSubmitBtn(WebDriver driver, String password) throws Exception {
+        WebElement appSubmitBtn = driver.findElement(By.id("applyForm:submitAppBtn"));
+
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView();", appSubmitBtn);
+
+        driver.findElement(By.id("applyForm:password")).clear();
+        driver.findElement(By.id("applyForm:password")).sendKeys(password);
+        appSubmitBtn.click();
+        Thread.sleep(2500);
+        waitUntil(driver, By.xpath("//span[@data-notify='message']"));
     }
 
     public void addCompetence(WebDriver driver, boolean selectComp, boolean selectYOE) {

@@ -2,13 +2,20 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite thread-count="2" guice-stage="DEVELOPMENT" name="Failed suite [kth.iv1201_RecruitmentClient_war_1.0-SNAPSHOT]" parallel="tests">
   <test thread-count="2" name="testChrome(failed)">
+    <parameter name="recUserPassword" value="qwer"/>
     <parameter name="browser" value="chrome"/>
+    <parameter name="recUserName" value="qwer"/>
     <classes>
       <class name="RunTests">
         <methods>
-          <include name="testAppOverviewPage"/>
+          <include name="testAppOverviewPage" invocation-numbers="0"/>
+          <include name="testApplyPage"/>
           <include name="tearDown"/>
           <include name="setUp"/>
+          <include name="testApplicationsPage"/>
+          <include name="testParticipantLogout"/>
+          <include name="testRecruiterLogin" invocation-numbers="0"/>
+          <include name="testRecruiterLinks"/>
         </methods>
       </class> <!-- RunTests -->
     </classes>

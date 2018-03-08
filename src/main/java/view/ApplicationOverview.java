@@ -5,6 +5,7 @@
  */
 package view;
 
+import java.io.IOException;
 import model.ApplicationDetailsDTO;
 import model.CompetenceProfileDTO;
 import java.io.Serializable;
@@ -14,12 +15,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.spi.JsonProvider;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
@@ -50,15 +53,19 @@ public class ApplicationOverview implements Serializable {
 
     @Inject
     private LanguageChange lc;
+
     /**
      * Return recruiter password
+     *
      * @return password of reqruiter
      */
     public String getPassword() {
         return password;
     }
+
     /**
      * Set reqruiter password
+     *
      * @param password reqruiter password
      */
     public void setPassword(String password) {
@@ -163,24 +170,26 @@ public class ApplicationOverview implements Serializable {
         msgToUser = null;
         return temp;
     }
+
     /**
      * Sees that the user entered the correct password
+     *
      * @param status status to change
-     * @throws Exception 
+     * @throws Exception
      */
     public void authenticateSubmit(String status) throws Exception {
         JsonObject job = provider.createObjectBuilder()
-                    .add("password", password).build();
+                .add("password", password).build();
         Response validateResponse = rc.validate(job);
-        if (validateResponse.getStatus() == 204){
+        if (validateResponse.getStatus() == 204) {
             changeStatus(status);
-        }else if(validateResponse.getStatus() == 400){
-            System.out.println("let it goooo");
+
+        } else if (validateResponse.getStatus() == 400) {
             parseMsgToUser(lc.getLangProperty("errorMsg_creds"), "danger");
         }
-        
+
     }
-    
+
     /**
      * Change current application status by sending the status to server
      *
@@ -195,12 +204,16 @@ public class ApplicationOverview implements Serializable {
         Response response = rc.changeAppStatus(jbuilder);
 
         if (response.getStatus() != Response.Status.OK.getStatusCode()) {
-            // LOG INFO SOMWTHING WENT WRONG CHANGING STATUS (USERNAME)
+            log.logErrorMsg("Something went wrong when changing status, ERROR CODE:" + response.getStatus(), Level.WARNING, null);
             return;
         }
-        appDetails.setStatusName(response.readEntity(new GenericType<List<StatusNameDTO>>() {
-        }));
 
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        try {
+            ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+        } catch (IOException ex) {
+            log.logErrorMsg("Something went wrong when reloading application overview page.", Level.WARNING, ex);
+        }
     }
 
     /**

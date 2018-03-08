@@ -37,6 +37,7 @@ public class RegisterTest extends CommonMethods {
         register(driver, "test", "test", "test@gg.se", "test2", password + "1", password, "123456789", By.xpath("//span[@data-notify='message']"), false);
 
         register(driver, firstname, surname, email, username, password, password, ssn, By.id("user_menu"), true);
+        
     }
 
     @Test

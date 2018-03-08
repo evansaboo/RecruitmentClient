@@ -134,6 +134,7 @@
                 <div class="form-group" >
                     <h:panelGroup class="col-lg-12 text-center" layout="block" rendered="#{!empty applyManager.comps || !empty applyManager.availabilities}" >
                         <hr rendered="#{!empty applyManager.comps || !empty applyManager.availabilities}"/>
+                        <h:message id="pwdErrorMsg" for="password" />
                         <h:inputSecret binding="#{input1}" class="form-control" id="password" a:placeholder="#{msg['password']}" immediate="true">
                             <f:validateRequired />
                         </h:inputSecret>

@@ -17,7 +17,7 @@ import org.testng.annotations.Test;
 public class LoopTests {
     @Test
     public void test(){
-        for(int i=0;i<3;i++)
+        for(int i=0;i<200;i++)
         {
             List<String> suites = new ArrayList<>();
             suites.add("src/test/java/suites.xml"); //path of .xml file to be run-provide complete path
@@ -27,5 +27,6 @@ public class LoopTests {
 
             tng.run(); //run test suite
         }
+        
     }
 }

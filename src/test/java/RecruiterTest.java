@@ -82,7 +82,8 @@ public class RecruiterTest extends CommonMethods {
             String surname,
             String email,
             String ssn,
-            String submissionDate) throws Exception {
+            String submissionDate,
+            String password) throws Exception {
         waitUntil(driver, By.xpath("//h1[contains(.,'Job Application Overview')]"));
         Assert.assertEquals(driver.findElement(By.id("jsfRepeat:0:regDate")).getText(), submissionDate);
         Assert.assertEquals(driver.findElement(By.id("firstName")).getText(), firstname);
@@ -91,19 +92,32 @@ public class RecruiterTest extends CommonMethods {
         Assert.assertEquals(driver.findElement(By.id("ssn")).getText(), ssn);
 
         Random rand = new Random();
-        for (int i = 0; i < 10; i++) {
-            int chooseBtn = rand.nextInt(2);
-            if (chooseBtn == 0) {
-                driver.findElement(By.id("jsfRepeat:0:changeStatusForm:AcceptBtn")).click();
-                Thread.sleep(500);
 
+        for (int i = 0; i < 5; i++) {
+            int chooseBtn = rand.nextInt(2);
+            testStatusChange(driver, "", "AcceptBtn");
+            waitUntil(driver, By.id("jsfRepeat:0:changeStatusForm:pwdErrorMsg"));
+            testStatusChange(driver, "0", "RejectBtn");
+            waitUntil(driver, By.xpath("//span[@data-notify='message']"));
+
+            if (chooseBtn == 0) {
+                System.out.println(password +" Here");
+                testStatusChange(driver, password, "AcceptBtn");
                 Assert.assertEquals(waitUntil(driver, By.id("currentStatus")).getText(), "Accepted");
+
             } else {
-                driver.findElement(By.id("jsfRepeat:0:changeStatusForm:RejectBtn")).click();
-                Thread.sleep(500);
+                testStatusChange(driver, password, "RejectBtn");
                 Assert.assertEquals(waitUntil(driver, By.id("currentStatus")).getText(), "Rejected");
             }
         }
+
+    }
+
+    private void testStatusChange(WebDriver driver, String password, String btnId) throws InterruptedException {
+        driver.findElement(By.id("jsfRepeat:0:changeStatusForm:password")).clear();
+        driver.findElement(By.id("jsfRepeat:0:changeStatusForm:password")).sendKeys(password);
+        Thread.sleep(500);
+        driver.findElement(By.id("jsfRepeat:0:changeStatusForm:" + btnId)).click();
 
     }
 
@@ -142,8 +156,9 @@ public class RecruiterTest extends CommonMethods {
         driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
 
     }
-        public String parseDateAfterLocale(String date) {
-          
+
+    public String parseDateAfterLocale(String date) {
+
         DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, Locale.ENGLISH);
         Date tempDate = null;
         try {
@@ -151,7 +166,6 @@ public class RecruiterTest extends CommonMethods {
         } catch (ParseException ex) {
             Logger.getLogger(RecruiterTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println(df.format(tempDate));
         return df.format(tempDate);
     }
 }

@@ -85,11 +85,12 @@ public class RunTests extends CommonMethods {
         boolean useNumbers = false;
         firstname = RandomStringUtils.random(length, useLetters, useNumbers);
         surname = RandomStringUtils.random(length, useLetters, useNumbers);
-        ssn = RandomStringUtils.random(length, false, true);
+        ssn = String.valueOf(Long.parseLong(RandomStringUtils.random(15, false, true)));
         email = RandomStringUtils.random(5, useLetters, useNumbers);
         email = email + "@" + email + ".com";
         username = RandomStringUtils.random(length, useLetters, useNumbers);
         password = RandomStringUtils.random(length, useLetters, true);
+
     }
 
     @AfterTest
@@ -126,7 +127,7 @@ public class RunTests extends CommonMethods {
 
     @Test
     public void testApplyPage() throws Exception {
-        submissionDate = applTest.testApplyPage(driver, avFrom, avTo, submissionDate);
+        submissionDate = applTest.testApplyPage(driver, avFrom, avTo, submissionDate, password);
     }
 
     @Test
@@ -135,8 +136,9 @@ public class RunTests extends CommonMethods {
     }
 
     @Test
-    public void testRecruiterLogin() throws Exception {
-        loginTest.testRecruiterLogin(driver);
+    @Parameters({"recUserName", "recUserPassword"})
+    public void testRecruiterLogin(String recUserName, String recUserPassword) throws Exception {
+        loginTest.testRecruiterLogin(driver, recUserName, recUserPassword);
     }
 
     @Test
@@ -150,7 +152,8 @@ public class RunTests extends CommonMethods {
     }
 
     @Test
-    public void testAppOverviewPage() throws Exception {
-        recTest.testAppOverviewPage(driver, firstname, surname, email, ssn, submissionDate);
+    @Parameters("recUserPassword")
+    public void testAppOverviewPage(String recUserPassword) throws Exception {
+        recTest.testAppOverviewPage(driver, firstname, surname, email, ssn, submissionDate, recUserPassword);
     }
 }
