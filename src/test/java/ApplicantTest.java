@@ -1,16 +1,9 @@
 
 import java.net.URI;
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.faces.context.FacesContext;
-import model.AvailabilityDTO;
-import model.LanguageChange;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -25,11 +18,16 @@ import org.testng.annotations.Test;
  * and open the template in the editor.
  */
 /**
- *
- * @author Evan
+ * Test Class for testing applicant operations
+ * 
  */
 public class ApplicantTest extends CommonMethods {
-
+    
+    /**
+     * Testing different links when logged in as applicant
+     * @param driver webdriver
+     * @throws Exception If test fails
+     */
     @Test
     public void testParticipantLinks(WebDriver driver) throws Exception {
         driver.get(new URI(driver.getCurrentUrl()).resolve("apply.xhtml").toString());
@@ -44,12 +42,20 @@ public class ApplicantTest extends CommonMethods {
         driver.get(new URI(driver.getCurrentUrl()).resolve("application_overview.xhtml").toString());
         driver.findElement(By.xpath("//h1[contains(.,'403')]"));
     }
-
+    
+    /**
+     * Test everything in the apply page by providing with wrong and correct input parameters
+     * @param driver webdriver
+     * @param avFrom provided applicant available from
+     * @param avTo provided applicant available to
+     * @param password porvided applicant password
+     * @return current submission date 
+     * @throws Exception If test fails
+     */
     @Test
     public String testApplyPage(WebDriver driver,
             String avFrom,
             String avTo,
-            String submissionDate,
             String password) throws Exception {
         driver.get(new URI(driver.getCurrentUrl()).resolve("apply.xhtml").toString());
 
@@ -100,7 +106,7 @@ public class ApplicantTest extends CommonMethods {
         waitUntil(driver, By.xpath("//span[@data-notify='message']"));
     }
 
-    public void addCompetence(WebDriver driver, boolean selectComp, boolean selectYOE) {
+    private void addCompetence(WebDriver driver, boolean selectComp, boolean selectYOE) {
         Random rand = new Random();
         Select selectorComp = new Select(driver.findElement(By.id("applyForm:t1")));
         Select selectorYOE = new Select(driver.findElement(By.id("applyForm:t2")));
@@ -120,7 +126,7 @@ public class ApplicantTest extends CommonMethods {
         waitUntil(driver, By.id("applyForm:addCompBtn"));
     }
 
-    public void addAvailablity(WebDriver driver, String dateFrom, String dateTo, By by) {
+    private void addAvailablity(WebDriver driver, String dateFrom, String dateTo, By by) {
         WebElement dateFromElem = driver.findElement(By.id("applyForm:t3"));
         WebElement dateToElem = driver.findElement(By.id("applyForm:t4"));
         dateFromElem.clear();

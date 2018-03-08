@@ -1,34 +1,19 @@
 
-import java.net.URI;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang.math.RandomUtils;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
- *
- * @author Evan
+ * Test Class used to initialize webdriver and test all cases
  */
-public class RunTests extends CommonMethods {
+public class RunTests {
 
     RegisterTest regTest = new RegisterTest();
     LoginTest loginTest = new LoginTest();
@@ -46,16 +31,17 @@ public class RunTests extends CommonMethods {
     String avFrom = "03/15/19";
     String avTo = "03/15/20";
 
+    /**
+     * Initialize webdriver and applicant credentials
+     *
+     * @param browser
+     * @throws Exception
+     */
     @BeforeTest
     @Parameters("browser")
     public void setUp(String browser) throws Exception {
 
         switch (browser) {
-            case "chrome":
-                System.setProperty(
-                        "webdriver.chrome.driver", "chromedriver.exe");
-                driver = new ChromeDriver();
-                break;
             case "edge":
                 System.setProperty("webdriver.edge.driver", "MicrosoftWebDriver.exe");
                 driver = new EdgeDriver();
@@ -93,6 +79,11 @@ public class RunTests extends CommonMethods {
 
     }
 
+    /**
+     * Close webdriver when all tests have finished
+     *
+     * @throws Exception
+     */
     @AfterTest
     public void tearDown() throws Exception {
         if (driver != null) {
@@ -100,57 +91,118 @@ public class RunTests extends CommonMethods {
         }
     }
 
+    /**
+     * Test by redirecting to register link
+     *
+     * @throws Exception if test fails
+     */
     @Test
     public void testRegisterLink() throws Exception {
         regTest.testRegisterLink(driver);
     }
 
+    /**
+     * Test register page by providing different register parameters and checks
+     * the result
+     *
+     * @throws Exception if test fails
+     */
     @Test
     public void testRegister() throws Exception {
         regTest.testRegister(driver, firstname, surname, email, username, password, password, ssn);
     }
 
+    /**
+     * Test logout functionality dependent of login test
+     *
+     * @throws Exception if test fails
+     */
     @Test
     public void testLogout() throws Exception {
         loginTest.testLogout(driver);
     }
 
+    /**
+     * Test the login function by inserting different user credentials and
+     * checking the result
+     *
+     * @throws Exception if test fails
+     */
     @Test
     public void testLogin() throws Exception {
         loginTest.testLogin(driver, username, password);
     }
 
+    /**
+     * Testing different links when logged in as applicant
+     *
+     * @throws Exception If test fails
+     */
     @Test
     public void testParticipantLinks() throws Exception {
         applTest.testParticipantLinks(driver);
     }
 
+    /**
+     * Test everything in the apply page by providing with wrong and correct
+     * input parameters
+     *
+     * @throws Exception If test fails
+     */
     @Test
     public void testApplyPage() throws Exception {
-        submissionDate = applTest.testApplyPage(driver, avFrom, avTo, submissionDate, password);
+        submissionDate = applTest.testApplyPage(driver, avFrom, avTo, password);
     }
 
+    /**
+     * Special logout only for participant
+     *
+     * @throws Exception if test fails
+     */
     @Test
     public void testParticipantLogout() throws Exception {
         loginTest.testParticipantLogout(driver);
     }
 
+    /**
+     * Test by doing a login with recruiter credentials
+     *
+     * @param recUserName provided username from testng.xml
+     * @param recUserPassword provided password from testng.xml
+     * @throws Exception if the test fails
+     */
     @Test
     @Parameters({"recUserName", "recUserPassword"})
     public void testRecruiterLogin(String recUserName, String recUserPassword) throws Exception {
         loginTest.testRecruiterLogin(driver, recUserName, recUserPassword);
     }
 
+    /**
+     * Test by doing a login with recruiter credentials
+     *
+     * @throws Exception if the test fails
+     */
     @Test
     public void testRecruiterLinks() throws Exception {
         recTest.testRecruiterLinks(driver);
     }
 
+    /**
+     * Test application search page with different search parameters
+     *
+     * @throws Exception if test fails
+     */
     @Test
     public void testApplicationsPage() throws Exception {
         recTest.testApplicationsPage(driver, firstname, submissionDate, avFrom, avTo);
     }
 
+    /**
+     * Test application search page with different search parameters
+     *
+     * @param recUserPassword provided recruiter password from testng.xml
+     * @throws Exception if test fails
+     */
     @Test
     @Parameters("recUserPassword")
     public void testAppOverviewPage(String recUserPassword) throws Exception {

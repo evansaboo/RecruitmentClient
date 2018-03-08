@@ -43,7 +43,6 @@ public class Authentication implements Serializable {
     private String msgToUser;
     private String token;
     private String role;
-    JsonProvider provider = JsonProvider.provider();
 
     private final ExceptionLogger log = new ExceptionLogger();
 
@@ -256,7 +255,7 @@ public class Authentication implements Serializable {
      */
     public String login() {
         try {
-            JsonObject job = provider.createObjectBuilder()
+            JsonObject job = JsonProvider.provider().createObjectBuilder()
                     .add("username", user)
                     .add("password", password).build();
 
@@ -278,7 +277,7 @@ public class Authentication implements Serializable {
         if (!regpassword.equals(regpassword2)) {
             parseMsgToUser(lc.getLangProperty("pmatch"), "danger");
         } else {
-            JsonObject job = provider.createObjectBuilder()
+            JsonObject job = JsonProvider.provider().createObjectBuilder()
                     .add("name", name)
                     .add("surname", surname)
                     .add("ssn", ssn)

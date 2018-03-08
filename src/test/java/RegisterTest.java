@@ -11,11 +11,23 @@ import org.testng.annotations.Test;
  * and open the template in the editor.
  */
 /**
- *
+ *Test Class used to test register functionality
  * @author Evan
  */
 public class RegisterTest extends CommonMethods {
-
+    
+    /**
+     * Test register page by providing different register parameters and checks the result
+     * @param driver webdriver to test in
+     * @param firstname provided CORRECT firstname
+     * @param surname provided CORRECT surname
+     * @param email provided CORRECT email
+     * @param username provided CORRECT username
+     * @param password provded CORRECT password
+     * @param password2 provided CORRECT password AGAIN
+     * @param ssn provided CORRECT social security number
+     * @throws Exception if test fails
+     */
     @Test
     public void testRegister(WebDriver driver,
             String firstname,
@@ -39,14 +51,19 @@ public class RegisterTest extends CommonMethods {
         register(driver, firstname, surname, email, username, password, password, ssn, By.id("user_menu"), true);
         
     }
-
+    
+    /**
+     * Test by redirecting to register link
+     * @param driver webdriver to test in
+     * @throws Exception if test fails
+     */
     @Test
     public void testRegisterLink(WebDriver driver) throws Exception {
         driver.findElement(By.linkText("Login/Register")).click();
         waitUntil(driver, By.id("dropdownMenuButton"));
     }
 
-    public void register(WebDriver driver,
+    private void register(WebDriver driver,
             String firstname,
             String surname,
             String email,

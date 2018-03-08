@@ -1,33 +1,24 @@
 
 import java.net.URI;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.util.Date;
-import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
- *
- * @author Evan
+ * Test Class used to test recruiter functonality 
  */
 public class RecruiterTest extends CommonMethods {
-
+    
+    /**
+     * Test links by redirecting to them and checking if correct content is shown when logged in as recruiter 
+     * @param driver provided webdriver to test in
+     * @throws Exception if test fails
+     */
     @Test
     public void testRecruiterLinks(WebDriver driver) throws Exception {
 
@@ -43,7 +34,16 @@ public class RecruiterTest extends CommonMethods {
         driver.get(new URI(driver.getCurrentUrl()).resolve("application_overview.xhtml").toString());
         Assert.assertEquals(driver.findElement(By.tagName("h1")).getText(), "ERROR 406");
     }
-
+    
+    /**
+     * Test application search page with different search parameters
+     * @param driver provided webdriver to test in
+     * @param firstname provided CORRECT firstname
+     * @param submissionDate provided CORRECT submission date
+     * @param avFrom provided CORRECT availability date from
+     * @param avTo provided CORRECT availability date to
+     * @throws Exception if test fails
+     */
     @Test
     public void testApplicationsPage(WebDriver driver,
             String firstname,
@@ -76,6 +76,17 @@ public class RecruiterTest extends CommonMethods {
         waitUntil(driver, By.linkText("View Application")).click();
     }
 
+    /**
+     * Checks if the application overview page has the correct content and later tests status change functionality
+     * @param driver provided webdriver
+     * @param firstname provided applicant firstname
+     * @param surname provided applicant surname
+     * @param email provided applicant email
+     * @param ssn provided applicant ssn
+     * @param submissionDate provided applicants application submission date
+     * @param password provided recruiter password
+     * @throws Exception if test fails
+     */
     @Test
     public void testAppOverviewPage(WebDriver driver,
             String firstname,
@@ -121,7 +132,7 @@ public class RecruiterTest extends CommonMethods {
 
     }
 
-    public void searchForApp(WebDriver driver,
+    private void searchForApp(WebDriver driver,
             String subDate,
             String avFrom,
             String avTo,
@@ -155,17 +166,5 @@ public class RecruiterTest extends CommonMethods {
         driver.findElement(By.id("searchForm:searchBtn")).click();
         driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
 
-    }
-
-    public String parseDateAfterLocale(String date) {
-
-        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, Locale.ENGLISH);
-        Date tempDate = null;
-        try {
-            tempDate = df.parse(date);
-        } catch (ParseException ex) {
-            Logger.getLogger(RecruiterTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return df.format(tempDate);
     }
 }

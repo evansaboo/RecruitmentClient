@@ -48,7 +48,6 @@ public class ApplyManager implements Serializable {
     private AvailabilityDTO availability = new AvailabilityDTO();
     private final List<Double> yearsOfExp = new ArrayList<>();
     private String msgToUser;
-    JsonProvider provider = JsonProvider.provider();
 
 
     private final ExceptionLogger log = new ExceptionLogger();
@@ -84,7 +83,8 @@ public class ApplyManager implements Serializable {
      * @throws Exception 
      */
     public void authenticateSubmit(String pass) throws Exception {
-        JsonObject job = provider.createObjectBuilder()
+
+        JsonObject job = JsonProvider.provider().createObjectBuilder()
                     .add("password", pass).build();
         Response validateResponse = controller.validate(job);
         

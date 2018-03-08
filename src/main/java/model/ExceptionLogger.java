@@ -6,6 +6,7 @@
 package model;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.SimpleFormatter;
@@ -15,7 +16,9 @@ import java.util.logging.SimpleFormatter;
  *
  * @author Evan
  */
-public class ExceptionLogger {
+public class ExceptionLogger implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger("Client_Logger");
     private final String CLIENT_LOGGER_SEVERE_FILE = "Client_Logger_Severe.log";
@@ -24,6 +27,9 @@ public class ExceptionLogger {
 
     private FileHandler fh;
 
+    /**
+     * Class Constructor
+     */
     public ExceptionLogger() {
 
     }
@@ -31,6 +37,7 @@ public class ExceptionLogger {
     /**
      * Logs error message into desired file
      *
+     * @param message provided costum message
      * @param ex Throwable exception to log
      * @param logLvl Log Level
      */

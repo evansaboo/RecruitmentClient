@@ -47,7 +47,6 @@ public class ApplicationOverview implements Serializable {
     private String msgToUser;
     private String password;
     private final Map<String, List<CompetenceProfileDTO>> competenceHashMap = new HashMap<>();
-    JsonProvider provider = JsonProvider.provider();
     @Inject
     private RestCommunication rc;
 
@@ -178,7 +177,8 @@ public class ApplicationOverview implements Serializable {
      * @throws Exception
      */
     public void authenticateSubmit(String status) throws Exception {
-        JsonObject job = provider.createObjectBuilder()
+
+        JsonObject job = JsonProvider.provider().createObjectBuilder()
                 .add("password", password).build();
         Response validateResponse = rc.validate(job);
         if (validateResponse.getStatus() == 204) {

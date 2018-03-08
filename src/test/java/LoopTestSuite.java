@@ -11,10 +11,14 @@ import org.testng.annotations.Test;
  */
 
 /**
- *
+ *Used to run test suite number amount of times
  * @author Evan
  */
-public class LoopTests {
+public class LoopTestSuite {
+    
+    /**
+     * Method used to run test suite number amount of times
+     */
     @Test
     public void test(){
         for(int i=0;i<200;i++)
