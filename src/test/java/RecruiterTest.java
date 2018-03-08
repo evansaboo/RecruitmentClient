@@ -112,7 +112,6 @@ public class RecruiterTest extends CommonMethods {
             waitUntil(driver, By.xpath("//span[@data-notify='message']"));
 
             if (chooseBtn == 0) {
-                System.out.println(password +" Here");
                 testStatusChange(driver, password, "AcceptBtn");
                 Assert.assertEquals(waitUntil(driver, By.id("currentStatus")).getText(), "Accepted");
 

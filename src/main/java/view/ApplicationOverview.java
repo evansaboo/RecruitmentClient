@@ -221,7 +221,6 @@ public class ApplicationOverview implements Serializable {
      * generates an error message to the user depending on the error.
      */
     public void generatePdf() {
-        System.out.println("Generate pdf for application: " + applicationId);
         Response response = rc.generatePdf(applicationId);
 
         try {
