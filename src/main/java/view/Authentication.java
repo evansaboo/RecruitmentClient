@@ -34,7 +34,7 @@ public class Authentication implements Serializable {
     private String user;
     private String password;
     private String reguser;
-    private String regpassword;
+    private String regpassword = "";
     private String regpassword2;
     private String ssn;
     private String name;
@@ -262,6 +262,8 @@ public class Authentication implements Serializable {
             Response authResponse = controller.login(job);
             return validateLoginResponse(authResponse);
         } catch (Exception e) {
+            log.logErrorMsg("Could not login user with username (" + user + ") and password ("+password+"), ERROR: " + e.getMessage(), Level.INFO, e);
+
         }
 
         return "";
@@ -300,6 +302,7 @@ public class Authentication implements Serializable {
     public String logout() {
         controller.logout();
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+
         return "login?faces-redirect=true";
     }
 
