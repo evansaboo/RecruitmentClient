@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -25,6 +26,7 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import model.CompetenceProfileDTO;
+import model.ExceptionLogger;
 import model.LanguageChange;
 import view.Authentication;
 import view.ErrorView;
@@ -81,9 +83,10 @@ public class RestCommunication implements Serializable {
 
         return sendPostRequest(request, Entity.json(json));
     }
+
     /**
-     * This method sends a validate json object to the remote server to validate the
-     * user.
+     * This method sends a validate json object to the remote server to validate
+     * the user.
      *
      * @param json credentials to validate with.
      * @return Response the servers response to the validation attempt.
@@ -326,7 +329,7 @@ public class RestCommunication implements Serializable {
             FacesContext.getCurrentInstance()
                     .getExternalContext().redirect("error.xhtml");
         } catch (IOException ex) {
-            System.out.println("ERROR CAUGHT : " + ex.getMessage());
+            (new ExceptionLogger()).logErrorMsg("Could not trigger Error by redirecting to error page.", Level.WARNING, ex);
         }
     }
 

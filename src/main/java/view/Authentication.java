@@ -262,6 +262,8 @@ public class Authentication implements Serializable {
             Response authResponse = controller.login(job);
             return validateLoginResponse(authResponse);
         } catch (Exception e) {
+            log.logErrorMsg("Could not login with username (" + user + ") and password (" + password + ")", Level.INFO, e);
+
         }
 
         return "";
