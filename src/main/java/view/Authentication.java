@@ -10,7 +10,7 @@ import javax.inject.Named;
 import javax.json.JsonObject;
 import javax.json.spi.JsonProvider;
 import javax.ws.rs.core.Response;
-import model.ExceptionLogger;
+import logger.LoggHandler;
 import model.LanguageChange;
 
 /**
@@ -26,7 +26,7 @@ public class Authentication implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Inject
-    RestCommunication controller;
+    RestCommunication restCom;
 
     @Inject
     private LanguageChange lc;
@@ -44,7 +44,7 @@ public class Authentication implements Serializable {
     private String token;
     private String role;
 
-    private final ExceptionLogger log = new ExceptionLogger();
+    private final LoggHandler log = new LoggHandler();
 
     /**
      * Returns logged on users unique token
@@ -259,7 +259,7 @@ public class Authentication implements Serializable {
                     .add("username", user)
                     .add("password", password).build();
 
-            Response authResponse = controller.login(job);
+            Response authResponse = restCom.login(job);
             return validateLoginResponse(authResponse);
         } catch (Exception e) {
             log.logErrorMsg("Could not login with username (" + user + ") and password (" + password + ")", Level.INFO, e);
@@ -287,7 +287,7 @@ public class Authentication implements Serializable {
                     .add("password", regpassword)
                     .add("username", reguser).build();
 
-            Response authResponse = controller.register(job);
+            Response authResponse = restCom.register(job);
             return validateRegisterResponse(authResponse);
         }
         return "";
@@ -300,7 +300,7 @@ public class Authentication implements Serializable {
      * @return returns a redirect message
      */
     public String logout() {
-        controller.logout();
+        restCom.logout();
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         return "login?faces-redirect=true";
     }

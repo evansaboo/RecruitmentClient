@@ -26,7 +26,7 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import model.CompetenceProfileDTO;
-import model.ExceptionLogger;
+import logger.LoggHandler;
 import model.LanguageChange;
 import view.Authentication;
 import view.ErrorView;
@@ -329,7 +329,7 @@ public class RestCommunication implements Serializable {
             FacesContext.getCurrentInstance()
                     .getExternalContext().redirect("error.xhtml");
         } catch (IOException ex) {
-            (new ExceptionLogger()).logErrorMsg("Could not trigger Error by redirecting to error page.", Level.WARNING, ex);
+            (new LoggHandler()).logErrorMsg("Could not trigger Error by redirecting to error page.", Level.WARNING, ex);
         }
     }
 

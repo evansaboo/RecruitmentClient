@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
-import model.ExceptionLogger;
+import logger.LoggHandler;
 import model.LanguageChange;
 import model.StatusNameDTO;
 import rest.RestCommunication;
@@ -71,7 +71,7 @@ public class ApplicationOverview implements Serializable {
         this.password = password;
     }
 
-    ExceptionLogger log = new ExceptionLogger();
+    LoggHandler log = new LoggHandler();
 
     /**
      * Initilizes the page by getting job application details from server and

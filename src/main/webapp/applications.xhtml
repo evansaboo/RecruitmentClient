@@ -12,11 +12,11 @@
         </f:metadata>
     </ui:define>
     <ui:define name="head">
-        <link rel="stylesheet" href="css/footer.css"/>
-        <link rel="stylesheet" href="css/applications.css"/>
+        <link rel="stylesheet" href="resources/css/applications.css"/>
         <link  rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css"/>
         <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"/>
         <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"/>
+        <script src="resources/js/applications.js" /> 
     </ui:define>
     <ui:define name="body">
 
@@ -88,32 +88,5 @@
 
             </div>
         </div>
-        <script>
-            $(document).ready(function () {
-                $('#appListingTable').DataTable({
-                    "language": {
-                        "lengthMenu": "#{msg['lengthMenu']}",
-                        "emptyTable": "#{msg['emptyTable']}",
-                        "info": "#{msg['info']}",
-                        "InfoEmpty": "#{msg['infoEmpty']}",
-                        "infoFiltered": "#{msg['infoFiltered']}",
-                        "loadingRecords": "#{msg['loadingRecords']}",
-                        "processing": "#{msg['processing']}",
-                        "search": "#{msg['table_search']}",
-                        "zeroRecords": "#{msg['zeroRecords']}",
-                        "paginate": {
-                            "first": "#{msg['paginate_first']}",
-                            "last": "#{msg['paginate_last']}",
-                            "next": "#{msg['paginate_next']}",
-                            "previous": "#{msg['paginate_previous']}"
-                        },
-                        "araia": {
-                            "sortAscending": "#{msg['aria_sortAscending']}",
-                            "sortDescending": "#{msg['aria_sortDescending']}"
-                        }
-                    }
-                });
-            });
-        </script>
     </ui:define>
 </ui:composition>

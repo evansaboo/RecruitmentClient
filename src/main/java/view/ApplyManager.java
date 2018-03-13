@@ -21,7 +21,7 @@ import javax.json.spi.JsonProvider;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import model.CompetenceProfileDTO;
-import model.ExceptionLogger;
+import logger.LoggHandler;
 import model.LanguageChange;
 
 /**
@@ -35,7 +35,7 @@ public class ApplyManager implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Inject
-    private RestCommunication controller;
+    private RestCommunication restCom;
     @Inject
     private LanguageChange lc;
 
@@ -50,14 +50,14 @@ public class ApplyManager implements Serializable {
     private String msgToUser;
 
 
-    private final ExceptionLogger log = new ExceptionLogger();
+    private final LoggHandler log = new LoggHandler();
 
     /**
      * Initializes page by fetching relevant data
      */
     public void onPageLoad() {
         if (competences == null || competences.isEmpty()) {
-            Response competencesResponse = controller.getCompetences();
+            Response competencesResponse = restCom.getCompetences();
 
             if (competencesResponse.getStatus() != Response.Status.OK.getStatusCode()) {
                 log.logErrorMsg("Could not get Competences from server, ERROR CODE: " + competencesResponse.getStatus(), Level.WARNING, null);
@@ -86,7 +86,7 @@ public class ApplyManager implements Serializable {
 
         JsonObject job = JsonProvider.provider().createObjectBuilder()
                     .add("password", pass).build();
-        Response validateResponse = controller.validate(job);
+        Response validateResponse = restCom.validate(job);
         
         if (validateResponse.getStatus() == 204){
             submitApplication();
@@ -108,11 +108,11 @@ public class ApplyManager implements Serializable {
         Response compResponse = Response.noContent().build();
 
         if (!compProfiles.isEmpty()) {
-            compResponse = controller.sendCompetences(compProfiles);
+            compResponse = restCom.sendCompetences(compProfiles);
         }
 
         if (!availabilities.isEmpty()) {
-            availResponse = controller.sendAvailabilities(availabilities);
+            availResponse = restCom.sendAvailabilities(availabilities);
         }
 
         if (availResponse.getStatus() == Response.Status.NO_CONTENT.getStatusCode()

@@ -1,0 +1,9 @@
+.dropdown-menu>form>li>a{
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.4285;
+    color: #333;
+    white-space: nowrap; 
+  }

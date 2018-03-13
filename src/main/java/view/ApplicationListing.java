@@ -23,7 +23,7 @@ import javax.json.JsonObject;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import model.Application;
-import model.ExceptionLogger;
+import logger.LoggHandler;
 import model.LanguageChange;
 
 /**
@@ -46,18 +46,18 @@ public class ApplicationListing implements Serializable {
     private final ArrayList<Application> applications = new ArrayList<>();
 
     @Inject
-    private RestCommunication contr;
+    private RestCommunication restCom;
 
     @Inject
     private LanguageChange lc;
 
-    ExceptionLogger log = new ExceptionLogger();
+    LoggHandler log = new LoggHandler();
 
     /**
      * Fills the list of competences on initialize
      */
     public void initPage() {
-        Response response = contr.getCompetencesForRecruiter();
+        Response response = restCom.getCompetencesForRecruiter();
         if (response.getStatus() != Response.Status.OK.getStatusCode()) {
             log.logErrorMsg("Could not initialize Application listing page, ERROR CODE: "+ response.getStatus(), Level.INFO, null);
             return;
@@ -192,7 +192,7 @@ public class ApplicationListing implements Serializable {
      */
     private void initList() {
         applications.clear();
-        JsonArray jarray = contr.listApplications().readEntity(new GenericType<JsonArray>() {
+        JsonArray jarray = restCom.listApplications().readEntity(new GenericType<JsonArray>() {
         });
         for (int i = 0; i < jarray.size(); i++) {
             JsonObject obj = jarray.getJsonObject(i);
@@ -219,7 +219,7 @@ public class ApplicationListing implements Serializable {
                 .add("name", firstname)
                 .build();
 
-        Response response = contr.searchApplication(jbuilder);
+        Response response = restCom.searchApplication(jbuilder);
         if (response.getStatus() != Response.Status.OK.getStatusCode()) {
             log.logErrorMsg("Could not get applications by using search form, ERROR CODE: "+ response.getStatus(), Level.INFO, null);
 
