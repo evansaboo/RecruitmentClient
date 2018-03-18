@@ -16,13 +16,12 @@
         <link  rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css"/>
         <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"/>
         <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"/>
-        <script src="resources/js/applications.js" /> 
     </ui:define>
     <ui:define name="body">
 
         <div class="container">
-            <h1 class="title">#{msg['search_title']}</h1>
-            <h:form class="form col-xs-12 col-md-6 col-md-offset-3" id="searchForm">
+            <h1 class="title col-xs-12">#{msg['search_title']}</h1>
+            <h:form class="form col-xs-12" id="searchForm">
                 <div class="form-group" >
                     <label for="date">#{msg['app_submission_date']}</label>
                     <h:inputText value="#{applicationListing.regDate}" class="form-control" id="date" converterMessage="#{msg['dateFormatErrorMsg']} #{msg['localeDate']}" a:placeholder="#{msg['localeDate']}">
@@ -88,5 +87,32 @@
 
             </div>
         </div>
+        <script>
+            $(document).ready(function () {
+                $('#appListingTable').DataTable({
+                    "language": {
+                        "lengthMenu": "#{msg['lengthMenu']}",
+                        "emptyTable": "#{msg['emptyTable']}",
+                        "info": "#{msg['info']}",
+                        "InfoEmpty": "#{msg['infoEmpty']}",
+                        "infoFiltered": "#{msg['infoFiltered']}",
+                        "loadingRecords": "#{msg['loadingRecords']}",
+                        "processing": "#{msg['processing']}",
+                        "search": "#{msg['table_search']}",
+                        "zeroRecords": "#{msg['zeroRecords']}",
+                        "paginate": {
+                            "first": "#{msg['paginate_first']}",
+                            "last": "#{msg['paginate_last']}",
+                            "next": "#{msg['paginate_next']}",
+                            "previous": "#{msg['paginate_previous']}"
+                        },
+                        "araia": {
+                            "sortAscending": "#{msg['aria_sortAscending']}",
+                            "sortDescending": "#{msg['aria_sortDescending']}"
+                        }
+                    }
+                });
+            });
+        </script>
     </ui:define>
 </ui:composition>
